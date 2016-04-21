@@ -208,12 +208,12 @@ public class SupervisedMetablocking {
 //	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 	        String[] profilesPath = {   
-	                                  mainDirectory+"/10Kprofiles"
+	                                  mainDirectory+"/50Kprofiles"
 	                                  
 	        };
 	        
 	        String[] groundTruthPath = {   
-	                                     mainDirectory+"/10KIdDuplicates"
+	                                     mainDirectory+"/50KIdDuplicates"
 	        };
 		
 		

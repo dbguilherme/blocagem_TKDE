@@ -245,7 +245,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		trainingInstances = new Instances("trainingSet", attributes, 2*matchingInstances);
 		trainingInstances.setClassIndex(noOfAttributes - 1);
 		//double  vector[]={0,0,0,0,0};
-		//Random random= new Random();
+		Random random= new Random(iteration);
 		PrintStream pstxt = null;
 		PrintStream psarff = null;
 
@@ -275,9 +275,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
 				return 0;
 			}});
-
 		//Collections.shuffle(blocks);
-		//	blocks.get(random.nex)
+		
+		//
 
 		double perc[]=conta_niveis(blocks,ebc,tamanho);
 
@@ -316,6 +316,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			
 				//System.out.println(tentativas--);
 				//if(blocks.size()==j){
+				
 					System.out.println("zerou os blocks " + j + " tentativas "+ tentativas);
 					j=1;
 				//}
@@ -325,7 +326,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					//List<Comparison> comparisonList = blocks.get(j).getComparisons();
 					ComparisonIterator iterator = blocks.get(j).getComparisonIterator();
 					//int rand=0;
-					if(retorno==0)
+					if(retorno==-10)
 						break;
 					while(iterator.hasNext()){	
 					//	rand=random.nextInt(comparisonList.size());
@@ -340,10 +341,29 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						comparison.teste=blocks.get(j).getBlockIndex();
 						if(comparison.sim==0.0)
 							comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
+						
+						if(comparison.sim> ((double)controle*0.1) && comparison.sim< ((double)(controle+1)*0.1)){				
+							if(controle<5)
+							if(random.nextDouble()>(perc[controle])){
+								//lixo++;
+								//if(lixo%1000==0)
+								//	System.out.println("descarte " + lixo );
+								continue;
+							}
+							if(controle>=5)
+								if((random.nextDouble()/5)>(perc[controle])){
+									//lixo++;
+									//if(lixo%1000==0)
+									//	System.out.println("descarte " + lixo );
+									continue;
+								}
+						}else
+							continue;
+						
 						//System.out.println("¨¨¨¨¨¨¨" + comparison.teste + " " + comparison.getEntityId1() +" " + comparison.getEntityId2() + " " +block.getNoOfComparisons());
-						if((retorno=getLevels(comparison,ebc,comparison.teste,pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,perc))==0){
-							pstxt_level.close();
-							psarff_level.close();
+						if((retorno=getLevels(comparison,ebc,comparison.teste,pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,perc))<=0){
+							//pstxt_level.close();
+							//psarff_level.close();
 							break;
 						}
 					}
@@ -407,7 +427,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}			
 		}
 		for (int i = 0; i < levels.length; i++) {
-			perc[i]=(double)tamanho/(levels[i]);
+			perc[i]=((double)tamanho)/(levels[i]);
 			System.out.println(i + " "+ perc[i] + "  " + levels[i] );
 		}
 		return perc;
@@ -598,13 +618,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		Double sim=comparison.sim;
 				
 		
-		if(sim> ((double)controle*0.1) && sim< ((double)(controle+1)*0.1)){				
-			if(random.nextDouble()>(perc[controle])){
-				//lixo++;
-				//if(lixo%1000==0)
-				//	System.out.println("descarte " + lixo );
-				return -1;
-			}
+		{
 			
 //			if(last_block!=comparison.teste ){
 //				for (int j = 0; j < 10; j++) {
@@ -694,17 +708,17 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					//	if(ele)
 					elements[controle]++;
 					//System.out.println("controle " + controle + " --> element "+elements[controle]);
-					return -1;
+					return 0;
 				}
 				else{
 					System.out.println(controle + "tamanho --->> " + elements[controle]);
 					lixo=0;
-					return 0;
+					return -10;
 				}
 					
 			}
 		
-		return -1;
+	//	return -1;
 	}
 
 	private void prepareStatistics() {
