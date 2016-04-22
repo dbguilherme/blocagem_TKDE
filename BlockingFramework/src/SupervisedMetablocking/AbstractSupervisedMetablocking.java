@@ -325,7 +325,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				System.out.println("zerou os blocks " + j + " tentativas "+ tentativas);
 				j=1;
 				//}
-				
+				  
 				HashMap<Integer, ArrayList<Comparison>> bloco = deep.get(controle);
 				System.out.println("+++" +bloco.size());
 				//for (AbstractBlock block : blocks) {
