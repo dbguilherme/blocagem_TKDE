@@ -323,7 +323,7 @@ public class SupervisedMetablocking {
 		for (int i = 1; i <= 5;i++)
 		{
 			
-		int tamanho = 50;
+		int tamanho = 5;
 		while(tamanho <=1000)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs);
