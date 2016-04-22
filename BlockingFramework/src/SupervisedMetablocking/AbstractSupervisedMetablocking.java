@@ -408,9 +408,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
 	}
 
+	  
 	
-	
-	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
+	private double[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
 		
 		int levels[] = new int[10];
 		double perc[] = new double[10];
