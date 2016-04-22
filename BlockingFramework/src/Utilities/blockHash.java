@@ -15,7 +15,7 @@ import DataStructures.Uri;
 
 public class blockHash {
 	
-	static HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>> deep = new HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>>();
+	public static HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>> deep = new HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>>();
 	protected final static String names[]=(new Converter()).atributos_value;
 
 	public static void produceHash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc){
@@ -79,23 +79,23 @@ public class blockHash {
 			}
 			i++;
 		}
-		int count=0;
-		for(Integer e: deep.keySet()){
-			for(Integer f:deep.get(e).keySet()){
-				if(deep.get(e).get(f)!=null){
-					Iterator<DataStructures.Comparison> it = deep.get(e).get(f).iterator();
-					while(it.hasNext()){
-						DataStructures.Comparison c= it.next();
-						System.out.println("*****************" +c.sim + " " + c.getEntityId1() + " " +e + " "+ f);
-						count++;
-					}
-				}
-			}
-		}
+//		int count=0;
+//		for(Integer e: deep.keySet()){
+//			for(Integer f:deep.get(e).keySet()){
+//				if(deep.get(e).get(f)!=null){
+//					Iterator<DataStructures.Comparison> it = deep.get(e).get(f).iterator();
+//					while(it.hasNext()){
+//						DataStructures.Comparison c= it.next();
+//						System.out.println("*****************" +c.sim + " " + c.getEntityId1() + " " +e + " "+ f);
+//						count++;
+//					}
+//				}
+//			}
+//		}
 		
 		//ArrayList<DataStructures.Comparison> x = deep.get(1).get(1);
 		
-		System.out.println("*****************" +count);
+	//	System.out.println("*****************" +count);
 		//blocks.get(0);
 		
 	}
