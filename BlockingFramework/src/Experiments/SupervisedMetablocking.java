@@ -26,6 +26,7 @@ import Utilities.BlockStatistics;
 import Utilities.ExecuteBlockComparisons;
 import Utilities.ExportBlocks;
 import Utilities.SerializationUtilities;
+import Utilities.blockHash;
 import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_parameter;
@@ -208,12 +209,12 @@ public class SupervisedMetablocking {
 //	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 	        String[] profilesPath = {   
-	                                  mainDirectory+"/50Kprofiles"
+	                                  mainDirectory+"/10Kprofiles"
 	                                  
 	        };
 	        
 	        String[] groundTruthPath = {   
-	                                     mainDirectory+"/50KIdDuplicates"
+	                                     mainDirectory+"/10KIdDuplicates"
 	        };
 		
 		
@@ -276,17 +277,20 @@ public class SupervisedMetablocking {
 		
 		AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 		blockPurging.applyProcessing(blocks);
-
+		
 		int num_blocks=0;
 		for ( AbstractBlock b:blocks) {
 			if(b!=null){
 				num_blocks+=b.getNoOfComparisons();
+			
 			}
 		}
 		System.out.println(" blocks --> "+ num_blocks);
 		
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		
+		
+		blockHash.produceHash(blocks,ebc);
 		//            System.out.println("\n\n\n\n\n======================= Supervised CEP =======================");
 		Classifier[] classifiers = getSupervisedCepClassifiers();
 		//            SupervisedCEP scep = new SupervisedCEP(classifiers.length, blocks, duplicatePairs);
@@ -314,11 +318,12 @@ public class SupervisedMetablocking {
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
 		
+		
 		//int i=1;
 		for (int i = 1; i <= 5;i++)
 		{
 			
-		int tamanho = 10;
+		int tamanho = 50;
 		while(tamanho <=1000)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs);

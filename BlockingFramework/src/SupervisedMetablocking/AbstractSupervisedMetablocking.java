@@ -408,6 +408,32 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
 	}
 
+	
+	
+	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
+		
+		int levels[] = new int[10];
+		double perc[] = new double[10];
+		for (int i = 0; i < levels.length; i++) {
+			levels[i]=0;
+		}
+		for (AbstractBlock abstractBlock : blocks) {
+			ComparisonIterator iterator = abstractBlock.getComparisonIterator();
+			Comparison comparison;
+			while(iterator.hasNext()){			
+					 comparison = iterator.next(); 
+					 comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);		
+					// System.out.println(((int)Math.floor(comparison.sim*10)));
+					 levels[((int)Math.ceil(comparison.sim*10))]++;
+			}			
+		}
+		for (int i = 0; i < levels.length; i++) {
+			perc[i]=((double)tamanho)/(levels[i]);
+			System.out.println(i + " "+ perc[i] + "  " + levels[i] );
+		}
+		return perc;
+	}
+	
 
 	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
 		
