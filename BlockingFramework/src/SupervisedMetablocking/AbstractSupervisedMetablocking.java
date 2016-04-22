@@ -329,6 +329,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				HashMap<Integer, ArrayList<Comparison>> bloco = deep.get(controle);
 				System.out.println("+++" +bloco.size());
 				//for (AbstractBlock block : blocks) {
+				int comp=0;
 				while(++j<bloco.size()){
 					if(retorno==0)
 						break;
@@ -338,8 +339,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					Iterator<Comparison> it = listComp.iterator();
 					while(it.hasNext()){
 					//System.out.println("-----------" +listComp.size());
-						comparison = listComp.get(random.nextInt(listComp.size()));
-						it.next();
+						comparison = it.next();
+						//it.next();
 //						
 						final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(blocks.get(j).getBlockIndex(), comparison);
 	
