@@ -50,7 +50,7 @@ public class EntityIndex implements Serializable {
         indexEntities(blocks);
     }
     
-    private void enumerateBlocks(List<AbstractBlock> blocks) {
+    public void enumerateBlocks(List<AbstractBlock> blocks) {
         int blockIndex = 0;
         for (AbstractBlock block : blocks) {
             block.setBlockIndex(blockIndex++);
@@ -79,6 +79,7 @@ public class EntityIndex implements Serializable {
                     if (!firstCommonIndex) {
                         firstCommonIndex = true;
                         if (blocks1[i] != blockIndex) {
+                        	//System.out.println("blockIndex "+ blockIndex+ " "+ blocks1[i]);
                             return null;
                         }
                     }

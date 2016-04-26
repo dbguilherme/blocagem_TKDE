@@ -15,9 +15,12 @@ import DataStructures.Uri;
 
 public class blockHash {
 	
-	public static HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>> deep = new HashMap<Integer, HashMap<Integer, ArrayList<DataStructures.Comparison>>>();
+	public static HashMap<Integer,  ArrayList<DataStructures.Comparison>> deep = new HashMap<Integer, ArrayList<DataStructures.Comparison>>();
 	protected final static String names[]=(new Converter()).atributos_value;
-
+	public static int blockSize[] = new int[10];
+	public static int blockNumber[] = new int[10];
+	
+	
 	public static void produceHash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc){
 		
 		Collections.sort(blocks, new Comparator<AbstractBlock>() {
@@ -26,17 +29,20 @@ public class blockHash {
 				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
 				return 0;
 			}});
-		
 		for (int i = 0; i < 10; i++) {
-			ArrayList<DataStructures.Comparison> array= new ArrayList<DataStructures.Comparison>();
+			blockSize[i]=0;
+			blockNumber[i]=0;
+		}
+		for (int i = 0; i < 10; i++) {
+		  ArrayList<DataStructures.Comparison> array= new ArrayList<DataStructures.Comparison>();
 			
-			HashMap<Integer, ArrayList<DataStructures.Comparison>> hashA = new HashMap<Integer, ArrayList<DataStructures.Comparison>>();
-			hashA.put(0, array);
-			deep.put(i,hashA);
+			//HashMap<Integer, ArrayList<DataStructures.Comparison>> hashA = new HashMap<Integer, ArrayList<DataStructures.Comparison>>();
+			//hashA.put(0, null);
+			deep.put(i,array);
 		}
 		HashMap<Integer, ArrayList<DataStructures.Comparison>> hashB;
 		HashMap<Integer, ArrayList<DataStructures.Comparison>> hashA;
-		int i=0;
+		//int i=0;
 		for ( AbstractBlock b:blocks) {
 			
 			if(b!=null){
@@ -47,26 +53,30 @@ public class blockHash {
 					
 					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),names);
 					c.sim=sim;
-					hashA=deep.get(((int)Math.floor(sim*10)));
-					if(hashA!=null){
-						ArrayList<DataStructures.Comparison> a= hashA.get(i);
-						if(a==null){
-							ArrayList<DataStructures.Comparison> array= new ArrayList<DataStructures.Comparison>();
-							array.add(c);
-							hashA.put(i,array);
-						}else{
-							a.add(c);
-							hashA.put(i,a);
-						}
-					}else{
-						ArrayList<DataStructures.Comparison> array= new ArrayList<DataStructures.Comparison>();
-						array.add(c);
-						hashA = new HashMap<Integer, ArrayList<DataStructures.Comparison>>();
-						hashA.put(i, array);
+					//int array;
+					c.teste=b.getBlockIndex();
+					//System.out.println("b.getBlockIndex();  " + b.getBlockIndex());
+					ArrayList<DataStructures.Comparison> array;
+					array=deep.get(((int)Math.floor(sim*10)));
+					if(array!=null){
 						
+						
+						
+							array.add(c);
+							blockNumber[((int)Math.floor(sim*10))]++;
+						//	System.out.println("aqui");
+							deep.put(blockNumber[((int)Math.floor(sim*10))],array);
+							blockSize[((int)Math.floor(sim*10))]++;
+						
+					}else{
+						ArrayList<DataStructures.Comparison> arrayN= new ArrayList<DataStructures.Comparison>();
+						arrayN.add(c);
+						//hashA = new HashMap<Integer, ArrayList<DataStructures.Comparison>>();
+						deep.put(blockNumber[((int)Math.floor(sim*10))]++, array);
+						blockSize[((int)Math.floor(sim*10))]++;
 					}
 					
-					deep.put(((int)Math.floor(sim*10)), hashA);
+					//deep.put(((int)Math.floor(sim*10)), hashA);
 					//if((deep.get(((int)Math.ceil(sim*10))))==null){
 						
 					//}
@@ -77,7 +87,7 @@ public class blockHash {
 				}
 				
 			}
-			i++;
+			
 		}
 //		int count=0;
 //		for(Integer e: deep.keySet()){
@@ -95,7 +105,7 @@ public class blockHash {
 		
 		//ArrayList<DataStructures.Comparison> x = deep.get(1).get(1);
 		
-	//	System.out.println("*****************" +count);
+		System.out.println("*****************" +blockSize[0]);
 		//blocks.get(0);
 		
 	}

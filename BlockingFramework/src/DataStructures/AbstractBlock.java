@@ -66,8 +66,7 @@ public abstract class AbstractBlock implements Serializable {
             if (!adp.isSuperfluous(comparison)) {
                 noOfComparisons++;
             }
-        }
-        
+        }        
         return noOfComparisons;
     }
     
@@ -85,9 +84,8 @@ public abstract class AbstractBlock implements Serializable {
         }
         Collections.shuffle(comparisons);//#############
         return comparisons;
-    }
-   
+    }   
     
-    public abstract double getTotalBlockAssignments();
+    public abstract double getTotalBlockAssignments();    
     public abstract void setUtilityMeasure();
 }

@@ -18,6 +18,7 @@ import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
 import DataStructures.AbstractBlock;
+import DataStructures.EntityIndex;
 import DataStructures.EntityProfile;
 import DataStructures.IdDuplicates;
 import SupervisedMetablocking.SupervisedCNP;
@@ -75,10 +76,10 @@ public class SupervisedMetablocking {
 
 		RandomForest rf= new RandomForest();
 		rf.setNumTrees(10);
-		
-		
+
+
 		J48 j48 = new J48();
-		j48.setMinNumObj(5);
+		j48.setMinNumObj(2);
 		j48.setConfidenceFactor((float) 0.05);
 
 		LibSVM libSVM=new LibSVM();
@@ -88,47 +89,47 @@ public class SupervisedMetablocking {
 		smo.setC(9.0);
 
 		BayesNet bayesNet = new BayesNet();
-		
+
 		LibSVM sv = new LibSVM();
 		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
 		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
 		//sv.setCost(2);
-		
-		
-		
-		
-//		svm_parameter param;
-//		param = new svm_parameter();
-//		
-//		param=	get_grid(param);
-//		// default values
-//		
-//		sv.setGamma(param.gamma);
-//		sv.setCost(param.C);
-	
-		
-	//	svm_problem prob = new svm_problem();
-		
+
+
+
+
+		//		svm_parameter param;
+		//		param = new svm_parameter();
+		//		
+		//		param=	get_grid(param);
+		//		// default values
+		//		
+		//		sv.setGamma(param.gamma);
+		//		sv.setCost(param.C);
+
+
+		//	svm_problem prob = new svm_problem();
+
 		//String options = ( "-S 0 -K 0 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1" );
 		//String[] optionsArray = options.split( " " );
-//		try {
-//			sv.setOptions(optionsArray);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			sv.setOptions(optionsArray);
+		//		} catch (Exception e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 		//classifiers[3].setOptions( optionsArray );
 
 		Classifier[] classifiers = new Classifier[4];
 		classifiers[0] =naiveBayes;// naiveBayes;
 		classifiers[1] = smo;
-		        //classifiers[2] = sv;
-		        classifiers[2] = j48;
-		        classifiers[3] = rf;
+		//classifiers[2] = sv;
+		classifiers[2] = j48;
+		classifiers[3] = rf;
 		return classifiers;
 	}
-	
-	
+
+
 	public static svm_parameter get_grid(svm_parameter param) {
 		PrintWriter out =null;
 		BufferedReader in=null;
@@ -160,7 +161,7 @@ public class SupervisedMetablocking {
 						System.out.println("valor c  " + param.C + "  " + param.gamma);
 						return param;
 					}
-					
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -175,69 +176,69 @@ public class SupervisedMetablocking {
 		//the blocks are constructed on the fly
 		System.out.println( System.getProperty("user.home"));
 		///home/guilhermedb/Dropbox/blocagem/bases/base_clean_serializada
-//		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
-//		//String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-//		String[] profilesPath = { 
-//				mainDirectory+"/dblp",
-//				mainDirectory+"/scholar"};
-//		//mainDirectory+"/dataset1_imdb",
-//	//	mainDirectory+"/dataset1_dbpedia"};
-//
-//		String[] groundTruthPath = { mainDirectory+ "/groundtruth"};  
-		
-		
-		
-			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//	
-		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
-	        String[] profilesPath = {   
-	                                  mainDirectory+"/50Kprofiles"
-	                                  
-	        };
-	        
-	        String[] groundTruthPath = {   
-	                                     mainDirectory+"/50KIdDuplicates"
-	        };
-		
-		
-		
+		//		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
+		//		//String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
+		//		String[] profilesPath = { 
+		//				mainDirectory+"/dblp",
+		//				mainDirectory+"/scholar"};
+		//		//mainDirectory+"/dataset1_imdb",
+		//	//	mainDirectory+"/dataset1_dbpedia"};
+		//
+		//		String[] groundTruthPath = { mainDirectory+ "/groundtruth"};  
 
-//		String mainDirectory = "/home/guilherme/Transferências/";
-//	        String[] profilesPath = {   
-//	                                  mainDirectory+"/1Mprofiles"
-//	                                  
-//	        };
-//	        
-//	        String[] groundTruthPath = {   
-//	                                     mainDirectory+"/1MIdDuplicates"
-//	        };
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//	
+		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
+		String[] profilesPath = {   
+				mainDirectory+"/50Kprofiles"
+
+		};
+
+		String[] groundTruthPath = {   
+				mainDirectory+"/50KIdDuplicates"
+		};
+
+
+
+
+		//		String mainDirectory = "/home/guilherme/Transferências/";
+		//	        String[] profilesPath = {   
+		//	                                  mainDirectory+"/1Mprofiles"
+		//	                                  
+		//	        };
+		//	        
+		//	        String[] groundTruthPath = {   
+		//	                                     mainDirectory+"/1MIdDuplicates"
+		//	        };
+
+
+
 		//String[] groundTruthPath = {  System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_scholar_gab/groundtruth"	};
 
-	//	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies";
-	//	String[] profilesPath = { 
-	//			mainDirectory+"/dataset"};
-	//	String[] groundTruthPath = {  System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies/groundtruth"	};
+		//	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies";
+		//	String[] profilesPath = { 
+		//			mainDirectory+"/dataset"};
+		//	String[] groundTruthPath = {  System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies/groundtruth"	};
 		//        String[] indexDirs = {"/media/guilherme/SAMSUNG/base/bases_scholar_original1/",
 		//        "/media/guilherme/SAMSUNG/base/bases_scholar_original2/"};
 		//    String duplicatesPath =  "/media/guilherme/SAMSUNG/base/base_scholar_gab";
@@ -253,44 +254,42 @@ public class SupervisedMetablocking {
 		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath[0]);
 		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
 
-		
-		
-//
+
+
+		//
 		List<EntityProfile>[] profiles ;
-//		if(profilesPath.length>1){
-//			profiles = new List[2];
-//			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[0]);
-//			profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[1]);
-//		}else
+		//		if(profilesPath.length>1){
+		//			profiles = new List[2];
+		//			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[0]);
+		//			profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[1]);
+		//		}else
 		{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[0]);
 		}
-			
-		
-//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
+
+
+		//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
 		TokenBlocking imtb = new TokenBlocking(profiles);
 		List<AbstractBlock> blocks = imtb.buildBlocks();
-		
+
 		//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 		//sbb.applyProcessing(blocks);
-		
+
 		AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 		blockPurging.applyProcessing(blocks);
-		
+
 		int num_blocks=0;
 		for ( AbstractBlock b:blocks) {
 			if(b!=null){
 				num_blocks+=b.getNoOfComparisons();
-			
+
 			}
 		}
 		System.out.println(" blocks --> "+ num_blocks);
-		
+
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
-		
-		
-		blockHash.produceHash(blocks,ebc);
+
 		//            System.out.println("\n\n\n\n\n======================= Supervised CEP =======================");
 		Classifier[] classifiers = getSupervisedCepClassifiers();
 		//            SupervisedCEP scep = new SupervisedCEP(classifiers.length, blocks, duplicatePairs);
@@ -299,64 +298,68 @@ public class SupervisedMetablocking {
 		//            }
 		//            scep.printStatistics();
 		//
-//		            System.out.println("\n\n\n\n\n======================= Supervised CNP =======================");
-//		            classifiers = getSupervisedCnpClassifiers();
-//		            SupervisedCNP scnp = new SupervisedCNP(classifiers.length, blocks, duplicatePairs);
-//		            for (int j = 0; j < 5; j++) {
-//		                scnp.applyProcessing(j, classifiers, ebc);
-////		                BlockStatistics blockStats = new BlockStatistics(blocks, new BilateralDuplicatePropagation(mainDirectory+ "/groundtruth"));
-////		     		   double teste[]=blockStats.applyProcessing();
-////		     		   System.out.println("------------" +teste[0] + "  "+ teste[1] + "  "+ teste[0]);
-//		            }
-//		            scnp.printStatistics();
-		    
+		//		            System.out.println("\n\n\n\n\n======================= Supervised CNP =======================");
+		//		            classifiers = getSupervisedCnpClassifiers();
+		//		            SupervisedCNP scnp = new SupervisedCNP(classifiers.length, blocks, duplicatePairs);
+		//		            for (int j = 0; j < 5; j++) {
+		//		                scnp.applyProcessing(j, classifiers, ebc);
+		////		                BlockStatistics blockStats = new BlockStatistics(blocks, new BilateralDuplicatePropagation(mainDirectory+ "/groundtruth"));
+		////		     		   double teste[]=blockStats.applyProcessing();
+		////		     		   System.out.println("------------" +teste[0] + "  "+ teste[1] + "  "+ teste[0]);
+		//		            }
+		//		            scnp.printStatistics();
+
 		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"));
 		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"));
 		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"));
 		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"));
-		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
+
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
+
+		//new EntityIndex(blocks).enumerateBlocks(blocks);;
+		swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
+		blockHash.produceHash(blocks, ebc);
 		
-		
+		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		//int i=1;
 		for (int i = 1; i <= 5;i++)
 		{
-			
-		int tamanho = 5;
-		while(tamanho <=1000)
-		{
-			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs);
-			writer1.write("level "+tamanho +"\n");
-			writer2.write("level "+tamanho +"\n");
-			writer3.write("level "+tamanho +"\n");
-			writer4.write("level "+tamanho +"\n");
-			for (int j = 0; j < 10; j++) {
-				swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
-				writer1.flush();
-				writer2.flush();
-				writer3.flush();
-				writer4.flush();
+
+			int tamanho = 10;
+			while(tamanho <=1000)
+			{
+				
+				writer1.write("level "+tamanho +"\n");
+				writer2.write("level "+tamanho +"\n");
+				writer3.write("level "+tamanho +"\n");
+				writer4.write("level "+tamanho +"\n");
+				for (int j = 0; j < 10; j++) {
+					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
+					writer1.flush();
+					writer2.flush();
+					writer3.flush();
+					writer4.flush();
+				}
+				swep.printStatistics();
+				//swep.printStatisticsB(writer);
+				System.out.println("size of level : "+ tamanho);
+
+				if(tamanho==5)
+					tamanho=10;
+				else if(tamanho==10)
+					tamanho=50;
+				else if(tamanho==50)
+					tamanho*=2;
+				else if(tamanho==100)
+					tamanho+=100;
+				else if(tamanho==200)
+					tamanho=500;
+				else if( tamanho==500)
+					tamanho=1000;
+				else tamanho*=tamanho;
+
 			}
-			swep.printStatistics();
-			//swep.printStatisticsB(writer);
-			System.out.println("size of level : "+ tamanho);
-			
-			if(tamanho==5)
-				tamanho=10;
-			else if(tamanho==10)
-				tamanho=50;
-			else if(tamanho==50)
-				tamanho*=2;
-			else if(tamanho==100)
-				tamanho+=100;
-			else if(tamanho==200)
-				tamanho=500;
-			else if( tamanho==500)
-				tamanho=1000;
-			else tamanho*=tamanho;
-			
-		}
 		}
 		writer1.close();
 		writer2.close();
