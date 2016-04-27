@@ -279,14 +279,14 @@ public class SupervisedMetablocking {
 		AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 		blockPurging.applyProcessing(blocks);
 
-		int num_blocks=0;
-		for ( AbstractBlock b:blocks) {
-			if(b!=null){
-				num_blocks+=b.getNoOfComparisons();
-
-			}
-		}
-		System.out.println(" blocks --> "+ num_blocks);
+//		int num_blocks=0;
+//		for ( AbstractBlock b:blocks) {
+//			if(b!=null){
+//				num_blocks+=b.getNoOfComparisons();
+//
+//			}
+//		}
+//		System.out.println(" blocks --> "+ num_blocks);
 
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 

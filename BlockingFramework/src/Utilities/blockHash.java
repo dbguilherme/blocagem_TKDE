@@ -103,9 +103,9 @@ public class blockHash {
 //			}
 //		}
 		
-		//ArrayList<DataStructures.Comparison> x = deep.get(1).get(1);
+		ArrayList<DataStructures.Comparison> x = deep.get(0);
 		
-		System.out.println("*****************" +blockSize[0]);
+		System.out.println("*****************" +x.get(x.size()-1).teste);
 		//blocks.get(0);
 		
 	}
