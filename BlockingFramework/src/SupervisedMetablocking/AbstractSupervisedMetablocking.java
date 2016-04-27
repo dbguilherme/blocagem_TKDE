@@ -297,7 +297,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		HashMap<Integer, ArrayList<DataStructures.Comparison>> deep= blockHash.deep;
 		
 		int valores[]=new int[tamanho];
-		while(tentativas>=0 && controle < 9){
+		while(tentativas>=0 && controle < 10){
 			
 			if(tentativas<=0){
 				retorno=0;				
