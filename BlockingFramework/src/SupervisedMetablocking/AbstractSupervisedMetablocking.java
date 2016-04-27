@@ -111,7 +111,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		getStatistics();
 		prepareStatistics();
 		getAttributes();
-		blockHash.produceHash(blocks,ebc);
+		//blockHash.produceHash(blocks,ebc);
 	}
 
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
@@ -624,7 +624,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//Statement st = con.createStatement();
 		String idA,idB = null, block = "";
 		int countP=0,countN=0;
-
+		trainingInstances.clear();
+		sampleMatches.clear();
+		sampleNonMatches.clear();
 		while ((line=br.readLine()) != null) {
 			//System.out.println(line);
 			splitLine=line.split(",");

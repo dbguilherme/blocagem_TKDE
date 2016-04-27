@@ -210,12 +210,12 @@ public class SupervisedMetablocking {
 		//	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 		String[] profilesPath = {   
-				mainDirectory+"/50Kprofiles"
+				mainDirectory+"/10Kprofiles"
 
 		};
 
 		String[] groundTruthPath = {   
-				mainDirectory+"/50KIdDuplicates"
+				mainDirectory+"/10KIdDuplicates"
 		};
 
 
@@ -318,16 +318,16 @@ public class SupervisedMetablocking {
 		SupervisedWEP swep;
 
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;
-		swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
-		blockHash.produceHash(blocks, ebc);
+		
 		
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		//int i=1;
-		for (int i = 1; i <= 5;i++)
+		for (int i = 1; i <= 2;i++)
 		{
-
+			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
+			blockHash.produceHash(blocks, ebc);
 			int tamanho = 10;
-			while(tamanho <=1000)
+			while(tamanho <=100)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
@@ -345,19 +345,21 @@ public class SupervisedMetablocking {
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
 
-				if(tamanho==5)
-					tamanho=10;
-				else if(tamanho==10)
-					tamanho=50;
-				else if(tamanho==50)
-					tamanho*=2;
-				else if(tamanho==100)
-					tamanho+=100;
-				else if(tamanho==200)
-					tamanho=500;
-				else if( tamanho==500)
-					tamanho=1000;
-				else tamanho*=tamanho;
+				tamanho=tamanho+10;
+//				if(tamanho==5)
+//					tamanho=10;
+//				else if(tamanho==10)
+//					
+//					tamanho=50;
+//				else if(tamanho==50)
+//					tamanho*=2;
+//				else if(tamanho==100)
+//					tamanho+=100;
+//				else if(tamanho==200)
+//					tamanho=500;
+//				else if( tamanho==500)
+//					tamanho=1000;
+//				else tamanho*=tamanho;
 
 			}
 		}

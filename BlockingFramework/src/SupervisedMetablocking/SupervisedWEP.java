@@ -160,17 +160,17 @@ int count=0;
         try {
         	if(classifierId==0){
         		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(iteration) +  " samplesNMatch "+  sampleNonMatches.get(iteration) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
         		//armazena++;
         	}else
         	if(classifierId==1){
         		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(iteration) +  " samplesNMatch "+  sampleNonMatches.get(iteration) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
         		//armazena++;
         	}else
         	if(classifierId==2){
         		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer3.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(iteration) +  " samplesNMatch "+  sampleNonMatches.get(iteration) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+        		writer3.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
         		armazena++;
         	}
 //        	else
