@@ -82,7 +82,7 @@ public abstract class AbstractBlock implements Serializable {
             Comparison comparison = iterator.next();
             comparisons.add(comparison);
         }
-        Collections.shuffle(comparisons);//#############
+       // Collections.shuffle(comparisons);//#############
         return comparisons;
     }   
     

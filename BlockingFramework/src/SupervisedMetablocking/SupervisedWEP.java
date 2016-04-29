@@ -86,7 +86,7 @@ int count=0;
                   //  continue;
                 }
 
-                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison);
+                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0);
                 int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
                 if (instanceLabel == DUPLICATE) {
                 	count++;
