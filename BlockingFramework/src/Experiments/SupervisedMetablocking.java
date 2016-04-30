@@ -120,12 +120,12 @@ public class SupervisedMetablocking {
 		//		}
 		//classifiers[3].setOptions( optionsArray );
 
-		Classifier[] classifiers = new Classifier[4];
+		Classifier[] classifiers = new Classifier[3];
 		classifiers[0] =naiveBayes;// naiveBayes;
-		classifiers[1] = smo;
+	//	classifiers[1] = smo;
 		//classifiers[2] = sv;
-		classifiers[2] = j48;
-		classifiers[3] = rf;
+		classifiers[1] = j48;
+		classifiers[2] = rf;
 		return classifiers;
 	}
 
@@ -210,12 +210,12 @@ public class SupervisedMetablocking {
 		//	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 		String[] profilesPath = {   
-				mainDirectory+"/50Kprofiles"
+				mainDirectory+"/10Kprofiles"
 
 		};
 
 		String[] groundTruthPath = {   
-				mainDirectory+"/50KIdDuplicates"
+				mainDirectory+"/10KIdDuplicates"
 		};
 
 
@@ -326,7 +326,7 @@ public class SupervisedMetablocking {
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
+			int tamanho = 20;
 			while(tamanho <=100)
 			{
 				
@@ -340,12 +340,17 @@ public class SupervisedMetablocking {
 					writer2.flush();
 					writer3.flush();
 					writer4.flush();
+					//System.in.read(arg0, arg1, arg2)
 				}
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
-
-				tamanho=tamanho+10;
+				if(tamanho==5)
+					tamanho+=5;
+				else if(tamanho==10)
+					tamanho+=10;
+				else
+					tamanho+=20;
 //				if(tamanho==5)
 //					tamanho=10;
 //				else if(tamanho==10)

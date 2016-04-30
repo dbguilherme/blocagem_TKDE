@@ -69,7 +69,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     public SupervisedWEP (int noOfClassifiers, List<AbstractBlock> bls, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
         super (noOfClassifiers, bls, duplicatePairs,ebc);
     }
-int count=0;
+    int count=0;
     @Override
     protected void applyClassifier(Classifier classifier) throws Exception {
         for (AbstractBlock block : blocks) {
@@ -230,12 +230,12 @@ int count=0;
 	             if (areMatching(comparison)) {
 	                 label="true";
 	             }
-//	            try {
-//					FileUtilities.save_data_db(sA[0], sB[0],concatStringA,concatStringB, ebc.getSImilarity(entityIds1[i1],entityIds2[i1]),label,con, pstxt);
-//				} catch (FileNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+	            try {
+	            	pstxt.print(concatStringA +": "+ ebc.getSImilarity(entityIds1[i1],entityIds2[i1])+ ": "+ concatStringB +" :"+label);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 //          	try {
 //  				load_data_db(entityIds1[i1], entityIds2[i1],st);
 //  			} catch (SQLException e) {

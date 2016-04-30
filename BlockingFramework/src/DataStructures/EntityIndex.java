@@ -76,10 +76,12 @@ public class EntityIndex implements Serializable {
                 }
 
                 if (blocks1[i] == blocks2[j]) {
-                    if (!firstCommonIndex) {
+                    if (!firstCommonIndex) 
+                    {
                         firstCommonIndex = true;
                         if (blocks1[i] != blockIndex) {
-                        	//System.out.println("blockIndex "+ blockIndex+ " "+ blocks1[i]);
+                        	 
+                        		
                             return null;
                         }
                     }
@@ -87,7 +89,12 @@ public class EntityIndex implements Serializable {
                 }
             }
         }
-        
+//        if(comparison.sim>=0.0){
+//    		for (int j2 = 0; j2 < blocks2.length && j2 < blocks1.length; j2++) {
+//    			System.out.println("certo blockIndex "+ blocks1[j2]+ " "+ blocks2[j2] + " " + indices.size());
+//			}
+//    		System.out.println("*******************");
+//        }
         return indices;
     }
     
