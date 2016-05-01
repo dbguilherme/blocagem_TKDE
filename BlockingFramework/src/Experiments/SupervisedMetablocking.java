@@ -210,12 +210,12 @@ public class SupervisedMetablocking {
 		//	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 		String[] profilesPath = {   
-				mainDirectory+"/10Kprofiles"
+				mainDirectory+"/50Kprofiles"
 
 		};
 
 		String[] groundTruthPath = {   
-				mainDirectory+"/10KIdDuplicates"
+				mainDirectory+"/5te0KIdDuplicates"
 		};
 
 
@@ -326,7 +326,7 @@ public class SupervisedMetablocking {
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 20;
+			int tamanho = 10;
 			while(tamanho <=100)
 			{
 				

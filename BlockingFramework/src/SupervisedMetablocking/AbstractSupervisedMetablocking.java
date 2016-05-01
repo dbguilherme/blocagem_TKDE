@@ -670,7 +670,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 		
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 			
 		
 		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
@@ -697,11 +697,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//					countN++;
 			//			}
 			//	rs.close();
-			//if(i==0 && label.equals("true")){
+			if(i==0 && label.equals("true")){
 				System.err.println(idA +" " +idB + " " + block);	
 				Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
 				trainingSet.add(comparison);
-				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
 					
 				if(commonBlockIndices!=null){	
 					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
@@ -711,23 +711,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					else
 						countN++;		
 				}
-			//}
+			}
 //			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-//			if(i==1 && label.equals("false") && countN<countP){
-//				System.err.println(idA +" " +idB + " " + block);	
-//				Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-//				trainingSet.add(comparison);
-//				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-//					
-//				if(commonBlockIndices!=null){	
-//					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-//					trainingInstances.add(newInstance);
-//					if(label.toLowerCase().contains("true"))
-//						countP++;
-//					else
-//						countN++;		
-//				}
-//			}
+			if(i==1 && label.equals("false") && countN<countP){
+				System.err.println(idA +" " +idB + " " + block);	
+				 Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+				trainingSet.add(comparison);
+			    List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+					
+				if(commonBlockIndices!=null){	
+					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+					trainingInstances.add(newInstance);
+					if(label.toLowerCase().contains("true"))
+						countP++;
+					else
+						countN++;		
+				}
+			}
 //			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		}
 		}
