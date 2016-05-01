@@ -287,7 +287,7 @@ public class SupervisedMetablocking {
 //				num_blocks+=b.getNoOfComparisons();
 //
 //			}
-//		}
+//		}   
 //		System.out.println(" blocks --> "+ num_blocks);
 
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
