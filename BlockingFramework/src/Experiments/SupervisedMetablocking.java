@@ -215,7 +215,9 @@ public class SupervisedMetablocking {
 		};
 
 		String[] groundTruthPath = {   
+
 				mainDirectory+"/300KIdDuplicates"
+
 		};
 
 
