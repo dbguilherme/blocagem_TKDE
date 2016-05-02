@@ -210,12 +210,14 @@ public class SupervisedMetablocking {
 		//	
 		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 		String[] profilesPath = {   
-				mainDirectory+"/50Kprofiles"
+				mainDirectory+"/300Kprofiles"
 
 		};
 
 		String[] groundTruthPath = {   
-				mainDirectory+"/50KIdDuplicates"
+
+				mainDirectory+"/300KIdDuplicates"
+
 		};
 
 
@@ -285,7 +287,7 @@ public class SupervisedMetablocking {
 //				num_blocks+=b.getNoOfComparisons();
 //
 //			}
-//		}
+//		}   
 //		System.out.println(" blocks --> "+ num_blocks);
 
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
@@ -326,7 +328,9 @@ public class SupervisedMetablocking {
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
+
 			int tamanho = 50;
+
 			while(tamanho <=1000)
 			{
 				
@@ -345,7 +349,11 @@ public class SupervisedMetablocking {
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
+
 	/*			if(tamanho==5)
+=======
+		/*		if(tamanho==5)
+>>>>>>> 5daee64caf8372bbedaf6014f6bc6e66f2535586
 					tamanho+=5;
 				else if(tamanho==10)
 					tamanho+=10;
