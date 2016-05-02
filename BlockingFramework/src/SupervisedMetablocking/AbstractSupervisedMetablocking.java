@@ -284,12 +284,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		System.out.println("linha 260");
 
 		
-		Collections.sort(blocks, new Comparator<AbstractBlock>() {
-			public int compare(AbstractBlock c1, AbstractBlock c2) {
-				if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
-				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
-				return 0;
-			}});
+//		Collections.sort(blocks, new Comparator<AbstractBlock>() {
+//			public int compare(AbstractBlock c1, AbstractBlock c2) {
+//				if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
+//				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
+//				return 0;
+//			}});
 		//Collections.shuffle(blocks);
 		
 		//
@@ -379,9 +379,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 									//break;
 								}
 								break;
-							}else
-								continue;
-							
+							}						
 							
 						}
 						
