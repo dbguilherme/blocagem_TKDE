@@ -176,15 +176,15 @@ public class SupervisedMetablocking {
 		//the blocks are constructed on the fly
 		System.out.println( System.getProperty("user.home"));
 		///home/guilhermedb/Dropbox/blocagem/bases/base_clean_serializada
-		//		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
+				String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
 		//		//String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-		//		String[] profilesPath = { 
-		//				mainDirectory+"/dblp",
-		//				mainDirectory+"/scholar"};
-		//		//mainDirectory+"/dataset1_imdb",
-		//	//	mainDirectory+"/dataset1_dbpedia"};
-		//
-		//		String[] groundTruthPath = { mainDirectory+ "/groundtruth"};  
+				String[] profilesPath = { 
+						mainDirectory+"/dblp",
+						mainDirectory+"/scholar"};
+				//mainDirectory+"/dataset1_imdb",
+			//	mainDirectory+"/dataset1_dbpedia"};
+		
+				String[] groundTruthPath = { mainDirectory+ "/groundtruth"};  
 
 
 
@@ -208,15 +208,15 @@ public class SupervisedMetablocking {
 
 
 		//	
-		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
-		String[] profilesPath = {   
-				mainDirectory+"/10Kprofiles"
-
-		};
-
-		String[] groundTruthPath = {   
-				mainDirectory+"/10KIdDuplicates"
-		};
+	//		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
+	//		String[] profilesPath = {   
+	//				mainDirectory+"/10Kprofiles"
+	//
+	//		};
+	//
+	//		String[] groundTruthPath = {   
+	//				mainDirectory+"/10KIdDuplicates"
+	//		};
 
 
 
