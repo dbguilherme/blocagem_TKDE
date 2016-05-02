@@ -407,7 +407,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 
 			//	System.out.println("apagar---> "+ lixo);
-			//	lixo=0;
+			//	lixo=0;   
 			
 			}
 		//}
