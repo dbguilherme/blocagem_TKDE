@@ -284,12 +284,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		System.out.println("linha 260");
 
 		
-//		Collections.sort(blocks, new Comparator<AbstractBlock>() {
-//			public int compare(AbstractBlock c1, AbstractBlock c2) {
-//				if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
-//				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
-//				return 0;
-//			}});
+		Collections.sort(blocks, new Comparator<AbstractBlock>() {
+			public int compare(AbstractBlock c1, AbstractBlock c2) {
+				if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
+				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
+				return 0;
+			}});
 		//Collections.shuffle(blocks);
 		
 		//
@@ -300,44 +300,45 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		System.out.println("time da contagem "+ deltaTime);
 		
 		int controle=-1;
-		PrintStream pstxt_level = null;
-		PrintStream psarff_level= null;
+		PrintStream pstxt_level[] = new PrintStream[10];
+		PrintStream psarff_level[]= new PrintStream[10];
 		int j=1,l=0;
 		int retorno=0;
 		int tentativas=3;
 		//HashMap<Integer, ArrayList<DataStructures.Comparison>> deep= blockHash.deep;
 		
 		//int valores[]=new int[tamanho];
+		for (int i = 0; i < 10; i++) {
+			try {
+				pstxt_level[i] = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+i+"D.txt"),false));
+				psarff_level[i] = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+i+".arff"),false));
+				psarff_level[i].println("@relation whatever");
+				for (int k = 0; k < trainingInstances.numAttributes()-1 ; k++) {					
+					psarff_level[i].println("@attribute "+k+" numeric");			
+				}		
+				psarff_level[i].println("@attribute classe {0,1}");
+				psarff_level[i].println("@data");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
 		
-		
-		while(tentativas>=0 && controle < 9){
+		while(tentativas>=0 && controle < 0)
+		{
 			
 			if(tentativas<=0){
 				retorno=0;				
 			}
-			
 			if(retorno==0){
 				controle++;
 				retorno=-1;
 				tentativas=0;
 				if(Nblocks[controle]==0)
 					continue;
-				System.out.println("controle   " + controle);
-				try {
-					pstxt_level = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+controle+"D.txt"),false));
-					psarff_level = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+controle+".arff"),false));
-					psarff_level.println("@relation whatever");
-					for (int i = 0; i < trainingInstances.numAttributes()-1 ; i++) {
-						psarff_level.println("@attribute "+i+" numeric");			
-					}		
-					psarff_level.println("@attribute classe {0,1}");
-					psarff_level.println("@data");
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				}
+			//	System.out.println("controle   " + controle);
 			}else
 				tentativas--;
-			
 				System.out.println("zerou os blocks " + j + " tentativas "+ tentativas +  "  avaliações " +l);
 				j=1;
 				l=0;  
@@ -358,21 +359,33 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						
 						if(comparison.sim==0.0)
 							comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
-						if(comparison.sim>= ((double)controle*0.1) && comparison.sim<= ((double)(controle+1)*0.1)){	
-							l++;
-							int temp=random.nextInt(Nblocks[controle]);
-							if(temp>tamanho){
-							//	lixo++;
-								//if(lixo%1000==0)
-								//if(controle==4)
-								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
+					
+						for (int k = 0; k < 10; k++) {
+							if(comparison.sim>= ((double)k*0.1) && comparison.sim<= ((double)(k+1)*0.1)){	
+								l++;
+								int temp=random.nextInt(Nblocks[k]);
+								if(temp>tamanho){
+								//	lixo++;
+									//if(lixo%1000==0)
+									//if(controle==4)
+									//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
+									continue;
+								}
+//								if(controle==4)
+//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
+								if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,k))<=0){
+									//pstxt_level.close();
+									//psarff_level.close();
+									//break;
+								}
+								break;
+							}else
 								continue;
-							}
-//							if(controle==4)
-//								System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-
-						}else
-							continue;
+							
+							
+						}
+						
+						
 						
 					
 						
@@ -391,11 +404,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //							continue;
 //						}
 						//System.out.println("¨¨¨¨¨¨¨" + comparison.teste + " " + comparison.getEntityId1() +" " + comparison.getEntityId2() );
-						if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,Nblocks))<=0){
-							//pstxt_level.close();
-							//psarff_level.close();
-							//break;
-						}
+					
 					}
 				}
 
@@ -406,7 +415,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//}
 		pstxt.close();
 		psarff.close();
-
+		for (int m = 0; m < 10; m++) {
+			pstxt_level[m].close();
+			psarff_level[m].close();
+		}
 		try {
 			DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
 			callGeraBins();
@@ -414,7 +426,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			e1.printStackTrace();
 		}
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 8; i >=0; i--) {
 			//if(i>3 && i<6)
 			//	continue;
 			System.out.println("chamando allac " + i	);
@@ -670,7 +682,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 		
-		for (int i = 0; i < 2; i++) {
+		//for (int i = 0; i < 2; i++) {
 			
 		
 		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
@@ -697,23 +709,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//					countN++;
 			//			}
 			//	rs.close();
-			if(i==0 && label.equals("true")){
-				System.err.println(idA +" " +idB + " " + block);	
-				Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-				trainingSet.add(comparison);
-				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-					
-				if(commonBlockIndices!=null){	
-					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-					trainingInstances.add(newInstance);
-					if(label.toLowerCase().contains("true"))
-						countP++;
-					else
-						countN++;		
-				}
-			}
+//			if(i==0 && label.equals("true")){
+//				System.err.println(idA +" " +idB + " " + block);	
+//				Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+//				trainingSet.add(comparison);
+//				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+//					
+//				if(commonBlockIndices!=null){	
+//					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+//					trainingInstances.add(newInstance);
+//					if(label.toLowerCase().contains("true"))
+//						countP++;
+//					else
+//						countN++;		
+//				}
+//			}
 //			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-			if(i==1 && label.equals("false") && countN<countP){
+		//	if(i==1 && label.equals("false") && countN<countP){
 				System.err.println(idA +" " +idB + " " + block);	
 				 Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
 				trainingSet.add(comparison);
@@ -729,8 +741,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 			}
 //			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-		}
-		}
+	//	}
+	//	}
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		sampleMatches.add((double) countP);///positivos
 		sampleNonMatches.add((double) (countN)); //negativos
@@ -741,7 +753,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	int last_block=0;
 	//int lixo=0;
 	//Random random=new Random();
-	private int getLevels(Comparison comparison, ExecuteBlockComparisons ebc, int i, PrintStream pstxt, PrintStream psarff, PrintStream pstxt_level, PrintStream psarff_level, double nonMatchRatio, double tamanho, int controle, String[] names, int[] perc) throws FileNotFoundException {
+	private int getLevels(Comparison comparison, ExecuteBlockComparisons ebc, int i, PrintStream pstxt, PrintStream psarff, PrintStream[] pstxt_level, PrintStream[] psarff_level, double nonMatchRatio, double tamanho, int controle, String[] names, int k) throws FileNotFoundException {
 		String concatStringA;
 		String concatStringB;
 		int flag=1;
@@ -831,13 +843,16 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 					for (int j = 0; j < newInstanceTemp.numAttributes()-1; j++) {
 						psarff.print((newInstanceTemp.value(j)) + ", ");
-						psarff_level.print((newInstanceTemp.value(j)) + ", ");
+						psarff_level[k].print((newInstanceTemp.value(j)) + ", ");
 					}
 					psarff.println(newInstanceTemp.value(newInstanceTemp.numAttributes()-1)==1.0?1:0);
-					psarff_level.println(newInstanceTemp.value(newInstanceTemp.numAttributes()-1)==1.0?1:0);
+					psarff_level[k].println(newInstanceTemp.value(newInstanceTemp.numAttributes()-1)==1.0?1:0);
 					///////////    	
-					FileUtilities.save_data_db( String.valueOf(i), sB[0],concatStringA,concatStringB, sim,label,null,pstxt,pstxt_level, psarff_level  );
-
+					//FileUtilities.save_data_db( String.valueOf(i), sB[0],concatStringA,concatStringB, sim,label,null,pstxt,pstxt_level, psarff_level,k  );
+					pstxt.println(concatStringA +","+sim+ ", " +concatStringB+ ","+label+ " ,"+String.valueOf(i));
+					pstxt_level[k].println(concatStringA +","+sim+ ", " +concatStringB+ ","+label+ " ,"+String.valueOf(i));
+					pstxt_level[k].flush();
+					pstxt.flush();
 					//	if(ele)
 					elements[controle]++;
 					//System.out.println("controle " + controle + " --> element "+elements[controle]);

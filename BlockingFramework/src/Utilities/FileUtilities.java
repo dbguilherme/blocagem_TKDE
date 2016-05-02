@@ -44,39 +44,39 @@ public class FileUtilities {
         return lines;
     }
     
-    public static void save_data_db(String idA, String idB, String recA, String recB, double d, String label, Connection con, PrintStream pstxt, PrintStream pstxt_level, PrintStream psarff_level) throws FileNotFoundException  {
-    	//System.out.println("salvando dados " +idA +" "+ idB);
-//		PreparedStatement preparedStatement = null;
-//		try	{
-//			preparedStatement=con.prepareStatement("insert into   base_scholar_clear (idA,idB,recA,similarity,recB,label) values (?,?,?,?,?,?);");
-//		}catch(SQLException ex){
-//			ex.printStackTrace();
-//		}
-		//while (buf.ready()){
-		//	String temp = buf.readLine();
-			
-//			try{
-//			//	String[] text_split=temp.split(";");
-//				//System.out.println(text_split[0].split(":")[2]);
-//				preparedStatement.setInt(1, Integer.parseInt(idA));
-//				preparedStatement.setInt(2,Integer.parseInt(idB));
-//				preparedStatement.setString(3,recA);
-//				preparedStatement.setDouble(4, d);
-//				preparedStatement.setString(5,recB);
-//				preparedStatement.setString(6,label);
-//				preparedStatement.execute();
-//				
-//			}catch(SQLException ex){
-//				ex.printStackTrace();	
-//			}
-	//	} 		
-		
-			
-			///save file
-			//System.out.println(recA +","+d+ ", " +recB+ ","+label);
-			pstxt.println(recA +","+d+ ", " +recB+ ","+label+ " ,"+idA);
-			pstxt_level.println(recA +","+d+ ", " +recB+ ","+label+ " ,"+idA);
-			pstxt_level.flush();
-			pstxt.flush();
-	}
+//    public static void save_data_db(String idA, String idB, String recA, String recB, double d, String label, Connection con, PrintStream pstxt, PrintStream pstxt_level, PrintStream psarff_level) throws FileNotFoundException  {
+//    	//System.out.println("salvando dados " +idA +" "+ idB);
+////		PreparedStatement preparedStatement = null;
+////		try	{
+////			preparedStatement=con.prepareStatement("insert into   base_scholar_clear (idA,idB,recA,similarity,recB,label) values (?,?,?,?,?,?);");
+////		}catch(SQLException ex){
+////			ex.printStackTrace();
+////		}
+//		//while (buf.ready()){
+//		//	String temp = buf.readLine();
+//			
+////			try{
+////			//	String[] text_split=temp.split(";");
+////				//System.out.println(text_split[0].split(":")[2]);
+////				preparedStatement.setInt(1, Integer.parseInt(idA));
+////				preparedStatement.setInt(2,Integer.parseInt(idB));
+////				preparedStatement.setString(3,recA);
+////				preparedStatement.setDouble(4, d);
+////				preparedStatement.setString(5,recB);
+////				preparedStatement.setString(6,label);
+////				preparedStatement.execute();
+////				
+////			}catch(SQLException ex){
+////				ex.printStackTrace();	
+////			}
+//	//	} 		
+//		
+//			
+//			///save file
+//			//System.out.println(recA +","+d+ ", " +recB+ ","+label);
+//			pstxt.println(recA +","+d+ ", " +recB+ ","+label+ " ,"+idA);
+//			pstxt_level.println(recA +","+d+ ", " +recB+ ","+label+ " ,"+idA);
+//			pstxt_level.flush();
+//			pstxt.flush();
+//	}
 }
