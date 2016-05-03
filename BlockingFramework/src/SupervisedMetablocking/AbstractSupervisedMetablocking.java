@@ -324,7 +324,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			
 		}
 		
-		while(tentativas>=0 && controle < 0)
+		while(tentativas>=0 && controle < 9)
 		{
 			
 			if(tentativas<=0){
@@ -360,10 +360,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						if(comparison.sim==0.0)
 							comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
 					
-						for (int k = 0; k < 10; k++) {
-							if(comparison.sim>= ((double)k*0.1) && comparison.sim<= ((double)(k+1)*0.1)){	
+						//for (int k = 0; k < 10; k++) {
+							if(comparison.sim>= ((double)controle*0.1) && comparison.sim<= ((double)(controle+1)*0.1)){	
 								l++;
-								int temp=random.nextInt(Nblocks[k]);
+								int temp=random.nextInt(Nblocks[controle]);
 								if(temp>tamanho){
 								//	lixo++;
 									//if(lixo%1000==0)
@@ -373,20 +373,20 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 								}
 //								if(controle==4)
 //									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-								if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,k))<=0){
+								if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,controle,names,controle))<=0){
 									//pstxt_level.close();
 									//psarff_level.close();
 									//break;
 								}
 								break;
-							}						
+							//}						
 							
 						}
 						
 						
 						
 					
-						    dfvsdfsd
+						    
 						
 						
 					
