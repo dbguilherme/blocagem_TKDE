@@ -80,6 +80,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected double[] comparisonsPerBlock;
 	protected double[] nonRedundantCPE;
 	protected double[] redundantCPE;
+	//protected int[] Nblocks;
 
 	protected Attribute classAttribute;
 	protected ArrayList<Attribute> attributes;
@@ -121,11 +122,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected abstract void savePairs(int i, ExecuteBlockComparisons ebc);
 	protected abstract int getCount();
 
-	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3, BufferedWriter writer4, int r) throws Exception {
+	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3, BufferedWriter writer4, int r, int[] nblocks) throws Exception {
 		elements=new int[10];
 
-
-		getTrainingSet_original(iteration,ebc,tamanho,r);
+		getTrainingSet_original(iteration,ebc,tamanho,r,nblocks);
 		//getTrainingSet(iteration,ebc,tamanho);
 		System.out.println(trainingInstances.size() + "  ----- " +temp);
 
@@ -248,7 +248,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 
 	int temp=0;
-	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r) throws FileNotFoundException {
+	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, int[] nblocks) throws FileNotFoundException {
 
 
 
@@ -294,7 +294,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		//
 		long startingTime = System.currentTimeMillis();
-		int Nblocks[]=conta_niveis_hash(blocks,ebc,tamanho);
+		
 		long deltaTime= System.currentTimeMillis()-startingTime;
 
 		System.out.println("time da contagem "+ deltaTime);
@@ -324,7 +324,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		}
 
-		while(tentativas>=0 && controle<=0 ){
+		//while(tentativas>=0 && controle<=0 )
+		{
 			//tentativas--;
 			if(tentativas<=0){
 				retorno=0;				
@@ -365,7 +366,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					{
 						if(comparison.sim>= ((double)level*0.1) && comparison.sim<= ((double)(level+1)*0.1)){	
 							l++;
-							int temp=random.nextInt(Nblocks[level]);
+							int temp=random.nextInt(nblocks[level]);
 							if(temp>tamanho){
 								//	lixo++;
 								//if(lixo%1000==0)
@@ -424,87 +425,32 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	//	int[] primeiroBlock=new int[10];
 
-	private int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
-
-		int[] blockSize=  new int[10];
-		for (int i = 0; i < 10; i++) {
-			blockSize[i]=0;
-			//	primeiroBlock[i]=0;
-		}
-		for ( AbstractBlock b:blocks) {
-
-			if(b!=null){
-				ComparisonIterator comparisonit = b.getComparisonIterator();
-				b.getBlockIndex();
-				while(comparisonit.hasNext()){
-					DataStructures.Comparison c=comparisonit.next();
-
-					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
-					if (commonBlockIndices == null) {
-						continue;
-					}
-
-					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),names);
-					c.sim=sim;
-					blockSize[((int)Math.floor(sim*10))]++;
-
-				}
-
-			}
-
-		}
 
 
-		//
-		for (int i = 0; i < 10; i++) {
-			//	perc[i]=(((double)tamanho)/(blockSize[i]));
-			System.out.println(i + " tamanho do bloco "+  "  " + blockSize[i] );
-			//totalPares += blockHash.blockSize[i];
-		}
-		return blockSize;
 
-		//		int levels[] = new int[10];
-		//		double perc[] = new double[10];
-		//		for (int i = 0; i < levels.length; i++) {
-		//			levels[i]=0;
-		//		}
-		//		for (AbstractBlock abstractBlock : blocks) {
-		//			ComparisonIterator iterator = abstractBlock.getComparisonIterator();
-		//			Comparison comparison;
-		//			while(iterator.hasNext()){			
-		//					 comparison = iterator.next(); 
-		//					 comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);		
-		//					// System.out.println(((int)Math.floor(comparison.sim*10)));
-		//					 levels[((int)Math.ceil(comparison.sim*10))]++;
-		//			}			
-		//		}
-
-	}
-
-
-	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
-
-		int levels[] = new int[10];
-		double perc[] = new double[10];
-		for (int i = 0; i < levels.length; i++) {
-			levels[i]=0;
-		}
-		for (AbstractBlock abstractBlock : blocks) {
-			ComparisonIterator iterator = abstractBlock.getComparisonIterator();
-			Comparison comparison;
-			while(iterator.hasNext()){			
-				comparison = iterator.next(); 
-				comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);		
-				// System.out.println(((int)Math.floor(comparison.sim*10)));
-				levels[((int)Math.floor(comparison.sim*10))]++;
-			}			
-		}
-		for (int i = 0; i < levels.length; i++) {
-			perc[i]=((double)tamanho)/(levels[i]);
-			System.out.println(i + " "+ perc[i] + "  " + levels[i] );
-		}
-		return perc;
-	}
+//	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
+//
+//		int levels[] = new int[10];
+//		double perc[] = new double[10];
+//		for (int i = 0; i < levels.length; i++) {
+//			levels[i]=0;
+//		}
+//		for (AbstractBlock abstractBlock : blocks) {
+//			ComparisonIterator iterator = abstractBlock.getComparisonIterator();
+//			Comparison comparison;
+//			while(iterator.hasNext()){			
+//				comparison = iterator.next(); 
+//				comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);		
+//				// System.out.println(((int)Math.floor(comparison.sim*10)));
+//				levels[((int)Math.floor(comparison.sim*10))]++;
+//			}			
+//		}
+//		for (int i = 0; i < levels.length; i++) {
+//			perc[i]=((double)tamanho)/(levels[i]);
+//			System.out.println(i + " "+ perc[i] + "  " + levels[i] );
+//		}
+//		return perc;
+//	}
 
 	private void callGeraBins() throws IOException {
 		String line;
