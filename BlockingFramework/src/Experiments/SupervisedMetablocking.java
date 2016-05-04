@@ -228,6 +228,7 @@ public class SupervisedMetablocking {
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
 			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";			
+	
 			
 			break;
 		case "2":
