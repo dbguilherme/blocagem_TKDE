@@ -35,7 +35,8 @@ public abstract class AbstractBlock implements Serializable {
     public double comparisons;
     protected int blockIndex;
     protected double utilityMeasure;
-            
+         
+    
     public AbstractBlock() {
         blockIndex = -1;
         utilityMeasure = -1;

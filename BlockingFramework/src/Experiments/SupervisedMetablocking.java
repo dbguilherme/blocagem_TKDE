@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +20,7 @@ import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
 import DataStructures.AbstractBlock;
+import DataStructures.Comparison;
 import DataStructures.EntityIndex;
 import DataStructures.EntityProfile;
 import DataStructures.IdDuplicates;
@@ -330,6 +332,45 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 		}
 
+		List<AbstractBlock> blocks_select = new ArrayList<AbstractBlock>();
+		
+		for (int i = 0; i < blocks.size(); i++) {
+			
+			
+			blocks_select.add(blocks.get(i));
+			if(blocks.get(i).getNoOfComparisons()>2){
+				AbstractBlock b = blocks.get(i);
+				List<Comparison> c = b.getComparisons();
+				
+				for(Comparison com:c){
+					System.out.println("id ---"+ com.getEntityId1()+ " "+ com.getEntityId2());
+					
+				}
+				
+				
+				blocks_select.get(i).comparisons--;
+				
+				b = blocks_select.get(i);
+				c = b.getComparisons();
+				for(Comparison com:c){
+					System.out.println("c 2  ---"+ com.getEntityId1()+ " "+ com.getEntityId2());					
+				}
+				
+				b = blocks.get(i);
+				c = b.getComparisons();
+				for(Comparison com:c){
+					System.out.println("c 3  ---"+ com.getEntityId1()+ " "+ com.getEntityId2());
+					
+				}
+				
+				break;
+			}
+		}
+		
+		
+//		for(AbstractBlock b:blocks_select){
+//			System.out.println("XXXX  " + b.getNoOfComparisons());
+//		}
 
 		//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
 	
@@ -345,12 +386,12 @@ public class SupervisedMetablocking {
 		//
 
 		int num_blocks=0;
-		for ( AbstractBlock b:blocks) {
-			if(b!=null){
-				num_blocks+=b.getNoOfComparisons();
-
-			}
-		}   
+//		for ( AbstractBlock b:blocks) {
+//			if(b!=null){
+//				num_blocks+=b.getNoOfComparisons();
+//
+//			}
+//		}   
 		System.out.println(" numero comparações --> "+ num_blocks);
 
 		
