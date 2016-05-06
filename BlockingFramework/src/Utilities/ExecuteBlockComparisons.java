@@ -117,7 +117,7 @@ public class ExecuteBlockComparisons {
 //		}
 //		System.out.println();
 		 return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
-                 dataset1[entityIds2].getAttributes());
+                 dataset2[entityIds2].getAttributes());
 	}
 
 //	
@@ -144,14 +144,18 @@ public class ExecuteBlockComparisons {
 		try{
 			for(Attribute att:profile1){
 				for (int i = 1; i < vetA.length; i++) {
-					if(att.getName().equals(names[i]))
+					if(att.getName().equals(names[i])){
 		    			vetA[i]= att.getValue().toLowerCase().trim();
+		    	
+					}
 				}
 			}
 			for(Attribute att:profile2){
 				for (int i = 1; i < vetB.length; i++) {
-					if(att.getName().equals(names[i]))
+					if(att.getName().equals(names[i])){
 		    			vetB[i]= att.getValue().toLowerCase().trim();
+		    			
+					}
 				}
 			}
 	
@@ -162,14 +166,21 @@ public class ExecuteBlockComparisons {
 			for (int i = 1; i < vetB.length && i < vetA.length; i++) {
 				if(!(vetA[i]==null) && !(vetB[i]==null) && !vetA[i].isEmpty() && !vetB[i].isEmpty()  )
 				{
-					sim+=le.getSimilarity(vetA[i], vetB[i]);
-					//if(sim>0.2)
-					//System.out.println(vetA[i] + " ---- " +  vetB[i] + "  "+ sim);
+					//if(vetB[i].contains("\\("))
+						sim+=le.getSimilarity(vetA[i], vetB[i].replaceAll("\\(.+\\)",""));
+					//else
+					//	sim+=jc.getSimilarity(vetA[i], vetB[i]);
+				//	System.out.println("name a "+ vetA[i] +"-------- "+ vetB[i] + " " +sim );
 				}
 					
 			}
-			
-		//System.out.println("sim -> " + ((sim)/vetB.length));
+//		if(sim>0.9){
+//			for (int i = 1; i < vetB.length && i < vetA.length; i++) {
+//				System.out.println(names[i] + "  "+  vetA[i] + " ---- " +  vetB[i] + "  "+ sim);
+//			}
+//		}
+				
+		//System.out.println("sim -> " + ((sim)) + " --- "+ vetB.length);
 		}catch(Exception e ){
 			System.out.println("erro " +e.getMessage());
 			e.printStackTrace();
