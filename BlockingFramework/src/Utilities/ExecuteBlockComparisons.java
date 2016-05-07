@@ -117,7 +117,7 @@ public class ExecuteBlockComparisons {
 //		}
 //		System.out.println();
 		 return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
-                 dataset2[entityIds2].getAttributes());
+                 dataset1[entityIds2].getAttributes());
 	}
 
 //	
