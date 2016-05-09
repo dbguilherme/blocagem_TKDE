@@ -1,5 +1,7 @@
 package Experiments;
 
+import static java.util.Arrays.asList;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import BlockBuilding.MemoryBased.TokenBlocking;
 import BlockProcessing.AbstractEfficiencyMethod;
@@ -33,6 +38,8 @@ import Utilities.ExecuteBlockComparisons;
 import Utilities.ExportBlocks;
 import Utilities.SerializationUtilities;
 import Utilities.blockHash;
+import Utilities.testeThread;
+
 import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_parameter;
@@ -234,7 +241,7 @@ public class SupervisedMetablocking {
 				for(Comparison com:c){
 					
 					com.teste=blocks.get(i).getBlockIndex();
-					com.sim=ebc.getSImilarityAttribute(com.getEntityId1(),com.getEntityId2(), Converter.atributos_value);
+					com.sim=ebc.getSImilarity(com.getEntityId1(),com.getEntityId2());
 					int level=(int) Math.floor(com.sim*10);
 					
 					final List<Integer> commonBlockIndices =  entityIndex.getCommonBlockIndices(com.teste, com);
@@ -245,7 +252,7 @@ public class SupervisedMetablocking {
 //						System.out.println(commonBlockIndices.size());
 					if(com.sim>= ((double)level*0.1) && com.sim<= ((double)(level+1)*0.1)){							
 						int temp=r.nextInt(nblocks[level]);
-						if((nblocks[level]<500) || (temp<(nblocks[level]*0.1))){
+						if((temp<500) || (temp<(nblocks[level]*0.1))){
 							//continue;
 							listComparison[level].add(com);
 						}
@@ -327,13 +334,33 @@ public class SupervisedMetablocking {
 		}
 		int num_blocks=0;
 
-		System.out.println(" numero comparações --> "+ num_blocks);
+		//System.out.println(" numero comparações --> "+ num_blocks);
 
 		
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		
 		int nblocks[]=conta_niveis_hash(blocks,ebc);
-		ArrayList<Comparison>[] arrayListComparison= testeParaGerarAscomparações(blocks,nblocks,ebc);
+		
+		///////////////////
+		ArrayList<Comparison>[] listComparison = (ArrayList<Comparison>[])new ArrayList[10];
+		for (int i = 0; i < 10; i++) {
+			listComparison[i]= new ArrayList<Comparison>();
+		}
+		System.out.println("testando thread " + testeThread.teste(blocks,nblocks,ebc,listComparison));
+		
+		
+		for (int i = 0; i < 10; i++) {
+			System.out.println("tamanho de cada faixa "+listComparison[i].size() );
+		}
+		
+		
+		
+		
+		/////////////////////
+		
+		
+		
+		//ArrayList<Comparison>[] arrayListComparison=testeParaGerarAscomparações(blocks,nblocks,ebc);
 		System.out.println("\n\n\n\n\n======================= Supervised CEP =======================");
 		Classifier[] classifiers = getSupervisedCepClassifiers();
 		//            SupervisedCEP scep = new SupervisedCEP(classifiers.length, blocks, duplicatePairs);
@@ -378,7 +405,7 @@ public class SupervisedMetablocking {
 				writer3.write("level "+tamanho +"\n");
 				writer4.write("level "+tamanho +"\n");
 				for (int j = 0; j < 10; j++) {
-					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i, nblocks,arrayListComparison);
+					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i, nblocks,listComparison);
 					writer1.flush();
 					writer2.flush();
 					writer3.flush();
