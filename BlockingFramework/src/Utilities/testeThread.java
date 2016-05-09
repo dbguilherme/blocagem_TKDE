@@ -12,6 +12,9 @@ import DataStructures.EntityIndex;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import static java.util.Arrays.asList;
 
 public class testeThread {
@@ -23,6 +26,7 @@ public class testeThread {
     	int[] nblocks;
     	ExecuteBlockComparisons ebc;
     	ArrayList<Comparison>[] listComparison;
+    	private final Lock lock = new ReentrantLock();
     //	
         
         testeThreads(int from,int to, List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc,ArrayList<Comparison>[] listComparison) {
@@ -50,6 +54,7 @@ public class testeThread {
 					for(Comparison com:c){
 						
 						com.teste=blocks.get(i).getBlockIndex();
+						
 						com.sim=ebc.getSImilarityAttribute(com.getEntityId1(),com.getEntityId2(),Converter.atributos_value);
 								//Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),Converter.atributos_value);		
 								
@@ -65,10 +70,15 @@ public class testeThread {
 							int temp=r.nextInt(nblocks[level]);
 							if((temp<500) || (temp<(nblocks[level]*0.1)))
 							{
-								//continue;
-								listComparison[level].add(com);
+								 try {
+		    				            lock.lock();
+		    				            if(com!=null)
+		    				            	listComparison[level].add(com);
+		    				        } finally {
+		    				            lock.unlock();
+		    				        }
 							}
-							
+   							
 						}
 					}
 				}
@@ -81,7 +91,7 @@ public class testeThread {
     }
     
     public static int teste (List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc, ArrayList<Comparison>[] listComparison) throws Exception {
-    	ExecutorService executor = Executors.newFixedThreadPool(1);
+    	ExecutorService executor = Executors.newFixedThreadPool(8);
     	long startingTime = System.currentTimeMillis();
     	Collections.shuffle(blocks);
 //    	List<Future<ArrayList<Comparison>[]>> results= executor.invokeAll(asList(
@@ -100,8 +110,10 @@ public class testeThread {
        // executor.shutdown();
        // executor.
     //	 ArrayList<Comparison>[] listComparison1= results.get();
-        for(Future<ArrayList<Comparison>[]> result: results){
-        	
+       
+    	 executor.shutdown();
+    	for(Future<ArrayList<Comparison>[]> result: results){
+        	//result.get
         	ArrayList<Comparison>[] array=result.get();
         	for (int i = 0; i < array.length; i++) {
         		System.out.println(i + "results " +array[i].size());
