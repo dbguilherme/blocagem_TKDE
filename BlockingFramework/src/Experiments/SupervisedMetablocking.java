@@ -39,7 +39,7 @@ import Utilities.ExportBlocks;
 import Utilities.SerializationUtilities;
 import Utilities.blockHash;
 import Utilities.testeThread;
-
+import Utilities.testeThread_Conta;
 import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_parameter;
@@ -339,7 +339,20 @@ public class SupervisedMetablocking {
 		
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		
-		int nblocks[]=conta_niveis_hash(blocks,ebc);
+		int[] nblocks=  new int[10];
+		for (int i = 0; i < 10; i++) {
+			nblocks[i]=0;
+			//	primeiroBlock[i]=0;
+		}
+	//	nblocks=conta_niveis_hash(blocks, ebc);
+		System.out.println("testando thread " + testeThread_Conta.teste(blocks,nblocks,ebc));
+		
+		
+		for (int i = 0; i < 10; i++) {
+			//	perc[i]=(((double)tamanho)/(blockSize[i]));
+			System.out.println(i + "contagem dos blocos  "+  "  " + nblocks[i] );
+			//totalPares += blockHash.blockSize[i];
+		}
 		
 		///////////////////
 		ArrayList<Comparison>[] listComparison = (ArrayList<Comparison>[])new ArrayList[10];
@@ -349,15 +362,11 @@ public class SupervisedMetablocking {
 		System.out.println("testando thread " + testeThread.teste(blocks,nblocks,ebc,listComparison));
 		
 		
+		
 		for (int i = 0; i < 10; i++) {
 			System.out.println("tamanho de cada faixa "+listComparison[i].size() );
 		}
-		
-		
-		
-		
 		/////////////////////
-		
 		
 		
 		//ArrayList<Comparison>[] arrayListComparison=testeParaGerarAscomparações(blocks,nblocks,ebc);

@@ -30,6 +30,7 @@ import Utilities.ProfileComparison;
 import Utilities.StatisticsUtilities;
 import Utilities.blockHash;
 import Utilities.similarityFunction;
+import Utilities.testeThread;
 import libsvm.svm_parameter;
 
 import java.io.BufferedReader;
@@ -124,7 +125,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3, BufferedWriter writer4, int r, int[] nblocks, ArrayList<Comparison>[] arrayListComparison) throws Exception {
 		elements=new int[10];
-
+		
 		getTrainingSet_original(iteration,ebc,tamanho,r,nblocks,arrayListComparison);
 		//getTrainingSet(iteration,ebc,tamanho);
 		System.out.println(trainingInstances.size() + "  ----- " +temp);
@@ -354,8 +355,17 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				
 				ArrayList<Comparison> a=arrayListComparison[i];
 				for (Comparison com:a) {
-					int level=(int) Math.floor(com.sim*10);
-					//System.out.println("level --> "+ level);
+					
+					if(com==null){
+						System.out.println("com null");
+						continue;
+					}
+					int level=0;
+					try{
+					 level=(int) Math.floor(com.sim*10);
+					}catch(Exception e ){
+						System.out.println("level --> "+ com.sim);
+					}
 					{
 						if(com.sim>= ((double)level*0.1) && com.sim<= ((double)(level+1)*0.1)){	
 							int temp=random.nextInt(a.size());
