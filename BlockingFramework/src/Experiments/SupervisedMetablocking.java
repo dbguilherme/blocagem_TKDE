@@ -64,7 +64,8 @@ import weka.classifiers.functions.LibSVM;;
 public class SupervisedMetablocking {
 
 	private final static int ITERATIONS = 10;
-
+	//String  atributos_value[][] = {{ "id", "name" , "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"},{ "id", "title" , "authors", "venue", "year"}};
+	
 	private static Classifier[] getSupervisedCepClassifiers() {
 		NaiveBayes naiveBayes = new NaiveBayes();
 		naiveBayes.setUseKernelEstimator(false);
@@ -276,11 +277,13 @@ public class SupervisedMetablocking {
 		String profilesPathA=null;
 		String profilesPathB=null;
 		String groundTruthPath = null;
+		
 		switch(args[0]){
 		case "1":	       
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
-			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";			
+			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
+			System.out.println("-----------"+mainDirectory);
 			break;
 		case "2":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
@@ -361,7 +364,7 @@ public class SupervisedMetablocking {
 		}
 		System.out.println("testando thread " + testeThread.teste(blocks,nblocks,ebc,listComparison));
 		
-		
+		//ebc.
 		
 		for (int i = 0; i < 10; i++) {
 			System.out.println("tamanho de cada faixa "+listComparison[i].size() );
@@ -406,7 +409,7 @@ public class SupervisedMetablocking {
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
+			int tamanho = 100;
 
 			while(tamanho <=1000){
 				writer1.write("level "+tamanho +"\n");

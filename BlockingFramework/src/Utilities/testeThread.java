@@ -55,7 +55,7 @@ public class testeThread {
 						
 						com.teste=blocks.get(i).getBlockIndex();
 						
-						com.sim=ebc.getSImilarityAttribute(com.getEntityId1(),com.getEntityId2(),Converter.atributos_value);
+						//com.sim=ebc.getSImilarityAttribute(com.getEntityId1(),com.getEntityId2(),Converter.atributos_value);
 								//Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),Converter.atributos_value);		
 								
 						int level=(int) Math.floor(com.sim*10);
@@ -64,6 +64,17 @@ public class testeThread {
 						if (commonBlockIndices == null) {
 							continue;
 						}
+						getFeaturesB(0, commonBlockIndices, com,0.0);
+						
+						double raccb = 0;
+						for (Integer index : commonBlockIndices) {
+							raccb += 1.0 / comparisonsPerBlock[index];
+						}
+						if (raccb < 1.0E-6) {
+							raccb = 1.0E-6;
+						}
+
+						
 //						if(commonBlockIndices.size()<1)
 //							System.out.println(commonBlockIndices.size());
 						if(com.sim>= ((double)level*0.1) && com.sim<= ((double)(level+1)*0.1)){							
@@ -113,13 +124,10 @@ public class testeThread {
        
     	 executor.shutdown();
     	for(Future<ArrayList<Comparison>[]> result: results){
-        	//result.get
         	ArrayList<Comparison>[] array=result.get();
         	for (int i = 0; i < array.length; i++) {
         		System.out.println(i + "results " +array[i].size());
-			}
-        	
-        	
+			}        	
         }
         double overheadTime = System.currentTimeMillis()-startingTime;
 		System.out.println(" Overhead time\t:\t" + overheadTime);

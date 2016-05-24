@@ -116,8 +116,14 @@ public class ExecuteBlockComparisons {
 //			System.out.print(att.getValue()+ " :");
 //		}
 //		System.out.println();
-		 return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
-                 dataset1[entityIds2].getAttributes());
+		if(dataset2==null){
+			return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
+	                 dataset1[entityIds2].getAttributes());
+		}else
+			return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
+	                 dataset2[entityIds2].getAttributes());
+		
+		 
 	}
 
 //	
@@ -134,9 +140,9 @@ public class ExecuteBlockComparisons {
 		Levenshtein le= new Levenshtein();
 		//String[] name=((new Converter()).atributos_value);
 		profile1= dataset1[entityIds1].getAttributes();
-//		if(dataset2!=null)
-//			profile2=dataset2[entityIds2].getAttributes();
-//		else
+		if(dataset2!=null)
+			profile2=dataset2[entityIds2].getAttributes();
+		else
 		profile2=dataset1[entityIds2].getAttributes();
 		
 		String[] vetA =new String[names.length];

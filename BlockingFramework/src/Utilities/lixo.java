@@ -29,12 +29,21 @@ public class lixo {
     
      public static void main(String[] args) throws IOException, ClassNotFoundException {
         
-         List<EntityProfile> profiles3 = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject("/home/guilherme/Dropbox/blocagem/bases/movies/dataset1_imdb");
-         List<EntityProfile> profiles = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject("/home/guilherme/Dropbox/blocagem/bases/movies/dataset2_dbpedia");
-         Set<IdDuplicates> duplicates = (Set<IdDuplicates>) SerializationUtilities.loadSerializedObject("/home/guilherme/Dropbox/blocagem/bases/movies//groundtruth");
-         PrintWriter writer = new PrintWriter("/tmp/scholar", "UTF-8");
-       
-       
+         List<EntityProfile> profiles3 = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject("/home/vmguilherme/Downloads/dataset1");
+         List<EntityProfile> profiles = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject("/home/vmguilherme/Downloads/dataset2");
+        Set<IdDuplicates> duplicates = (Set<IdDuplicates>) SerializationUtilities.loadSerializedObject("/home/vmguilherme/Downloads//groundtruth");
+     //    PrintWriter writer = new PrintWriter("/tmp/scholar", "UTF-8");
+     // 
+//         InputStream is = ...;
+//         OutputStream os = ...;
+//
+//         byte buffer[] = new byte[1024];
+//         int read;
+//         while((read = is.read(buffer)) != -1){
+//             os.write(buffer, 0, read);
+//         }
+         
+         
         int count =0, x=0;
         for(IdDuplicates id: duplicates){
             
@@ -51,7 +60,7 @@ public class lixo {
                for (Attribute attribute :profiles.get(id.getEntityId2()).getAttributes()){
                   System.err.println(attribute.getName() + " "  + " "+ attribute.getValue());    
               }  
-              if(x++>5)
+              if(x++>1)
               break;
               System.err.println("\n\n\n");
               System.err.flush();
@@ -59,7 +68,7 @@ public class lixo {
 //        for (int i = 0; i < profiles3.size(); i++) {
 //            String s[]={"","","","",""};
 //            for (Attribute attribute :profiles3.get(i).getAttributes()){
-//                 // System.err.print(attribute.getName() +"  ");
+//                  System.err.println(attribute.getName() +"  "+attribute.getValue());
 //              //  name   starring writer actor genre director title year editor
 //            	if(attribute.getName().equals("title"))
 //                      s[0]=s[0].concat(attribute.getValue());
@@ -70,8 +79,10 @@ public class lixo {
 //                  if(attribute.getName().equals("year"))
 //                      s[3]=s[3].concat(attribute.getValue());
 //            }
-     //}
-          //  break;
+//            if(i>5)
+//            	break;
+//     }
+          // 
             
         
 ////             writer.print(":"+(i)+":");

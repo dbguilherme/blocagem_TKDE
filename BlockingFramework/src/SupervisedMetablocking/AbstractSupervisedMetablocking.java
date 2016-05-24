@@ -246,8 +246,40 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		return newInstance;
 	}
 
+	public double getFeaturesB(int match, List<Integer> commonBlockIndices, Comparison comparison, double similarity) {
+	//	double[] instanceValues = new double[noOfAttributes];
+
+//		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
+//
+//		double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
+//		double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
+//		try{
+//			instanceValues[0] = commonBlockIndices.size()*ibf1*ibf2;	
+//		}catch (Exception e ){
+//			System.out.println(e.getMessage());
+//		}
 
 
+
+		double raccb = 0;
+		for (Integer index : commonBlockIndices) {
+			raccb += 1.0 / comparisonsPerBlock[index];
+		}
+		if (raccb < 1.0E-6) {
+			raccb = 1.0E-6;
+		}
+
+		//instanceValues[1] = raccb;
+
+//		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
+//		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
+//		instanceValues[4] = similarity;
+//		instanceValues[5] = match;
+//
+//		Instance newInstance = new DenseInstance(1.0, instanceValues);
+//		newInstance.setDataset(trainingInstances);
+		return raccb;
+	}
 	int temp=0;
 	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, int[] nblocks, ArrayList<Comparison>[] arrayListComparison) throws FileNotFoundException {
 
@@ -362,7 +394,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					}
 					int level=0;
 					try{
-					 level=(int) Math.floor(com.sim*10);
+					// level=(int) Math.floor(getFe*10);
 					}catch(Exception e ){
 						System.out.println("level --> "+ com.sim);
 					}
@@ -513,8 +545,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.add((double) trueMetadata);
 		sampleNonMatches.add((double) (trainingSet.size() - trueMetadata));
 	}
-
-
 	int testando=0;
 
 	private void callAllac(int i, int r) throws IOException {
