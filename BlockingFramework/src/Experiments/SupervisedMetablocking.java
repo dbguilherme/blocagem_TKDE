@@ -271,11 +271,13 @@ public class SupervisedMetablocking {
 		//		            scnp.printStatistics();
 		Random r=new Random();
 		int n=r.nextInt(100);
-		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1_"+n));
-		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2_"+n));
-		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3_"+n));
-		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4_"+n));
+		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"));
+		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"));
+		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"));
+		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"));
 
+       
+		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
 
@@ -289,9 +291,9 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 50;
+			int tamanho = 10;
 
-			while(tamanho <=1000)
+			while(tamanho <=10)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
@@ -310,15 +312,6 @@ public class SupervisedMetablocking {
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
 
-	/*			if(tamanho==5)
-=======
-		/*		if(tamanho==5)
->>>>>>> 5daee64caf8372bbedaf6014f6bc6e66f2535586
-					tamanho+=5;
-				else if(tamanho==10)
-					tamanho+=10;
-				else
-					tamanho+=20;*/
 				if(tamanho==5)
 					tamanho=10;
 				else if(tamanho==10)

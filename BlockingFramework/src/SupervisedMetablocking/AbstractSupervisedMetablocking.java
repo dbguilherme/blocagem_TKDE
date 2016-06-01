@@ -101,7 +101,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected int elements[];
 	protected Hashtable balance = new Hashtable();
 	protected final String names[]=(new Converter()).atributos_value;
-
+	int Nblocks[];
+	
 	public AbstractSupervisedMetablocking (int classifiers, List<AbstractBlock> bls, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
 		blocks = bls;
 		dirtyER = blocks.get(0) instanceof UnilateralBlock;
@@ -112,6 +113,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		getStatistics();
 		prepareStatistics();
 		getAttributes();
+		Nblocks=conta_niveis_hash(blocks,ebc);
 	}
 
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
@@ -294,7 +296,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		//
 		long startingTime = System.currentTimeMillis();
-		int Nblocks[]=conta_niveis_hash(blocks,ebc,tamanho);
+		
 		long deltaTime= System.currentTimeMillis()-startingTime;
 
 		System.out.println("time da contagem "+ deltaTime);
@@ -404,7 +406,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		for (int i = 8; i >=0; i--) {
 			System.out.println("chamando allac " + i	);
 			try {
-				DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");		
+				DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
 				callAllac(i,r);   
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -424,7 +426,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	//	int[] primeiroBlock=new int[10];
 
-	private int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
+	private int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc) {
 
 		int[] blockSize=  new int[10];
 		for (int i = 0; i < 10; i++) {
