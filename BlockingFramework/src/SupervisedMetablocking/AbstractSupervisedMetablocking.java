@@ -406,7 +406,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		for (int i = 8; i >=0; i--) {
 			System.out.println("chamando allac " + i	);
 			try {
-				DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+//<<<<<<< HEAD
+//				DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+//=======
+				DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+
 				callAllac(i,r);   
 			} catch (Exception e) {
 				e.printStackTrace();
