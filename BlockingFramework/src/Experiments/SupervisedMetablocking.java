@@ -173,114 +173,63 @@ public class SupervisedMetablocking {
 	}
 
 	public static void main(String[] args) throws IOException, Exception {
-		//experiments with synthetic datasets
-		//the blocks are constructed on the fly
 		System.out.println( System.getProperty("user.home"));
-		///home/guilhermedb/Dropbox/blocagem/bases/base_clean_serializada
-		//		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
-		//		//String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-		//		String[] profilesPath = { 
-		//				mainDirectory+"/dblp",
-		//				mainDirectory+"/scholar"};
-		//		//mainDirectory+"/dataset1_imdb",
-		//	//	mainDirectory+"/dataset1_dbpedia"};
-		//
-		//		String[] groundTruthPath = { mainDirectory+ "/groundtruth"};  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//	
-		String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
-		String[] profilesPath = {   
-				mainDirectory+"/50Kprofiles"
-
-		};
-
-		String[] groundTruthPath = {   
-
-				mainDirectory+"/50KIdDuplicates"
-
-		};
+		String mainDirectory;
+		String profilesPathA=null;
+		String profilesPathB=null;
+		String groundTruthPath = null;
+		
+		switch(args[0]){
+		case "1":	       
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
+			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
+			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
+			System.out.println("-----------"+mainDirectory);
+			break;
+		case "2":
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
+			profilesPathA= mainDirectory+"/dblp";
+			profilesPathB= mainDirectory+"/scholar";
+			groundTruthPath =  mainDirectory+ "/groundtruth"; 
+			break;
+		case "3":
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
+			profilesPathA= mainDirectory+"/dataset1_imdb";
+			profilesPathB= mainDirectory+"/dataset2_dbpedia";
+			groundTruthPath =  mainDirectory+ "/groundtruth"; 
+			break;
+		}
+	
+		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath);
+		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
+		List<AbstractBlock> blocks;
+		List<EntityProfile>[] profiles ;
+		if(profilesPathB != null){
+					profiles = new List[2];
+					profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
+					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
+					TokenBlocking imtb = new TokenBlocking(profiles);
+					 blocks = imtb.buildBlocks();
+					SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
+					sbb.applyProcessing(blocks);
+		}else	{
+			profiles= new List[1];
+			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
+			TokenBlocking imtb = new TokenBlocking(profiles);
+			 blocks = imtb.buildBlocks();
+			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+			blockPurging.applyProcessing(blocks);
+		}
 
 
 
 
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
-		//	                                  mainDirectory+"/1Mprofiles"
-		//	                                  
-		//	        };
-		//	        
-		//	        String[] groundTruthPath = {   
-		//	                                     mainDirectory+"/1MIdDuplicates"
-		//	        };
-
-
-
-		//String[] groundTruthPath = {  System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_scholar_gab/groundtruth"	};
-
-		//	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies";
-		//	String[] profilesPath = { 
-		//			mainDirectory+"/dataset"};
-		//	String[] groundTruthPath = {  System.getProperty("user.home")+"/Dropbox/blocagem/bases/dirty_movies/groundtruth"	};
-		//        String[] indexDirs = {"/media/guilherme/SAMSUNG/base/bases_scholar_original1/",
-		//        "/media/guilherme/SAMSUNG/base/bases_scholar_original2/"};
-		//    String duplicatesPath =  "/media/guilherme/SAMSUNG/base/base_scholar_gab";
-		//    ExportBlocks exportBlocks = new ExportBlocks(indexDirs);
-		//    List<AbstractBlock> blocks = exportBlocks.getBlocks();
-		//    System.out.println("Blocks\t:\t" + blocks.size());
-		//
-		//    AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging();
-		//    blockPurging.applyProcessing(blocks);
-		//     for (int i = 0; i < profilesPath.length; i++) {
-		//    System.out.println("\n\n\n\n\nCurrent dataset\t:\t" + profilesPath[i]);
-
-		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath[0]);
-		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
-
-
-
-		//
-		List<EntityProfile>[] profiles ;
-		//		if(profilesPath.length>1){
-		//			profiles = new List[2];
-		//			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[0]);
-		//			profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[1]);
-		//		}else
-		{
-			profiles= new List[1];
-			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath[0]);
-		}
-
+		
 
 		//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
-		TokenBlocking imtb = new TokenBlocking(profiles);
-		List<AbstractBlock> blocks = imtb.buildBlocks();
-
-		//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
-		//sbb.applyProcessing(blocks);
-
-		AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
-		blockPurging.applyProcessing(blocks);
+		
 
 //		int num_blocks=0;
 //		for ( AbstractBlock b:blocks) {
@@ -291,7 +240,16 @@ public class SupervisedMetablocking {
 //		}   
 //		System.out.println(" blocks --> "+ num_blocks);
 
-		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
+		String[] profilesPath;
+		if(profilesPathB!=null){
+			 profilesPath=new String[2];
+			 profilesPath[0]=profilesPathA;
+			 profilesPath[1]=profilesPathB;
+		}else{
+			 profilesPath=new String[1];
+			 profilesPath[0]=profilesPathA;
+		}
+		int num_blocks=0;
 
 		//            System.out.println("\n\n\n\n\n======================= Supervised CEP =======================");
 		Classifier[] classifiers = getSupervisedCepClassifiers();
