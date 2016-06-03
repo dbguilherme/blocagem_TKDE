@@ -239,7 +239,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
-		instanceValues[4] = similarity;
+		instanceValues[4] = nonRedundantCPE[comparison.getEntityId2()];;
 		instanceValues[5] = match;
 
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
@@ -285,13 +285,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		System.out.println("linha 260");
 
-
-		//		Collections.sort(blocks, new Comparator<AbstractBlock>() {
-		//			public int compare(AbstractBlock c1, AbstractBlock c2) {
-		//				if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
-		//				if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
-		//				return 0;
-		//			}});
+//
+//				Collections.sort(blocks, new Comparator<AbstractBlock>() {
+//					public int compare(AbstractBlock c1, AbstractBlock c2) {
+//						if (c1.getNoOfComparisons() > c2.getNoOfComparisons()) return -1;
+//						if (c1.getNoOfComparisons() < c2.getNoOfComparisons()) return 1;
+//						return 0;
+//					}});
 		//Collections.shuffle(blocks);
 
 		//
@@ -326,7 +326,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		}
 
-		while(tentativas>=0 && controle<=0 ){
+		//while(tentativas>=0 && controle<=0 )
+		{
 			//tentativas--;
 			if(tentativas<=0){
 				retorno=0;				
@@ -342,7 +343,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				tentativas--;
 			System.out.println("zerou os blocks " + j + " tentativas "+ tentativas +  "  avaliações " +l);
 			j=1;
-			l=0;  
+			//l=0;  
 			//System.out.println("primeiroBlock[controle] -->> " + primeiroBlock[controle]);
 			for (int i=0;i<blocks.size();i++) {
 				ComparisonIterator iterator = blocks.get(i).getComparisonIterator();
@@ -366,7 +367,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					//System.out.println("level --> "+ level);
 					{
 						if(comparison.sim>= ((double)level*0.1) && comparison.sim<= ((double)(level+1)*0.1)){	
-							l++;
+						
 							int temp=random.nextInt(Nblocks[level]);
 							if(temp>tamanho){
 								//	lixo++;
@@ -375,12 +376,22 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 								continue;
 							}
+//							int match = NON_DUPLICATE; // false
+//							if (areMatching(comparison)) {
+//								if (random.nextDouble() < SAMPLE_SIZE) {
+//									trueMetadata++;
+//									match = DUPLICATE; // true
+//								} else {
+//									continue;
+//								}
+//							} else if (nonMatchRatio <= random.nextDouble()) {
+//								continue;
+//							}
+							l++;
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 							if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,names))<=0){
-								//pstxt_level.close();
-								//psarff_level.close();
-								//break;
+								
 							}
 							pstxt_level[level].flush();
 							psarff_level[level].flush();
@@ -390,26 +401,27 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 			}
 		}
-		pstxt.close();
-		psarff.close();
-		for (int m = 0; m < 10; m++) {
-			pstxt_level[m].close();
-			psarff_level[m].close();
-		}
+//		System.out.println("tamanho do L "+ l);
+//		pstxt.close();
+//		psarff.close();
+//		for (int m = 0; m < 10; m++) {
+//			pstxt_level[m].close();
+//			psarff_level[m].close();
+//		}
 		try {
 			DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
 			callGeraBins();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-
-		for (int i = 8; i >=0; i--) {
+//
+		for (int i = 8; i >=8; i--) {
 			System.out.println("chamando allac " + i	);
 			try {
-//<<<<<<< HEAD
-//				DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-//=======
-				DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+
+			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+
+		//		DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
 
 				callAllac(i,r);   
 			} catch (Exception e) {
@@ -422,8 +434,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}  catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("trainingSet.size() - trueMetadata)" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
+		System.err.println(" ");
+		System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
 		//	sampleMatches.add((double) trueMetadata);///positivos
 		//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
 	}
@@ -593,7 +605,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		String line;
 		String cmd;
 		String userHome = System.getProperty("user.home");
-		String file ="/tmp/levels_arff_level"+i+"D" + " /tmp/teste";
+		//String file ="/tmp/levels_arff_level"+i+"D" + " /tmp/teste";
+		String file ="/tmp/levels_arff2" + " /tmp/teste";
+		
 		int att=5;
 		Process proc = null;		
 		BufferedReader read, buf;
@@ -649,7 +663,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 
-		//for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++) 
+		{
 
 
 		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
@@ -657,7 +672,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 
 		while ((line=br.readLine()) != null) {
-			//System.out.println(line);
+			System.out.println("loading "+ line);
 			splitLine=line.split(",");
 			idA=splitLine[0].split(":")[2];
 			idB=splitLine[2].split(":")[2];
@@ -676,24 +691,26 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//					countN++;
 			//			}
 			//	rs.close();
-			//			if(i==0 && label.equals("true")){
-			//				System.err.println(idA +" " +idB + " " + block);	
-			//				Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-			//				trainingSet.add(comparison);
-			//				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-			//					
-			//				if(commonBlockIndices!=null){	
-			//					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-			//					trainingInstances.add(newInstance);
-			//					if(label.toLowerCase().contains("true"))
-			//						countP++;
-			//					else
-			//						countN++;		
-			//				}
-			//			}
-			//			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-			//	if(i==1 && label.equals("false") && countN<countP){
-			System.err.println(idA +" " +idB + " " + block);	
+						if(i==0 && label.equals("false") && countN < 5)
+						{
+							
+							Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+							trainingSet.add(comparison);
+							List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+								
+							if(commonBlockIndices!=null){	
+								Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+								trainingInstances.add(newInstance);
+								if(label.toLowerCase().contains("true"))
+									countP++;
+								else
+									countN++;		
+							}
+						}
+//						System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
+				if(i==1 && label.equals("true"))
+				{
+			//System.err.println(idA +" " +idB + " " + block);	
 			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
 			trainingSet.add(comparison);
 			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
@@ -701,6 +718,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			if(commonBlockIndices!=null){	
 				Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
 				trainingInstances.add(newInstance);
+//				for (int i = 0; i < newInstance.numAttributes(); i++) {
+//					System.err.print(newInstance.value(i)+" ,");
+//				}
+//				System.err.println();
+				
 				if(label.toLowerCase().contains("true"))
 					countP++;
 				else
@@ -708,8 +730,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}
 		}
 		//			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-		//	}
-		//	}
+			}
+			}
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		sampleMatches.add((double) countP);///positivos
 		sampleNonMatches.add((double) (countN)); //negativos

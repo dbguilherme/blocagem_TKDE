@@ -293,7 +293,7 @@ public class SupervisedMetablocking {
 
 			int tamanho = 10;
 
-			while(tamanho <=10)
+			while(tamanho <=100)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
