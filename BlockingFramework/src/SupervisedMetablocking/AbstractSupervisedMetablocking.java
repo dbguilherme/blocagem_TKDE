@@ -38,9 +38,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 //import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -416,13 +419,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			e1.printStackTrace();
 		}
 //
-		for (int i = 8; i >=8; i--) {
+		for (int i = 8; i <=8; i++) {
 			System.out.println("chamando allac " + i	);
 			try {
 
 			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
 
-		//		DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+			//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
 
 				callAllac(i,r);   
 			} catch (Exception e) {
@@ -443,6 +446,55 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	//	int[] primeiroBlock=new int[10];
 
+	private void descarta_allac() throws FileNotFoundException, IOException{
+		
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));	
+					PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("/tmp/alac.txt")), true);
+		String line, line_alac; 
+		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+	//	br.readLine();//pula primeira linha
+		//BufferedReader br = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));
+		
+		int flag=0;
+		while((line=alac_result.readLine()) != null){
+			
+			while ((line_alac=br.readLine()) != null) {
+				//System.out.println(line_alac);
+				if(line.equals(line_alac)){
+					flag=1;
+					System.out.println( "hit   " + line_alac);				
+					break;
+					
+				}
+			}
+			
+			br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+			if(flag==0){
+				out.println(line);
+				flag=0;
+			}
+			
+		}
+		br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+		alac_result = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));	
+		while((line=alac_result.readLine()) != null){
+			
+			while ((line_alac=br.readLine()) != null) {
+				//System.out.println(line_alac);
+				if(line.equals(line_alac)){
+					flag=1;
+					System.out.println( "hit   " + line_alac);				
+					break;
+					
+				}
+			}
+			br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+			out.println(line);
+		}
+			
+	}
+	
+	
 	private int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc) {
 
 		int[] blockSize=  new int[10];
@@ -671,6 +723,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			
 
 		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+		br.readLine();//pula primeira linha
 		//BufferedReader br = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));
 		String line_alac;
 		int flag=0;
@@ -680,14 +733,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				//System.out.println(line_alac);
 				if(line.equals(line_alac)){
 					flag=1;
-					System.out.println( "hit   " + line_alac);
-					
-					br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+					System.out.println( "hit   " + line_alac);				
 					break;
 					
 				}
 			}
 			br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+			br.readLine();//pula primeira linha
 			if(flag==0){
 				
 				splitLine=line.split(",");
@@ -823,7 +875,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//				return -1;
 			//			}
 
-			if(controle<100)
+			if(elements[controle]<tamanho)
 			{
 				//					if(controle <0.5 && random.nextDouble()>0.30)
 				//						return -1;
@@ -895,16 +947,16 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				//System.out.println("controle " + controle + " --> element "+elements[controle]);
 				return -1;
 			}
-			else{
-				System.out.println(controle + "tamanho --->> " + elements[controle]);
+			//else{
+				//System.out.println(controle + "tamanho --->> " + elements[controle]);
 				//	lixo=0;
-				return 0;
+				
 			}
-
+		return 0;
 		}
-
+	
 		//	return -1;
-	}
+	//}
 
 	private void prepareStatistics() {
 		sampleMatches = new ArrayList<Double>();

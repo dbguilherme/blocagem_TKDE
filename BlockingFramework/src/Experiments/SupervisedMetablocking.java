@@ -285,7 +285,7 @@ public class SupervisedMetablocking {
 		
 		
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
-		int i=1,j=5;
+		int i=3,j=5;
 		//for (int i = 1; i <= 2;i++)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
