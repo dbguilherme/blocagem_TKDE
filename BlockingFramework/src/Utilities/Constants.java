@@ -48,7 +48,7 @@ public interface Constants {
     String VALUE_LABEL = "value";
     
     //for supervised meta-blocking
-    double SAMPLE_SIZE = 0.05;
+    double SAMPLE_SIZE = 0.01;
     int DUPLICATE = 1;
     int NON_DUPLICATE = 0;
     String MATCH = "match";

@@ -121,12 +121,12 @@ public class SupervisedMetablocking {
 		//		}
 		//classifiers[3].setOptions( optionsArray );
 
-		Classifier[] classifiers = new Classifier[3];
+		Classifier[] classifiers = new Classifier[1];
 		classifiers[0] =naiveBayes;// naiveBayes;
 	//	classifiers[1] = smo;
 		//classifiers[2] = sv;
-		classifiers[1] = j48;
-		classifiers[2] = rf;
+	//	classifiers[1] = j48;
+	//	classifiers[2] = rf;
 		return classifiers;
 	}
 
@@ -285,22 +285,23 @@ public class SupervisedMetablocking {
 		
 		
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
-		//int i=1;
-		for (int i = 1; i <= 2;i++)
+		int i=1,j=5;
+		//for (int i = 1; i <= 2;i++)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
 			int tamanho = 10;
 
-			while(tamanho <=100)
+			while(tamanho <=1000)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho +"\n");
 				writer4.write("level "+tamanho +"\n");
-				for (int j = 0; j < 10; j++) {
+				for ( j = 0; j < 10; j++) 
+				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
 					writer1.flush();
 					writer2.flush();

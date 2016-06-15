@@ -269,6 +269,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		try {
 			pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff2.txt"),false));
+			//pstxt = new PrintStream(new FileOutputStream(new File("/tmp/final_treina.txt"),false));
 			psarff = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff.arff"),false));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -611,7 +612,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		int att=5;
 		Process proc = null;		
 		BufferedReader read, buf;
-		cmd = "cd  "+ userHome+ "/Downloads/SSARP/Dedup/test5/; bash ./SSARP2.sh  " +file + " "+ i + " " + i+ " " +i + " " +att + "  "+ r;
+		cmd = "cd  "+ userHome+ "/Downloads/SSARP/Dedup/test5/; bash ./SSARP2.sh  " +file + " "+ i +" " +att + "  "+ r;
 		proc = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd});
 		System.out.println("CMD 1= " +cmd);
 
@@ -663,75 +664,122 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 
-		for (int i = 0; i < 2; i++) 
-		{
+		//for (int i = 0; i < 2; i++) 
+		//{
 
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));	
+			
 
 		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));
-
-
-		while ((line=br.readLine()) != null) {
-			System.out.println("loading "+ line);
-			splitLine=line.split(",");
-			idA=splitLine[0].split(":")[2];
-			idB=splitLine[2].split(":")[2];
-			block=splitLine[4].trim();
-			String label=splitLine[3].trim();
-
-			//System.err.println("select * from base_scholar_clear where recA like '" + splitLine[0]+ "' and recB like  '" +splitLine[2]+"';");
-			//    		ResultSet rs = st.executeQuery("select * from base_scholar_clear where recA like '%" + idA+ "%' and idB ="+idB);
-			//			while( rs.next()){
-			//				block=rs.getString("idA");
-			//				label=rs.getString("label");
-			//				if(label.equals("true"))
-			//					countP++;
-			//				else
-
-			//					countN++;
-			//			}
-			//	rs.close();
-						if(i==0 && label.equals("false") && countN < 5)
-						{
-							
-							Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-							trainingSet.add(comparison);
-							List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-								
-							if(commonBlockIndices!=null){	
-								Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-								trainingInstances.add(newInstance);
-								if(label.toLowerCase().contains("true"))
-									countP++;
-								else
-									countN++;		
-							}
-						}
-//						System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-				if(i==1 && label.equals("true"))
-				{
-			//System.err.println(idA +" " +idB + " " + block);	
-			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-			trainingSet.add(comparison);
-			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-
-			if(commonBlockIndices!=null){	
-				Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-				trainingInstances.add(newInstance);
-//				for (int i = 0; i < newInstance.numAttributes(); i++) {
-//					System.err.print(newInstance.value(i)+" ,");
-//				}
-//				System.err.println();
+		String line_alac;
+		int flag=0;
+		while((line=alac_result.readLine()) != null){
+			
+			while ((line_alac=br.readLine()) != null) {
+				//System.out.println(line_alac);
+				if(line.equals(line_alac)){
+					flag=1;
+					System.out.println( "hit   " + line_alac);
+					
+					br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+					break;
+					
+				}
+			}
+			br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+			if(flag==0){
 				
-				if(label.toLowerCase().contains("true"))
-					countP++;
-				else
-					countN++;		
+				splitLine=line.split(",");
+				idA=splitLine[0].split(":")[2];
+				idB=splitLine[2].split(":")[2];
+				block=splitLine[4].trim();
+				String label=splitLine[3].trim();
+				Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+				trainingSet.add(comparison);
+				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+
+				if(commonBlockIndices!=null){	
+					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+					trainingInstances.add(newInstance);
+//					for (int i = 0; i < newInstance.numAttributes(); i++) {
+//						System.err.print(newInstance.value(i)+" ,");
+//					}
+//					System.err.println();
+					
+					if(label.toLowerCase().contains("true"))
+						countP++;
+					else
+						countN++;		
+				}
 			}
+			flag=0;
+			
 		}
-		//			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
-			}
-			}
+		
+		
+		
+//		while ((line=br.readLine()) != null) {
+//			//System.out.println("loading "+ line);
+//			splitLine=line.split(",");
+//			idA=splitLine[0].split(":")[2];
+//			idB=splitLine[2].split(":")[2];
+//			block=splitLine[4].trim();
+//			String label=splitLine[3].trim();
+//
+//			//System.err.println("select * from base_scholar_clear where recA like '" + splitLine[0]+ "' and recB like  '" +splitLine[2]+"';");
+//			//    		ResultSet rs = st.executeQuery("select * from base_scholar_clear where recA like '%" + idA+ "%' and idB ="+idB);
+//			//			while( rs.next()){
+//			//				block=rs.getString("idA");
+//			//				label=rs.getString("label");
+//			//				if(label.equals("true"))
+//			//					countP++;
+//			//				else
+//
+//			//					countN++;
+//			//			}
+//			//	rs.close();
+////						if(i==0 && label.equals("false") && countN < 50000)
+////						{
+////							
+////							Comparison comparison= new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+////							trainingSet.add(comparison);
+////							List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+////								
+////							if(commonBlockIndices!=null){	
+////								Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+////								trainingInstances.add(newInstance);								
+////								if(label.toLowerCase().contains("true"))
+////									countP++;
+////								else
+////									countN++;		
+////							}
+////						}
+////						System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
+//		//		if(i==1 && label.equals("true"))
+//				{
+//			//System.err.println(idA +" " +idB + " " + block);	
+//			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+//			trainingSet.add(comparison);
+//			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+//
+//			if(commonBlockIndices!=null){	
+//				Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+//				trainingInstances.add(newInstance);
+////				for (int i = 0; i < newInstance.numAttributes(); i++) {
+////					System.err.print(newInstance.value(i)+" ,");
+////				}
+////				System.err.println();
+//				
+//				if(label.toLowerCase().contains("true"))
+//					countP++;
+//				else
+//					countN++;		
+//			}
+//		}
+//		//			System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
+//			}
+//			}
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		sampleMatches.add((double) countP);///positivos
 		sampleNonMatches.add((double) (countN)); //negativos
