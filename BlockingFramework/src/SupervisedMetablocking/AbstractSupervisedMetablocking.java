@@ -14,24 +14,6 @@
 
 package SupervisedMetablocking;
 
-import DataStructures.AbstractBlock;
-import DataStructures.Comparison;
-import DataStructures.EntityIndex;
-import DataStructures.IdDuplicates;
-import DataStructures.UnilateralBlock;
-import Experiments.SupervisedMetablocking;
-import Utilities.ComparisonIterator;
-import Utilities.Constants;
-import Utilities.Converter;
-import Utilities.DiscretizeTest;
-import Utilities.ExecuteBlockComparisons;
-import Utilities.FileUtilities;
-import Utilities.ProfileComparison;
-import Utilities.StatisticsUtilities;
-import Utilities.blockHash;
-import Utilities.similarityFunction;
-import libsvm.svm_parameter;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,32 +23,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-//import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
 
+import DataStructures.AbstractBlock;
+import DataStructures.Comparison;
+import DataStructures.EntityIndex;
+import DataStructures.IdDuplicates;
+import DataStructures.UnilateralBlock;
+import Utilities.ComparisonIterator;
+import Utilities.Constants;
+import Utilities.Converter;
+import Utilities.ExecuteBlockComparisons;
+import Utilities.StatisticsUtilities;
+import Utilities.kmeans;
 import weka.classifiers.Classifier;
-import weka.classifiers.functions.LibSVM;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.converters.LibSVMSaver;
 
 /**
  *
@@ -271,7 +255,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 
 		try {
-			pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff2.txt"),false));
+			pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff.txt"),false));
 			//pstxt = new PrintStream(new FileOutputStream(new File("/tmp/final_treina.txt"),false));
 			psarff = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff.arff"),false));
 		} catch (FileNotFoundException e1) {
@@ -405,46 +389,171 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 			}
 		}
-//		System.out.println("tamanho do L "+ l);
-//		pstxt.close();
-//		psarff.close();
-//		for (int m = 0; m < 10; m++) {
-//			pstxt_level[m].close();
-//			psarff_level[m].close();
+		System.out.println("tamanho do L "+ l);
+		pstxt.close();
+		psarff.close();
+		for (int m = 0; m < 10; m++) {
+			pstxt_level[m].close();
+			psarff_level[m].close();
+		}
+		try {
+			
+			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",tamanho));
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+//		try {
+//			//DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
+//			callGeraBins();
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
 //		}
-		try {
-			DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
-			callGeraBins();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+////
+//		for (int i = 8; i <=8; i++) {
+//			System.out.println("chamando allac " + i	);
+//			try {
 //
-		for (int i = 8; i <=8; i++) {
-			System.out.println("chamando allac " + i	);
-			try {
-
-			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-
-			//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-
-				callAllac(i,r);   
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		try {
-			loadFileTrainingSet(trainingInstances);
-		}  catch (Exception e) {
-			e.printStackTrace();
-		}
+//			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+//
+//			//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+//
+//			//	callAllac(i,r);   
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		try {
+//			loadFileTrainingSet(trainingInstances);
+//		}  catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		System.err.println(" ");
 		System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
-		//	sampleMatches.add((double) trueMetadata);///positivos
-		//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
+		//sampleMatches.add((double) trueMetadata);///positivos
+	//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
 	}
 
 	//	int[] primeiroBlock=new int[10];
+
+	private void loadFileTrainingSet(HashMap<Integer, LinkedList<String>> hash) throws NumberFormatException, IOException {
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+		String[] splitLine;
+		//Statement st = con.createStatement();
+		String idA,idB = null, block = "";
+		int countP=0,countN=0;
+		trainingInstances.clear();
+		sampleMatches.clear();
+		sampleNonMatches.clear();
+
+		//for (int i = 0; i < 2; i++) 
+		//{
+
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.txt"));
+				
+		Random r=new Random();
+		LinkedList<String> list =new LinkedList<String>();
+		//int i=0;
+		while((line=alac_result.readLine()) != null){
+			list.add(line);
+		}
+
+		
+		int flag=0;
+		for (int i = 0; i < hash.size(); i++) {
+			LinkedList<String> l = hash.get(i);
+			int rand=r.nextInt(l.size());
+			String Nline=l.get(rand).split(" ")[0];
+			line = list.get(Integer.parseInt(Nline));
+			//System.out.println(Nline+ " " +  +line);
+			splitLine=line.split(",");
+			idA=splitLine[0].split(":")[2];
+			idB=splitLine[2].split(":")[2];
+			block=splitLine[4].trim();
+			String label=splitLine[3].trim();
+			System.out.println(Nline+ " " + label + "   " +  line);
+			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+			trainingSet.add(comparison);
+			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+
+			if(commonBlockIndices!=null){
+				Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+				trainingInstances.add(newInstance);
+//				for (int i = 0; i < newInstance.numAttributes(); i++) {
+//					System.err.print(newInstance.value(i)+" ,");
+//				}
+//				System.err.println();
+				
+				if(label.toLowerCase().contains("true"))
+					countP++;
+				else
+					countN++;		
+			}
+			if(label.equals("false") && flag++<3)
+				i--;
+			
+		}
+		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
+		sampleMatches.add((double) countP);///positivos
+		sampleNonMatches.add((double) (countN)); //negativos
+		
+//			while ((line_alac=br.readLine()) != null) {
+//				//System.out.println(line_alac);
+//				if(line.equals(line_alac)){
+//					flag=1;
+//					System.out.println( "hit   " + line_alac);				
+//					break;
+//					
+//				}
+//			}
+		//	br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+		//	br.readLine();//pula primeira linha
+//			if(flag==0){
+//				
+//				
+//				splitLine=line.split(",");
+//				idA=splitLine[0].split(":")[2];
+//				idB=splitLine[2].split(":")[2];
+//				block=splitLine[4].trim();
+//				String label=splitLine[3].trim();
+//				Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+//				trainingSet.add(comparison);
+//				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
+//
+//				if(commonBlockIndices!=null){
+//					
+//					
+//					if(label.equals("false") ){
+//						if(((double)r.nextFloat())<0.8)
+//							continue;
+//					}
+//						
+//					if(label.equals("true") ){
+//						
+//						if(((double)r.nextFloat())<0.8)
+//							continue;
+//					}
+//
+//					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+//					trainingInstances.add(newInstance);
+////					for (int i = 0; i < newInstance.numAttributes(); i++) {
+////						System.err.print(newInstance.value(i)+" ,");
+////					}
+////					System.err.println();
+//					
+//					if(label.toLowerCase().contains("true"))
+//						countP++;
+//					else
+//						countN++;		
+//				}
+//			}
+//			flag=0;
+//			
+//		}
+		
+	}
 
 	private void descarta_allac() throws FileNotFoundException, IOException{
 		
@@ -581,7 +690,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		String line;
 		String cmd;
 		String userHome = System.getProperty("user.home");
-		String file ="/tmp/levels_arff2" + " /tmp/teste";
+		String file ="/tmp/levels_arff" + " /tmp/teste";
 		int att=5;
 		Process proc = null;		
 		BufferedReader read, buf;
@@ -659,7 +768,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		String cmd;
 		String userHome = System.getProperty("user.home");
 		//String file ="/tmp/levels_arff_level"+i+"D" + " /tmp/teste";
-		String file ="/tmp/levels_arff2" + " /tmp/teste";
+		String file ="/tmp/levels_arff" + " /tmp/teste";
 		
 		int att=5;
 		Process proc = null;		
@@ -719,28 +828,33 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//for (int i = 0; i < 2; i++) 
 		//{
 
-		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));	
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.txt"));
+				
+				//new BufferedReader(new FileReader("/tmp/levels_arff.txt"));	
 			
 
-		BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
-		br.readLine();//pula primeira linha
+		//BufferedReader br = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+		//br.readLine();//pula primeira linha
 		//BufferedReader br = new BufferedReader(new FileReader("/tmp/levels_arff2.txt"));
 		String line_alac;
 		int flag=0;
+		Random r=new Random();
+		
 		while((line=alac_result.readLine()) != null){
 			
-			while ((line_alac=br.readLine()) != null) {
-				//System.out.println(line_alac);
-				if(line.equals(line_alac)){
-					flag=1;
-					System.out.println( "hit   " + line_alac);				
-					break;
-					
-				}
-			}
-			br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
-			br.readLine();//pula primeira linha
+//			while ((line_alac=br.readLine()) != null) {
+//				//System.out.println(line_alac);
+//				if(line.equals(line_alac)){
+//					flag=1;
+//					System.out.println( "hit   " + line_alac);				
+//					break;
+//					
+//				}
+//			}
+		//	br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
+		//	br.readLine();//pula primeira linha
 			if(flag==0){
+				
 				
 				splitLine=line.split(",");
 				idA=splitLine[0].split(":")[2];
@@ -751,7 +865,20 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				trainingSet.add(comparison);
 				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
 
-				if(commonBlockIndices!=null){	
+				if(commonBlockIndices!=null){
+					
+					
+					if(label.equals("false") ){
+						if(((double)r.nextFloat())<0.8)
+							continue;
+					}
+						
+					if(label.equals("true") ){
+						
+						if(((double)r.nextFloat())<0.8)
+							continue;
+					}
+
 					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
 					trainingInstances.add(newInstance);
 //					for (int i = 0; i < newInstance.numAttributes(); i++) {
@@ -875,7 +1002,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//				return -1;
 			//			}
 
-			if(elements[controle]<tamanho)
+		//	if(elements[controle]<tamanho)
 			{
 				//					if(controle <0.5 && random.nextDouble()>0.30)
 				//						return -1;
@@ -952,7 +1079,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				//	lixo=0;
 				
 			}
-		return 0;
+		//return 0;
 		}
 	
 		//	return -1;

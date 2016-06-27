@@ -281,11 +281,9 @@ public class SupervisedMetablocking {
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
 
-		//new EntityIndex(blocks).enumerateBlocks(blocks);;
-		
-		
+		//new EntityIndex(blocks).enumerateBlocks(blocks);;		
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
-		int i=3,j=5;
+		int i=1,j=5;
 		//for (int i = 1; i <= 2;i++)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
@@ -293,7 +291,7 @@ public class SupervisedMetablocking {
 
 			int tamanho = 10;
 
-			while(tamanho <=1000)
+		//	while(tamanho <=1000)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
