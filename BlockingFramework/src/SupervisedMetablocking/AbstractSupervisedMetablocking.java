@@ -27,9 +27,11 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -356,25 +358,25 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					{
 						if(comparison.sim>= ((double)level*0.1) && comparison.sim<= ((double)(level+1)*0.1)){	
 						
-							int temp=random.nextInt(Nblocks[level]);
-							if(temp>tamanho){
-								//	lixo++;
-								//if(lixo%1000==0)
-								//if(controle==4)
-								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-								continue;
-							}
-//							int match = NON_DUPLICATE; // false
-//							if (areMatching(comparison)) {
-//								if (random.nextDouble() < SAMPLE_SIZE) {
-//									trueMetadata++;
-//									match = DUPLICATE; // true
-//								} else {
-//									continue;
-//								}
-//							} else if (nonMatchRatio <= random.nextDouble()) {
+//							int temp=random.nextInt(Nblocks[level]);
+//							if(temp>tamanho){
+//								//	lixo++;
+//								//if(lixo%1000==0)
+//								//if(controle==4)
+//								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 //								continue;
 //							}
+							int match = NON_DUPLICATE; // false
+							if (areMatching(comparison)) {
+								if (random.nextDouble() < SAMPLE_SIZE) {
+									trueMetadata++;
+									match = DUPLICATE; // true
+								} else {
+									continue;
+								}
+							} else if (nonMatchRatio <= random.nextDouble()) {
+								continue;
+							}
 							l++;
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
@@ -448,24 +450,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 
-		//for (int i = 0; i < 2; i++) 
-		//{
-
-		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.txt"));
-				
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.txt"));				
 		Random r=new Random();
 		LinkedList<String> list =new LinkedList<String>();
 		//int i=0;
 		while((line=alac_result.readLine()) != null){
 			list.add(line);
 		}
-
 		
 		int flag=0;
-		for (int i = 0; i < hash.size(); i++) {
-			LinkedList<String> l = hash.get(i);
-			int rand=r.nextInt(l.size());
-			String Nline=l.get(rand).split(" ")[0];
+		Collection<LinkedList<String>> colection = hash.values();
+		Iterator<LinkedList<String>> iterator = colection.iterator();
+		//for (int i = 0; i < hash.size(); i++) {
+		while(iterator.hasNext()){
+			LinkedList<String> l=iterator.next();
+			//int rand=r.nextInt(l.size());
+			System.err.println("----" +l.size());
+			String Nline=l.get(0).split(" ")[0];
 			line = list.get(Integer.parseInt(Nline));
 			//System.out.println(Nline+ " " +  +line);
 			splitLine=line.split(",");
@@ -473,7 +474,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			idB=splitLine[2].split(":")[2];
 			block=splitLine[4].trim();
 			String label=splitLine[3].trim();
-			System.out.println(Nline+ " " + label + "   " +  line);
+			System.out.println(Nline+ "---- " + label + "   " +  line);
 			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
 			trainingSet.add(comparison);
 			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
@@ -491,68 +492,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				else
 					countN++;		
 			}
-			if(label.equals("false") && flag++<3)
-				i--;
-			
+			//int i;
+			//if(label.equals("false") && flag++<3)
+			//	i--;		
 		}
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		sampleMatches.add((double) countP);///positivos
-		sampleNonMatches.add((double) (countN)); //negativos
-		
-//			while ((line_alac=br.readLine()) != null) {
-//				//System.out.println(line_alac);
-//				if(line.equals(line_alac)){
-//					flag=1;
-//					System.out.println( "hit   " + line_alac);				
-//					break;
-//					
-//				}
-//			}
-		//	br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
-		//	br.readLine();//pula primeira linha
-//			if(flag==0){
-//				
-//				
-//				splitLine=line.split(",");
-//				idA=splitLine[0].split(":")[2];
-//				idB=splitLine[2].split(":")[2];
-//				block=splitLine[4].trim();
-//				String label=splitLine[3].trim();
-//				Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-//				trainingSet.add(comparison);
-//				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-//
-//				if(commonBlockIndices!=null){
-//					
-//					
-//					if(label.equals("false") ){
-//						if(((double)r.nextFloat())<0.8)
-//							continue;
-//					}
-//						
-//					if(label.equals("true") ){
-//						
-//						if(((double)r.nextFloat())<0.8)
-//							continue;
-//					}
-//
-//					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-//					trainingInstances.add(newInstance);
-////					for (int i = 0; i < newInstance.numAttributes(); i++) {
-////						System.err.print(newInstance.value(i)+" ,");
-////					}
-////					System.err.println();
-//					
-//					if(label.toLowerCase().contains("true"))
-//						countP++;
-//					else
-//						countN++;		
-//				}
-//			}
-//			flag=0;
-//			
-//		}
-		
+		sampleNonMatches.add((double) (countN)); //negativos		
 	}
 
 	private void descarta_allac() throws FileNotFoundException, IOException{

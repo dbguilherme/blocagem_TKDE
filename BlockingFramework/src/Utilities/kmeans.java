@@ -30,7 +30,7 @@ public class kmeans {
 		SimpleKMeans kmeans = new SimpleKMeans();
 		HashMap<Integer,LinkedList<String>> example = new HashMap<Integer,LinkedList<String>>();
 		kmeans.setSeed(10);
- 
+		HashMap<Integer,LinkedList<String>> newhashMap= new HashMap<Integer,LinkedList<String>>();
 		//important parameter to set: preserver order, number of cluster.
 		kmeans.setPreserveInstancesOrder(true);
 		kmeans.setNumClusters(tamanho);
@@ -62,43 +62,65 @@ public class kmeans {
 		    //	l.add(i+ " ");
 		    	example.put(clusterNum, l);
 		    	//i++;
-		    }  	
-		    
-			
+		    } 
 		    i++;
-		}
+		}		
 		
-		
-		
-		Instances centroids = kmeans.getClusterCentroids();
-		
+		Instances centroids = kmeans.getClusterCentroids();		
 		
 		for (i = 0; i < centroids.numInstances(); i++) {
-			  System.out.println( "Centroid "+(i + 1)+": " + centroids.instance(i));
+			  //System.out.println( "Centroid "+(i + 1)+": " + centroids.instance(i));
+			  String cent[]=centroids.instance(i).toString().split(",");
+			  LinkedList<String> x = example.get(i);
 			  
-			  for (int j = 0; j < data.numInstances(); j++) {
-				  System.out.println( data.instance(i)+" is in cluster "+ (kmeans.clusterInstance(data.instance(i))+1) );
-				  if(kmeans.clusterInstance(data.instance(i))==i){
-					 centroids.
+			  double[] diff=new double[cent.length];
+			  double[] vfinal=new double[x.size()];
+			  String linha[]=new String[x.size()];
+ 			  for (int j = 0; j < x.size(); j++) {
+				try{
+				//  System.out.println(j+ "  xxxx   " + x.get(j));
+				  linha[j]=x.get(j).split(" ")[0];
+				  String local[]=x.get(j).split(" ")[1].split(",");
+				  for (int k = 0; k < local.length-1; k++) {
+					  diff[k]=Math.abs(Double.parseDouble(cent[k])- Double.parseDouble(local[k])); 
+					  vfinal[j]+=diff[k];
+				  }		
+				//  System.out.println("valor---"+ vfinal[j]);
+				}catch(Exception e ){					
+					System.out.println("LEMEENTO ---"+e.getMessage());
+					e.printStackTrace();
+				}
+			  }
+ 			  double menor=vfinal[0];
+ 			  int n = 0;
+			  for (int j = 0; j < vfinal.length; j++) {
+				  if(menor>vfinal[j]){
+					  menor=vfinal[j];
+					  n=j;
 					  
 				  }
-			  }
-		}
+			 }
+			  LinkedList<String> l = new LinkedList<String>();
+			  l.add(x.get(n));
+			  newhashMap.put(Integer.parseInt(linha[n]), l);
+			//  System.out.println("escolhido -->  "+ l + "  N "+ n  +"   ");
+//			  for (int j = 0; j < diff.length; j++) {
+//				
+//			} 
+		}		
 		
-		
-		//kmeans.
-		System.out.println("xxxxxxxxxxxx" + i);
-		for (int j = 1; j < example.size(); j++) {
-			LinkedList<String> l = example.get(j);
-			if(l==null)
-				continue;
-			for (int k = 0; k < l.size(); k++) {
-				System.out.print(l.get(k) + "  ---------");
-			}
-			System.out.println();
-						
-		}
-		
-		return example;
+	//	System.out.println("xxxxxxxxxxxx" + i);
+//		for (int j = 1; j < example.size(); j++) {
+//			LinkedList<String> l = example.get(j);
+//			if(l==null)
+//				continue;
+//			for (int k = 0; k < l.size(); k++) {
+//				System.out.print(l.get(k) + "  ---------");
+//			}
+//			System.out.println();
+//						
+//		}
+	//	System.out.println("size--" + newhashMap.size());
+		return newhashMap;
 	}
 }
