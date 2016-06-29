@@ -36,14 +36,14 @@ import libsvm.svm_problem;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.LibSVM;
+
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RBFKernel;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.SelectedTag;
-import weka.classifiers.functions.LibSVM;;
+
 
 /**
  *
@@ -76,23 +76,24 @@ public class SupervisedMetablocking {
 		naiveBayes.setUseSupervisedDiscretization(true);
 
 		RandomForest rf= new RandomForest();
-		rf.setNumTrees(10);
-
+		//rf.set
+		//rf.setNumTrees(10);
+		//rf.setN
 
 		J48 j48 = new J48();
 		j48.setMinNumObj(2);
 		j48.setConfidenceFactor((float) 0.05);
 
-		LibSVM libSVM=new LibSVM();
+//		LibSVM libSVM=new LibSVM();
 		SMO smo = new SMO();
-		smo.setBuildLogisticModels(true);
+		//smo.setBuildLogisticModels(true);
 		smo.setKernel(new RBFKernel());
 		smo.setC(9.0);
 
 		BayesNet bayesNet = new BayesNet();
 
-		LibSVM sv = new LibSVM();
-		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+//		LibSVM sv = new LibSVM();
+//		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
 		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
 		//sv.setCost(2);
 
@@ -289,16 +290,16 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 50;
+			int tamanho = 10;
 
-			while(tamanho <=1000)
+			//while(tamanho <=1000)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho +"\n");
 				writer4.write("level "+tamanho +"\n");
-				for ( j = 0; j < 10; j++) 
+				for (j = 0;j< 10; j++) 
 				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
 					writer1.flush();

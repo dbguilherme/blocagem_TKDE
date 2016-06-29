@@ -205,7 +205,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		double[] instanceValues = new double[noOfAttributes];
 
 		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
-
+	//	System.out.println(noOfBlocks +"   "+ entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
 		double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
 		double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
 		try{
@@ -254,7 +254,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		Random random= new Random(iteration);
 		PrintStream pstxt = null;
 		PrintStream psarff = null;
-
 
 		try {
 			pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff.txt"),false));
@@ -381,11 +380,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 							if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,names))<=0){
-								
+							//	break;
 							}
 							pstxt_level[level].flush();
 							psarff_level[level].flush();
-						//	break;
+						//	
 						}
 					}
 				}
@@ -398,39 +397,38 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			pstxt_level[m].close();
 			psarff_level[m].close();
 		}
+//		try {			
+//			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",tamanho));
+//		} catch (Exception e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
 		try {
-			
-			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",tamanho));
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			//DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
+	//		callGeraBins();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
-//		try {
-//			//DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
-//			callGeraBins();
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
-////
-//		for (int i = 8; i <=8; i++) {
-//			System.out.println("chamando allac " + i	);
-//			try {
 //
-//			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-//
-//			//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-//
-//			//	callAllac(i,r);   
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		try {
-//			loadFileTrainingSet(trainingInstances);
-//		}  catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		for (int i = 8; i <=8; i++) {
+			System.out.println("chamando allac " + i	);
+			try {
+
+			//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+
+			//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
+
+		//		callAllac(i,r);   
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			loadFileTrainingSet(trainingInstances);
+		}  catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.err.println(" ");
 		System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
 		//sampleMatches.add((double) trueMetadata);///positivos
@@ -774,7 +772,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//for (int i = 0; i < 2; i++) 
 		//{
 
-		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.txt"));
+		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/final_treina.txt"));
 				
 				//new BufferedReader(new FileReader("/tmp/levels_arff.txt"));	
 			
@@ -785,7 +783,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		String line_alac;
 		int flag=0;
 		Random r=new Random();
-		
+		int count=0;
 		while((line=alac_result.readLine()) != null){
 			
 //			while ((line_alac=br.readLine()) != null) {
@@ -799,8 +797,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //			}
 		//	br= new BufferedReader(new FileReader("/tmp/final_treina.txt"));
 		//	br.readLine();//pula primeira linha
-			if(flag==0){
-				
+			if(flag==0){				
 				
 				splitLine=line.split(",");
 				idA=splitLine[0].split(":")[2];
@@ -810,27 +807,50 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
 				trainingSet.add(comparison);
 				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-
+				
+				for (int i = 0; i < commonBlockIndices.size(); i++) {
+					System.out.print("---" + commonBlockIndices.get(i) + "\n ");
+				}
 				if(commonBlockIndices!=null){
 					
 					
-					if(label.equals("false") ){
-						if(((double)r.nextFloat())<0.8)
-							continue;
-					}
-						
-					if(label.equals("true") ){
-						
-						if(((double)r.nextFloat())<0.8)
-							continue;
-					}
-
-					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-					trainingInstances.add(newInstance);
-//					for (int i = 0; i < newInstance.numAttributes(); i++) {
-//						System.err.print(newInstance.value(i)+" ,");
+//					if(label.equals("false") ){
+//						if(((double)r.nextFloat())<0.8)
+//							continue;
 //					}
-//					System.err.println();
+//						
+//					if(label.equals("true") ){
+//						
+//						if(((double)r.nextFloat())<0.8)
+//							continue;
+//					}
+					//Instance i =new Instance
+					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+//					if(countN==1){
+//						newInstance.setValue(0, 10);
+//						countN++;
+//					}
+//					Random ran =new Random();
+//					newInstance.setValue(3, 0);
+//					newInstance.setValue(4, 0);
+//					if(count>=0){
+//						if(label.toLowerCase().contains("true")){
+//							newInstance.setValue(0, count*40);
+//							newInstance.setValue(1, count*0.1*0.8);
+//						}else{							
+//							newInstance.setValue(0, count*10);
+//							newInstance.setValue(1, count*0.1*0.1);
+//							//newInstance.setValue(1, 1- ran.nextDouble()/10-0.5);
+//						}
+//						
+//						//newInstance.setValue(2, 0);
+//						
+//					}
+					trainingInstances.add(newInstance);
+					for (int i = 0; i < newInstance.numAttributes(); i++) {
+						System.out.print(newInstance.value(i)+" ,");
+					}
+					System.out.println( commonBlockIndices.size() + "  "+blocks.get(Integer.parseInt(block)).getNoOfComparisons());
 					
 					if(label.toLowerCase().contains("true"))
 						countP++;
@@ -839,7 +859,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 			}
 			flag=0;
-			
+			count++;
 		}
 		
 		
@@ -1003,7 +1023,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,comparison.sim);
 
 
-				for (int j = 0; j < newInstanceTemp.numAttributes()-1; j++) {
+				for (int j = 0; j < newInstanceTemp.numAttributes()-3; j++) {
 					psarff.print((newInstanceTemp.value(j)) + ", ");
 					psarff_level[controle].print((newInstanceTemp.value(j)) + ", ");
 				}
