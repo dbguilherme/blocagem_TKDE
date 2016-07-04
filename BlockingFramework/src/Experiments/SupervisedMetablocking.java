@@ -75,11 +75,13 @@ public class SupervisedMetablocking {
 		naiveBayes.setUseKernelEstimator(false);
 		naiveBayes.setUseSupervisedDiscretization(true);
 
-		RandomForest rf= new RandomForest();
-		//rf.set
+		//RandomForest rf= new RandomForest();
+		RandomForest rf = new RandomForest();
+		rf.setNumTrees(200);
 		//rf.setNumTrees(10);
+		//rf.
 		//rf.setN
-
+		//Ibk
 		J48 j48 = new J48();
 		j48.setMinNumObj(2);
 		j48.setConfidenceFactor((float) 0.05);
@@ -290,7 +292,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 10;
+			int tamanho = 1000;
 
 			//while(tamanho <=1000)
 			{
