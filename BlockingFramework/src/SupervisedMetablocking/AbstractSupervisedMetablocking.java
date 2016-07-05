@@ -49,8 +49,10 @@ import Utilities.ExecuteBlockComparisons;
 import Utilities.StatisticsUtilities;
 import Utilities.kmeans;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
+import weka.classifiers.trees.RandomTree;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -117,7 +119,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3, BufferedWriter writer4, int r) throws Exception {
 		elements=new int[10];
 
-
+		
 		getTrainingSet_original(iteration,ebc,tamanho,r);
 		//getTrainingSet(iteration,ebc,tamanho);
 		System.out.println(trainingInstances.size() + "  ----- " +temp);
@@ -135,7 +137,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			double overheadTime = System.currentTimeMillis()-startingTime;
 			System.out.println("CL"+i+" Overhead time\t:\t" + overheadTime);
 			overheadTimes[i].add(overheadTime);
-			System.out.println("----------" +getCount());
+			//System.out.println("----------" +getCount());
 			//commented out for faster experiments
 			//use when measuring resolution time
 			long comparisonsTime = 0;//ebc.comparisonExecution(newBlocks);
@@ -242,8 +244,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	int temp=0;
 	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r) throws FileNotFoundException {
-
-
 
 		int trueMetadata=0;
 		int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size());
@@ -399,12 +399,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			pstxt_level[m].close();
 			psarff_level[m].close();
 		}
-//		try {			
-//			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",tamanho));
-//		} catch (Exception e2) {
-//			// TODO Auto-generated catch block
-//			e2.printStackTrace();
-//		}
+		try {			
+			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",20));
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		try {
 			//DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
 	//		callGeraBins();
@@ -426,12 +426,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}
 		}
 
-		try {
-			teste_tree(trainingInstances);
-			///loadFileTrainingSet(trainingInstances);
-		}  catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			teste_tree(trainingInstances);
+//			///loadFileTrainingSet(trainingInstances);
+//		}  catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		System.err.println(" ");
 		System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
 		//sampleMatches.add((double) trueMetadata);///positivos
@@ -448,34 +448,42 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						 
 		Instances data = new Instances(inputReader);
 		data.setClassIndex(data.numAttributes() -1);
-		
+//		
 		RandomForest rf = new RandomForest();
-	  //  rf.setNumTrees(50);
-		
+	    rf.setNumTrees(10);
+	    rf.setMaxDepth(2);
+	   
+	   // rf.buildClassifier(data);
+	   // rf.
+	 //   RandomTree rf= new RandomTree();
+	    
 		Instances data2 = new Instances(data,0);
-		//data2.setClassIndex(data2.numAttributes() -1);
+		data2.setClassIndex(data2.numAttributes() -1);
 		int linha=0,linha_arff=0;
 		double memoria=1.0;
 		double memoriaPares=0.0;
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 5; i++) {
 			data2.add(data.get(i));
 			linha++;
 			linha_arff++;
 		}
-		
-		
-for (int j = 0; j < 900;j++) {
-		data2.add(data.get(linha++));
-		linha_arff++;
+		int vector[] = new int[500000];
+		//rf.buildClassifier(data);
+
+for (int j = 0; j < 900;j++) 
+{
+		//data2.add(data.get(linha++));
+		//linha_arff++;
 		
 		rf.buildClassifier(data2);
-		
+		System.out.println(data2.size());
 		//j48.classifyInstance(instance);
 		
 		int countP=0,countN=0;
-		
+		 int flag=1;
 		 for (AbstractBlock block : blocks) {
 	            ComparisonIterator iterator = block.getComparisonIterator();
+	          
 	            while (iterator.hasNext()) {
 	            	
 	                Comparison comparison = iterator.next();
@@ -485,25 +493,38 @@ for (int j = 0; j < 900;j++) {
 	                }
 
 	                if (trainingSet.contains(comparison)) {
-	                  //  continue;
+	                    continue;
 	                }
 
 	                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0);
-	                double saida []=rf.distributionForInstance(currentInstance);
-	                System.out.println(saida[0] +  "  "+ saida[1]);
-	                		
-	                System.out.println();
 	                int instanceLabel = (int) rf.classifyInstance(currentInstance);  
+	                double saida []=rf.distributionForInstance(currentInstance);
+	                if(saida[1]<1 && saida[1]>0.0){	                	
+	                	if(flag<2){
+	                	   // System.out.println(saida[0] +  "  "+ saida[1] + " " + currentInstance.value(5));
+	                		if(instanceLabel==1)
+	                		{
+	                			currentInstance.setClassValue(value);
+	                			data2.add(currentInstance);
+	                			flag++;
+	                			//data.remove(index)
+	                			trainingSet.add(comparison);
+	                		}
+	                	}
+	                }
+	               // 		
+	               
 	                
 	                if (instanceLabel == DUPLICATE) {
 	                	//count++;
 	                    retainedEntities1.add(comparison.getEntityId1());
 	                    retainedEntities2.add(comparison.getEntityId2());
 	                }
+	               
 	            }
 	        }
 		 
-		  int[] entityIds1 = Converter.convertCollectionToArray(retainedEntities1);
+		    int[] entityIds1 = Converter.convertCollectionToArray(retainedEntities1);
 	        int[] entityIds2 = Converter.convertCollectionToArray(retainedEntities2);
 	        int teste=0;
 	        for (int i = 0; i < entityIds1.length; i++) {
@@ -514,45 +535,55 @@ for (int j = 0; j < 900;j++) {
 	                final IdDuplicates matchingPair = new IdDuplicates(entityIds1[i], entityIds2[i]);
 	                TdetectedDuplicates.add(matchingPair);  
 	                //System.out.println("match ->>>>" +entityIds1[i] +" ---" + entityIds2[i]);
-	            }
-	        }
+	            }	      
+	        }	 
+	        System.out.println(" data 2 --->"+data2.size());
+	        System.out.println("************Executed comparisons blocking\t:\t" 	);
+  	        System.out.println("************Executed comparisons\t:\t" + entityIds1.length);
+  	        System.out.println("************Detected duplicates\t:\t" + TdetectedDuplicates.size());
+  	        System.out.println("************Detected duplicates\t:\t" + (double)TdetectedDuplicates.size()/8700 + "\n\n\n\n");
+  	      
+  	      retainedEntities1.clear();
+  		retainedEntities2.clear();
+  		TdetectedDuplicates.clear();  	        
+        }
+		
 	        
-	        
-	        if(Math.abs((double)TdetectedDuplicates.size()/8700 -memoria)<0.01 && data2.size()<10){
-	        	data2.remove(linha_arff-1);
-	        	linha_arff--;
-	        	//System.out.println("removeuu...." + memoria );       	   	
-	        	
-	        	
-	        }else if(((double)TdetectedDuplicates.size()/8700 -memoria)<0.01 && data2.size()>10){
-	        	data2.remove(linha_arff-1);
-	        	linha_arff--;
-	        	//System.out.println("removeuu...." + memoria );        		
-        	}  	        
-	        else{        	
-	        	if((memoriaPares -entityIds1.length)<-11000 && data2.size()>15){
-	        		data2.remove(linha_arff-1);
-		        	linha_arff--;
-		        	System.out.println("removeuu pares...." + memoriaPares  + "   "+ entityIds1.length); 
-	        	}else{
-	        		
-	        	  memoria=(double)TdetectedDuplicates.size()/8700;
-	        	  memoriaPares =entityIds1.length;
-	        	  System.out.println("                    nao removeuu...." + memoria  + " "+(double)TdetectedDuplicates.size()/8700);
-	        		System.err.println("data2.size()--->" +data2.size());
-	        	  System.out.println("************Executed comparisons blocking\t:\t" 	);
-	  	        System.out.println("************Executed comparisons\t:\t" + entityIds1.length);
-	  	        System.out.println("************Detected duplicates\t:\t" + TdetectedDuplicates.size());
-	  	        System.out.println("************Detected duplicates\t:\t" + (double)TdetectedDuplicates.size()/8700 + "\n\n\n\n");
-	        	}
-	        }
+//	        if(Math.abs((double)TdetectedDuplicates.size()/8700 -memoria)<0.01 && data2.size()<10){
+//	        	data2.remove(linha_arff-1);
+//	        	linha_arff--;
+//	        	//System.out.println("removeuu...." + memoria );       	   	
+//	        	
+//	        	
+//	        }else if(((double)TdetectedDuplicates.size()/8700 -memoria)<0.01 && data2.size()>10){
+//	        	data2.remove(linha_arff-1);
+//	        	linha_arff--;
+//	        	//System.out.println("removeuu...." + memoria );        		
+//        	}  	        
+//	        else{        	
+//	        	if((memoriaPares -entityIds1.length)<-11000 && data2.size()>15){
+//	        		data2.remove(linha_arff-1);
+//		        	linha_arff--;
+//		        	System.out.println("removeuu pares...." + memoriaPares  + "   "+ entityIds1.length); 
+//	        	}else{
+//	        		
+//	        	  memoria=(double)TdetectedDuplicates.size()/8700;
+//	        	  memoriaPares =entityIds1.length;
+//	        	  System.out.println("                    nao removeuu...." + memoria  + " "+(double)TdetectedDuplicates.size()/8700);
+//	        		System.err.println("data2.size()--->" +data2.size());
+//	        	  System.out.println("************Executed comparisons blocking\t:\t" 	);
+//	  	        System.out.println("************Executed comparisons\t:\t" + entityIds1.length);
+//	  	        System.out.println("************Detected duplicates\t:\t" + TdetectedDuplicates.size());
+//	  	        System.out.println("************Detected duplicates\t:\t" + (double)TdetectedDuplicates.size()/8700 + "\n\n\n\n");
+//	        	}
+//	        }
 	        
 	        	
 	       
 	        retainedEntities1.clear();
 	        retainedEntities2.clear();
 	        TdetectedDuplicates.clear();
-}	 
+	 
 	}
 
 	//	int[] primeiroBlock=new int[10];
@@ -583,32 +614,33 @@ for (int j = 0; j < 900;j++) {
 		while(iterator.hasNext()){
 			LinkedList<String> l=iterator.next();
 			//int rand=r.nextInt(l.size());
-			System.err.println("----" +l.size());
-			String Nline=l.get(0).split(" ")[0];
-			line = list.get(Integer.parseInt(Nline));
-			//System.out.println(Nline+ " " +  +line);
-			splitLine=line.split(",");
-			idA=splitLine[0].split(":")[2];
-			idB=splitLine[2].split(":")[2];
-			block=splitLine[4].trim();
-			String label=splitLine[3].trim();
-			System.out.println(Nline+ "---- " + label + "   " +  line);
-			Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
-			trainingSet.add(comparison);
-			List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);
-
-			if(commonBlockIndices!=null){
-				Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
-				trainingInstances.add(newInstance);
-//				for (int i = 0; i < newInstance.numAttributes(); i++) {
-//					System.err.print(newInstance.value(i)+" ,");
-//				}
-//				System.err.println();
-				
-				if(label.toLowerCase().contains("true"))
-					countP++;
-				else
-					countN++;		
+			//System.err.println("----" +l.size());
+			for (int i = 0; i < l.size(); i++) {		
+				String Nline=l.get(i).split(" ")[0];
+				line = list.get(Integer.parseInt(Nline));
+				//System.out.println(Nline+ " " +  +line);
+				splitLine=line.split(",");
+				idA=splitLine[0].split(":")[2];
+				idB=splitLine[2].split(":")[2];
+				block=splitLine[4].trim();
+				String label=splitLine[3].trim();
+				System.out.println(Nline+ "---- " + label + "   " +  line);
+				Comparison comparison = new Comparison(true, Integer.parseInt(idA), Integer.parseInt(idB),0.0);
+				trainingSet.add(comparison);
+				List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(Integer.parseInt(block), comparison);	
+				if(commonBlockIndices!=null){
+					Instance newInstance = getFeatures(label.equals("true")?1:0, commonBlockIndices, comparison,0.0);
+					trainingInstances.add(newInstance);
+	//				System.out.println();
+	//				for (int i = 0; i < newInstance.numAttributes(); i++) {
+	//					System.err.print(newInstance.value(i)+" ,");
+	//				}
+	//				System.err.println();					
+					if(label.toLowerCase().contains("true"))
+						countP++;
+					else
+						countN++;		
+				}
 			}
 			//int i;
 			//if(label.equals("false") && flag++<3)

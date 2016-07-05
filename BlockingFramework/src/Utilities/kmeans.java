@@ -61,35 +61,50 @@ public class kmeans {
 		Instances centroids = kmeans.getClusterCentroids();		
 		
 		int i=0;
-		double vector[]=new double[tamanho];
-		String vInstance[]=new String[tamanho];
-		int position[]=new int[tamanho];
-		for (int j = 0; j < tamanho; j++) {
+		double vector[]=new double[tamanho*3];
+		String vInstance[]=new String[tamanho*3];
+		int position[]=new int[tamanho*3];
+		for (int j = 0; j < tamanho*3; j++) {
 			vector[j]=10000000;
 		}
-		
+		int posição=0;
 		for(int clusterNum : assignments) {
 			//example.put(clusterNum,data.get(i).toString());
-			//put(clusterNum,data.get(i));
-			System.out.println(data.get(i) + "          "+  centroids.instance(clusterNum));
+			////put(clusterNum,data.get(i));
+			//System.out.println(data.get(i) + "          "+  centroids.instance(clusterNum));
 			if(m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100)<vector[clusterNum]){
 				vector[clusterNum]=m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100);
 				vInstance[clusterNum]=data.get(i).toString();
 				position[clusterNum]=i;
-			}
-			
-		i++;
+			}			
+		    i++;
 		}		
 		
-		for (int j = 0; j < vInstance.length; j++) {
-			System.out.println(vector[j] +"   "+ vInstance[j] + "   "+ position[j]);
+		posição=i;
+		i=0;
+		for(int clusterNum : assignments) {
+			//example.put(clusterNum,data.get(i).toString());
+			////put(clusterNum,data.get(i));
+		//	System.out.println(clusterNum + " ------  " + data.get(i) + "          ");
+			if(m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100)<vector[clusterNum+tamanho]){
+				if(position[clusterNum]!=i && data.get(i).toString().split(",")[5]=="1"){
+					vector[tamanho+clusterNum]=m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100);
+					vInstance[tamanho+clusterNum]=data.get(i).toString();
+					position[tamanho+clusterNum]=i;
+				}
+			}			
+		    i++;
 		}
+			
 		
-		for (int j = 0; j < tamanho; j++) {
+//		for (int j = 0; j < vInstance.length; j++) {
+//			System.out.println(j + "   "+ vector[j] +"   "+ vInstance[j] + " ---------------------  "+ position[j]);
+//		}
+		
+		for (int j = 0; j < tamanho*2; j++) {
 			if(example.get(position[j])!=null){
 		    	LinkedList<String> l = example.get(position[j]);
 		    	//System.err.println(data.get(clusterNum));
-		    	///++;
 		    	l.add(position[j]+ " "+vInstance[j]);
 		    	//l.add(i+ " ");
 		    	example.put(position[j], l);
@@ -144,18 +159,17 @@ public class kmeans {
 //			
 //		}		
 		
-	//	System.out.println("xxxxxxxxxxxx" + i);
-//		for (int j = 1; j < example.size(); j++) {
+//		System.out.println("xxxxxxxxxxxx" + example.size());
+//		for (int j = 0; j < example.size(); j++) {
 //			LinkedList<String> l = example.get(j);
 //			if(l==null)
 //				continue;
 //			for (int k = 0; k < l.size(); k++) {
 //				System.out.print(l.get(k) + "  ---------");
 //			}
-//			System.out.println();
-//						
+//			System.out.println();						
 //		}
-	//	System.out.println("size--" + newhashMap.size());
+		//System.out.println("size--" + newhashMap.size());
 		return example;
 	}
 }

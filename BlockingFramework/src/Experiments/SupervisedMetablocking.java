@@ -77,6 +77,8 @@ public class SupervisedMetablocking {
 
 		//RandomForest rf= new RandomForest();
 		RandomForest rf = new RandomForest();
+		rf.setNumTrees(10);
+		
 		rf.setNumTrees(200);
 		//rf.setNumTrees(10);
 		//rf.
@@ -89,8 +91,8 @@ public class SupervisedMetablocking {
 //		LibSVM libSVM=new LibSVM();
 		SMO smo = new SMO();
 		//smo.setBuildLogisticModels(true);
-		smo.setKernel(new RBFKernel());
-		smo.setC(9.0);
+//		smo.setKernel(new RBFKernel());
+//		smo.setC(9.0);
 
 		BayesNet bayesNet = new BayesNet();
 
@@ -301,7 +303,7 @@ public class SupervisedMetablocking {
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho +"\n");
 				writer4.write("level "+tamanho +"\n");
-				for (j = 0;j< 10; j++) 
+				for (j = 0;j< 1; j++) 
 				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
 					writer1.flush();
