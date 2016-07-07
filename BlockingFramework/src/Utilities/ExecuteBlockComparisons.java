@@ -134,10 +134,10 @@ public class ExecuteBlockComparisons {
 		Levenshtein le= new Levenshtein();
 		//String[] name=((new Converter()).atributos_value);
 		profile1= dataset1[entityIds1].getAttributes();
-//		if(dataset2!=null)
-//			profile2=dataset2[entityIds2].getAttributes();
-//		else
-		profile2=dataset1[entityIds2].getAttributes();
+		if(dataset2!=null)
+			profile2=dataset2[entityIds2].getAttributes();
+		else
+			profile2=dataset1[entityIds2].getAttributes();
 		
 		String[] vetA =new String[names.length];
 		String[] vetB =new String[names.length];

@@ -126,10 +126,10 @@ public class SupervisedMetablocking {
 		//		}
 		//classifiers[3].setOptions( optionsArray );
 
-		Classifier[] classifiers = new Classifier[1];
+		Classifier[] classifiers = new Classifier[3];
 		classifiers[0] =naiveBayes;// naiveBayes;
-	//	classifiers[1] = smo;
-		//classifiers[2] = sv;
+		classifiers[1] = j48;
+		classifiers[2] = smo;
 	//	classifiers[1] = j48;
 	//	classifiers[2] = rf;
 		return classifiers;
@@ -294,11 +294,9 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 10;
-
-			while(tamanho <=1000)
-			{
-				
+			int tamanho = 500;
+			while(tamanho <=10000)
+			{				
 				writer1.write("level "+tamanho +"\n");
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho +"\n");
