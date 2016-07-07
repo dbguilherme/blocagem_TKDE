@@ -46,6 +46,7 @@ import Utilities.ComparisonIterator;
 import Utilities.Constants;
 import Utilities.Converter;
 import Utilities.ExecuteBlockComparisons;
+import Utilities.ProfileComparison;
 import Utilities.StatisticsUtilities;
 import Utilities.kmeans;
 import weka.classifiers.Classifier;
@@ -218,7 +219,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			System.out.println(e.getMessage());
 		}
 
-
+		//CF 	IBF -RACCB 	Jaccard	Sim	,Node Degree
 
 		double raccb = 0;
 		for (Integer index : commonBlockIndices) {
@@ -229,12 +230,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 
 		instanceValues[1] = raccb;
-
+	//	ProfileComparison.getJaccardSimilarity(profiles1[comparison.getEntityId1()].getAttributes(), profiles2[comparison.getEntityId2()].getAttributes());
 		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
-		instanceValues[4] = nonRedundantCPE[comparison.getEntityId2()];;
+		instanceValues[4] = nonRedundantCPE[entityId2];;
 		instanceValues[5] = match;
-
+		
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
 		newInstance.setDataset(trainingInstances);
 		return newInstance;
@@ -245,6 +246,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	int temp=0;
 	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r) throws FileNotFoundException {
 
+		
 		int trueMetadata=0;
 		int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size());
 		double nonMatchRatio = matchingInstances / (validComparisons - duplicates.size());
@@ -359,14 +361,14 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					{
 						if(comparison.sim>= ((double)level*0.1) && comparison.sim<= ((double)(level+1)*0.1)){	
 						
-							int temp=random.nextInt(Nblocks[level]);
-							if(temp>tamanho){
-								//	lixo++;
-								//if(lixo%1000==0)
-								//if(controle==4)
-								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-								continue;
-							}
+//							int temp=random.nextInt(Nblocks[level]);
+//							if(temp>tamanho){
+//								//	lixo++;
+//								//if(lixo%1000==0)
+//								//if(controle==4)
+//								//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
+//								continue;
+//							}
 //							int match = NON_DUPLICATE; // false
 //							if (areMatching(comparison)) {
 //								if (random.nextDouble() < SAMPLE_SIZE) {
@@ -378,7 +380,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //							} else if (nonMatchRatio <= random.nextDouble()) {
 //								continue;
 //							}
-							l++;
+//							l++;
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 							if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,names))<=0){
@@ -392,7 +394,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}
 			}
 		}
-		System.out.println("tamanho do L "+ l);
+		System.out.println("tamanho do arquivo arff "+ l);
 		pstxt.close();
 		psarff.close();
 		for (int m = 0; m < 10; m++) {
@@ -400,11 +402,22 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			psarff_level[m].close();
 		}
 		try {			
-			loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",20));
+			//loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",100, trainingInstances));
+			trainingInstances=kmeans.run("/tmp/levels_arff.arff",tamanho, trainingInstances,sampleMatches,sampleNonMatches);
 		} catch (Exception e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		System.out.println("training match Instances ---" + sampleMatches.get(0));
+		System.out.println("training match Instances ---" + sampleNonMatches.get(0));
+		for (int k = 0; k < trainingInstances.size(); k++) {
+			for (int k2 = 0; k2 < 6; k2++) {
+				System.out.print( trainingInstances.get(k).value(k2) +"  ");
+			}
+			System.out.println();
+		}
+		
+		
+		
 		try {
 			//DiscretizeTest.run("/tmp/levels_arff.arff", "/tmp/levels_arff2.arff");
 	//		callGeraBins();
@@ -504,7 +517,7 @@ for (int j = 0; j < 900;j++)
 	                	   // System.out.println(saida[0] +  "  "+ saida[1] + " " + currentInstance.value(5));
 	                		if(instanceLabel==1)
 	                		{
-	                			currentInstance.setClassValue(value);
+	                			//currentInstance.setClassValue(value);
 	                			data2.add(currentInstance);
 	                			flag++;
 	                			//data.remove(index)
