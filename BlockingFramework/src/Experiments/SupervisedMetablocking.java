@@ -294,14 +294,14 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 50;
-			while(tamanho <=10000)
+			int tamanho = 200;
+		//	while(tamanho <=10000)
 			{				
 				writer1.write("level "+tamanho +"\n");
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho +"\n");
 				writer4.write("level "+tamanho +"\n");
-				for (j = 0;j< 1000; j++) 
+				for (j = 0;j< 1; j++) 
 				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
 					writer1.flush();
