@@ -25,11 +25,11 @@ import DataStructures.Attribute;
 public class Converter {
 
 	
-	//public static String  atributos_value[] = { "id", "title" , "authors", "venue", "year"};
+	public static String  atributos_value[] = { "id", "title" , "authors", "venue", "year"};
 	
 	//public static String  atributos_value[] = { "id", "starring" , "writer", "year"};
 	//public static String  atributos_value[] = { "id",  "price", "title" };
-	public static String  atributos_value[] = { "id", "name" , "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
+	//public static String  atributos_value[] = { "id", "name" , "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
 	
 	
 	public static String[] createVector( Set<Attribute> setAtributtes, int entityIds1){
