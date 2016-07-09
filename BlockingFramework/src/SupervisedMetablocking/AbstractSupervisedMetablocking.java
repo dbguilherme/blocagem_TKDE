@@ -529,8 +529,8 @@ if(false){
 		Instances data = new Instances(alac_result);
 		data.setClassIndex(data.numAttributes() -1);
 		int countP=0,countN=0;
-		
-		
+		int len=3;
+		//trainingInstances.add(data.get(0));
 		//ArrayList<Attribute>
 		
 //		Instance P_maior= new DenseInstance(5);
@@ -543,7 +543,7 @@ if(false){
 		
 		for (int i = 0; i < matrix_out.length; i++) {
 			for (int j = 0; j < 6; j++) {
-				matrix_inP[i][j]=matrix_inN[i][j]=matrix_out[i][j]=0.0;
+				matrix_inP[i][j]=matrix_inN[i][j]=matrix_out[i][j]= 0.0;
 			}
 		}
 		
@@ -552,121 +552,142 @@ if(false){
 				String st =instance.toString();
 				String vetor[]=st.split(",");
 				for (int j = 0; j < 6; j++) {
-					if(vetor[5].equals("1")){
+					if(Double.parseDouble(vetor[5])==1.0){
 						matrix_inP[iP][j]=Double.parseDouble(vetor[j]);
 					}
 					else{
 						matrix_inN[iN][j]=Double.parseDouble(vetor[j]);
 					}
 				}
-				if(vetor[5].equals("1"))
+				if(Double.parseDouble(vetor[5])==1.0)
 					iP++;
 				else
 					iN++;
-		}		
+		}	
 		
-		int i, index=0;
-		for (i = 0; i < 5; i++) {//coluna positio maior
+		/////////////////////////////
+		int i, index_matrix=0;
+		for (i = 0; i < 1; i++) {//coluna positio maior
 			Arrays.sort(matrix_inP, new ArrayComparator<>(i));
 			
-			for (int linha = 0; linha < 3; linha++) {
+			for (int linha = 0; linha < 1; linha++) {  //mais de uma linha
 				//if(matrix_inP[linha][5]==1)
-				{					
-					matrix_out[linha][i]=matrix_inP[linha][i];
+				for (int j = 0; j <6; j++) {
+					matrix_out[index_matrix][j]=matrix_inP[linha][j];
 				}
-				matrix_out[linha][5]=1.0;
+				matrix_out[index_matrix++][5]=(double) 1;
 			}			
 			
 		}
 		
-//		for (i = 0; i < 6; i++) {
-//			for (int j = 0; j < 6; j++) {
-//				System.out.print(matrix_out[i][j]+ " ,");
-//			}			
-//			System.out.println();
-//		}
+		////////
+		int linha;
+		System.out.println( matrix_inP.length);
+		for (i = 0; i < 1; i++) {//coluna positivo menor 
+			Arrays.sort(matrix_inP, new ArrayComparator<>(i));
+			
+			int linha_start = matrix_inP.length-1;
+			
+			while(matrix_inP[linha_start][0]==0.0 ){
+				linha_start--;
+				
+				//System.out.println(matrix_inP[linha][i] +" "+ i);
+			}
+			
+			//int linha;
+			for (linha= linha_start-1; linha > linha_start-2; linha--) {
+				//if(matrix_inP[matrix_inP.length-linha+6-1][5]==1)
+				
+				
+					
+				//else
+				{
+					for (int j = 0; j < 6; j++) {
+						matrix_out[index_matrix][j]=matrix_inP[linha][j];
+					}
+					
+					//System.out.println(matrix_inP[linha][i]);
+				}
+				matrix_out[index_matrix++][5]=(double) 1;
+			}
+		}
 		
-		for (i = 0; i < 5; i++) {//coluna negativo maior 
+		for (i = 0; i < 1; i++) {//coluna positivo menor 
 			Arrays.sort(matrix_inN, new ArrayComparator<>(i));
 			
-			for (int linha = 0; linha < 3; linha++) {
+			int linha_start = matrix_inN.length-1;
+			
+			while(matrix_inN[linha_start][0]==0.0 ){
+				linha_start--;
+				
+				//System.out.println(matrix_inP[linha_start][i] +" "+ i);
+			}
+			
+			 linha=0;
+			for (linha= linha_start-1; linha > linha_start-2; linha--) {
+				//if(matrix_inP[matrix_inP.length-linha+6-1][5]==1)
+			
+				for (int j = 0; j < 6; j++) {
+					matrix_out[index_matrix][j]=matrix_inN[linha][j];
+				}
+				matrix_out[index_matrix++][5]=(double) 0;
+			}
+		}
+				
+		for (i = 0; i < 1; i++) {//coluna negativo maior 
+			Arrays.sort(matrix_inN, new ArrayComparator<>(i));
+			
+			for (linha = 0; linha < 1; linha++) {
 				//if(matrix_inN[linha][5]==0)
+				for (int j = 0; j < 6; j++) {
+					matrix_out[index_matrix][j]=matrix_inN[linha][j];
+				}
 				{					
-					matrix_out[linha +3][i]=matrix_inN[linha][i];
+					
 				//	System.out.println(matrix_inN[linha][i]);
 				}
-				matrix_out[linha +3][5]=0.0;
+				matrix_out[index_matrix++][5]=(double) 0;
 			}
 			
 		}
-//		for (i = 0; i < 6; i++) {
-//			for (int j = 0; j < 6; j++) {
-//				System.out.print(matrix_out[i][j]+ " ,,");
-//			}			
-//			System.out.println();
-//		}
-		////////
-		for (i = 0; i < 5; i++) {//coluna positivo menor 
-			Arrays.sort(matrix_inP, new ArrayComparator<>(i));
-			
-			for (int linha = matrix_inP.length-1, x1=6; linha > matrix_inP.length-3; linha--,x1++) {
-				//if(matrix_inP[matrix_inP.length-linha+6-1][5]==1)
-				while(matrix_inP[linha][i]==0.0){
-					linha--;					
-				}
-					
-				else
-				{					
-					matrix_out[x1][i]=matrix_inP[linha][i];
-					System.out.println(matrix_inP[linha][i]);
-				}
-				matrix_out[x1][5]=1.0;
-			}
-			index++;
-		}
-		
-		for (i = 0; i < 13; i++) {
-			for (int j = 0; j < 6; j++) {
-				System.out.print(matrix_out[i][j]+ " ,,");
-			}			
-			System.out.println();
-		}
-		
-		
-		
-		for (i = 0; i < 5; i++) {//coluna negativo menor
-			Arrays.sort(matrix_inN, new ArrayComparator<>(i));
-			
-			for (int linha = matrix_inN.length-1; linha > matrix_inN.length-3-1; linha--) {
-				//if(matrix_in[matrix_in.length-linha+9-1][5]==0)
-				{					
-					matrix_out[index][i]=matrix_inN[linha][i];
-				}
-				matrix_out[index][5]=0.0;
-			}	
-			index++;
-		}
-		
-		
-		
+
+	
 //		
-//		for (i = 0; i < 6; i++) {
+//	
+//		
+//		//System.out.println(x1);
+
+		
+//		for (i = 0; i < len*4; i++) {
 //			for (int j = 0; j < 6; j++) {
-//				System.out.print(matrix_out[i][j]+ " bbb,");
+//				System.out.print(matrix_out[i][j]+ ", ");
 //			}			
 //			System.out.println();
 //		}
+////		
 		
 		
 		
-		
-		for (int j = 0; j < 6; j++) {
-			Instance P_maior= new DenseInstance(6);
+		for (int j = 0; j < index_matrix; j++) {
+			double[] instanceValues = new double[noOfAttributes];
+			//Instance P_maior= new DenseInstance(6);
 			for (int k = 0; k < 6; k++) {
-				P_maior.setValue(k, matrix_out[j][k]);
-			}		
-			trainingInstances.add(P_maior);
-			countP++;
+				instanceValues[k]= matrix_out[j][k];
+			}
+			
+			
+//				inst_co.setValue(5, 1); //setClassValue(1);
+//			else
+//				inst_co.setValue(5, 0); //
+			Instance newInstance = new DenseInstance(1.0, instanceValues);
+			newInstance.setDataset(trainingInstances);
+			//P_maior.setClassValue(5);
+			//P_maior.setDataset(trainingInstances);
+			trainingInstances.add(newInstance);
+			if(matrix_out[j][5]==1)
+				countP++;
+			else
+				countN++;
 		}
 		
 		
@@ -712,19 +733,29 @@ if(false){
 
 		
 		
-		
-		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1))==0){
-				trainingInstances.add(instance);
-				if((instance.value(data.numAttributes() -1))==1)  
-					countP++;
-				else
-					countN++;
+//		
+//		for (Instance instance : data) {
+//			//if((instance.value(data.numAttributes() -1))==0){
+//			for (int j = 0; j < 6; j++) {
+//				//instance.setValue(j, 0.5);
+//			}
+//			
+//				trainingInstances.add(instance);
+//				if((instance.value(data.numAttributes() -1))==1)  
+//					countP++;
+//				else
+//					countN++;
+//			//}
+//			
+//				break;
+//		}
+//	
+		for (int j = 0; j < trainingInstances.size(); j++) {
+			for (int j2 = 0; j2 < 6; j2++) {
+				System.out.print(trainingInstances.get(j).value(j2)+ " ");
 			}
-			
-				
+			System.out.println();
 		}
-	
 		
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
 		sampleMatches.add((double) countP);///positivos
