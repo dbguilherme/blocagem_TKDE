@@ -112,7 +112,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		getStatistics();
 		prepareStatistics();
 		getAttributes();
-		//Nblocks=conta_niveis_hash(blocks,ebc);
+		Nblocks=conta_niveis_hash(blocks,ebc);
 	}
 
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
@@ -264,7 +264,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		Random random= new Random(iteration);
 		PrintStream pstxt = null;
 		PrintStream psarff = null;
-if(false){
+if(true){
 		//encontraPares();
 					try {
 						pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff.txt"),false));
@@ -370,15 +370,15 @@ if(false){
 									if(comparison.sim>= ((double)level*0.1) && comparison.sim<= ((double)(level+1)*0.1)){	
 										//System.out.println(blocks.get(i).getNoOfComparisons());
 			//							Instance newInstanceTemp = getFeatures(0, commonBlockIndices, comparison,comparison.sim);
-			//							int temp=random.nextInt(Nblocks[level]);
-			//							//if(newInstanceTemp.value(0)<150)	
-			//								if(temp>tamanho){
-			//									//	lixo++;
-			//									//if(lixo%1000==0)
-			//									//if(controle==4)
-			//									//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-			//									continue;
-			//								}
+										int temp=random.nextInt(Nblocks[level]);
+										//if(newInstanceTemp.value(0)<150)	
+											if(temp>tamanho){
+												//	lixo++;
+												//if(lixo%1000==0)
+												//if(controle==4)
+												//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
+												continue;
+											}
 										
 			//							String label="false";
 			//							IdDuplicates duplicatePair1 = new IdDuplicates(comparison.getEntityId1(), comparison.getEntityId2());
@@ -400,18 +400,18 @@ if(false){
 									//	}
 										
 										
-										int match = NON_DUPLICATE; // false
-										if (areMatching(comparison)) {
-											if (random.nextDouble() < SAMPLE_SIZE) {
-												trueMetadata++;
-												match = DUPLICATE; // true
-											} else {
-												continue;
-											}
-										} else if (nonMatchRatio <= random.nextDouble()) {
-											continue;
-										}
-										l++;
+//										int match = NON_DUPLICATE; // false
+//										if (areMatching(comparison)) {
+//											if (random.nextDouble() < SAMPLE_SIZE) {
+//												trueMetadata++;
+//												match = DUPLICATE; // true
+//											} else {
+//												continue;
+//											}
+//										} else if (nonMatchRatio <= random.nextDouble()) {
+//											continue;
+//										}
+//										l++;
 										//								if(controle==4)
 										//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 										if((retorno=getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,names))<=0){
@@ -471,8 +471,8 @@ if(false){
 	}
 		try {
 			//teste_tree(trainingInstances);
-			//loadFileTrainingSet(trainingInstances);
-			loadFileTrainingSet();
+			loadFileTrainingSet(trainingInstances);
+			//loadFileTrainingSet();
 		}  catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1043,7 +1043,7 @@ for (int j = 0; j < 900;j++)
 					if (commonBlockIndices == null) {
 						continue;
 					}
-
+					
 					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),names);
 					c.sim=sim;
 					blockSize[((int)Math.floor(sim*10))]++;
