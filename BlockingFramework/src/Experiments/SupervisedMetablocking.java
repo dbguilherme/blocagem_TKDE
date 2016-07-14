@@ -72,9 +72,10 @@ public class SupervisedMetablocking {
 
 	private static Classifier[] getSupervisedWepClassifiers() {
 		NaiveBayes naiveBayes = new NaiveBayes();
-		naiveBayes.setUseKernelEstimator(false);
-		naiveBayes.setUseSupervisedDiscretization(true);
+		//naiveBayes.setUseKernelEstimator(false);
+		//naiveBayes.setUseSupervisedDiscretization(false);
 
+		
 		//RandomForest rf= new RandomForest();
 		RandomForest rf = new RandomForest();
 	//	rf.setNumTrees(10);
@@ -95,7 +96,7 @@ public class SupervisedMetablocking {
 //		smo.setC(9.0);
 
 		BayesNet bayesNet = new BayesNet();
-
+		//bayesNet.
 //		LibSVM sv = new LibSVM();
 //		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
 		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);

@@ -58,12 +58,12 @@ public class kmeans {
 		
 		kmeans.setOptions(options);
 		kmeans.setPreserveInstancesOrder(true);
-		kmeans.setNumClusters(tamanho);
+		kmeans.setNumClusters(10000);
 		//kmeans.setFastDistanceCalc(true);
 		//kmeans.setInitializeUsingKMeansPlusPlusMethod(true);
 		kmeans.setMaxIterations(100);
-		//em.setMaxIterations(100);
-		//em.setNumClusters(80);
+		em.setMaxIterations(100);
+		em.setNumClusters(-1);
 		
 		BufferedReader datafile = readDataFile(file); 
 		
@@ -75,52 +75,78 @@ public class kmeans {
 		//kmeans.
 		kmeans.buildClusterer(data);
 		
-		
 		//em
 		//DenseInstance insta=new DenseInstance
-//		em.buildClusterer(data);
+		em.buildClusterer(data);
 //		
 //		
-//		int cluster[][] = new int[em.numberOfClusters()][2];
-//		int clusterFinal[]=new int[em.numberOfClusters()];
-//		int p=0,n=0;
-//		for (int i = 0; i < data.size(); i++) {
-//		//	System.out.println(em.clusterInstance(data.get(i)) + "  ----"  + data.get(i).toString().split(",")[5]);
-//			if(data.get(i).toString().split(",")[5].equals("1"))
-//				(cluster[em.clusterInstance(data.get(i))][1])++;
-//			else
-//				(cluster[em.clusterInstance(data.get(i))][0])++;
-//		}
-//		for (int i = 0; i < cluster.length; i++) {
-//			if(cluster[i][0]>cluster[i][1])
-//			{
-//				clusterFinal[i]=0;
-//				n++;
-//			}
-//			else{
-//				clusterFinal[i]=1;
-//				p++;
-//			}
-//		}
+		int cluster[][] = new int[em.numberOfClusters()][2];
+		int clusterFinal[]=new int[em.numberOfClusters()];
+		int p=0,n=0;
+		for (int i = 0; i < data.size(); i++) {
+			//System.out.println(em.clusterInstance(data.get(i)) + "  ----"  + data.get(i).toString().split(",")[5]);
+			if(data.get(i).toString().split(",")[5].equals("1"))
+				(cluster[em.clusterInstance(data.get(i))][1])++;
+			else
+				(cluster[em.clusterInstance(data.get(i))][0])++;
+		}
+		for (int i = 0; i < cluster.length; i++) {
+			if(cluster[i][0]>cluster[i][1])
+			{
+				clusterFinal[i]=0;
+				n++;
+			}
+			else{
+				clusterFinal[i]=1;
+				p++;
+			}
+		}
+		for (int i = 0; i < clusterFinal.length; i++) {
+			System.out.println(" " +cluster[i][0] + " " + cluster[i][1]);
+		}
 		
+		
+		System.out.println("negativos " + n+ " ----  positivos  " + p);
 		//System.out.println("zzzzzzzzzzzz"+ clusterFinal[0] +"  "+clusterFinal[1] +"  "+clusterFinal[2]);
-//		double[][][] matrix=em.getClusterModelsNumericAtts();
-//		for (int i = 0; i < matrix.length; i++) {
-//			double[] instanceValues = new double[6];
-//			for (int j = 0; j < matrix[i].length; j++) {
-//				//System.out.println(matrix[i][j][0]);
-//				instanceValues[j]=matrix[i][j][0];
-//			}
-//			instanceValues[5] = clusterFinal[i];
-//			DenseInstance newInstance = new DenseInstance(1.0, instanceValues);
-//			//newInstance.setClassValue(clusterFinal[i]);
-//			//System.out.println(newInstance.value(0));
-//			newInstance.setDataset(trainingInstances);
-//			
-//			trainingInstances.add(newInstance); 
-//			
-//			
-//		}
+		p=0;
+		n=0;
+		double[][][] matrix=em.getClusterModelsNumericAtts();
+		Random random= new Random();
+		
+		for (int i = 0; i < data.size(); i++) {
+						
+			//System.err.println("cluster "+em.clusterInstance(data.get(i)));
+			int temp=0;
+			try{
+			   temp=random.nextInt(cluster[em.clusterInstance(data.get(i))][clusterFinal[em.clusterInstance(data.get(i))]]);
+			}catch(Exception e ){
+				
+				
+				System.err.println("erro cluster "+em.clusterInstance(data.get(i)) + " ----  "+ cluster[em.clusterInstance(data.get(i))][clusterFinal[i]]);
+				System.out.println(clusterFinal[i]);
+			}
+			if(temp>10)
+				continue;
+			double[] instanceValues = new double[6];
+			for (int j = 0; j < data.numAttributes(); j++) {
+				//System.out.println(data.get(i).value(j));
+				instanceValues[j]=data.get(i).value(j);
+			}
+			//instanceValues[5] = clusterFinal[i];
+			DenseInstance newInstance = new DenseInstance(1.0, instanceValues);
+			//newInstance.setClassValue(clusterFinal[i]);
+			//System.out.println(newInstance.value(0));
+			newInstance.setDataset(trainingInstances);
+			
+			trainingInstances.add(newInstance); 
+			if(instanceValues[5]==1)
+				p++;
+			else
+				n++;
+			
+		}
+		sampleMatches.add((double) p);
+		sampleNonMatches.add((double) n);
 //		for (int k = 0; k < 3; k++) {
 //			for (int k2 = 0; k2 < 6; k2++) {
 //				System.out.print( trainingInstances.get(k).value(k2) +"  ");
@@ -131,45 +157,46 @@ public class kmeans {
 //		sampleNonMatches.add((double) n);	
 		
 		//int[] assignments = kmeans.getAssignments();
-		Instances centroids = kmeans.getClusterCentroids();			
-		int[] clusteSize = kmeans.getClusterSizes();
-		double mediaCluster=0;
-		int i;
-		for (i = 0; i < clusteSize.length; i++) {
-			System.out.println(i + "   "+ clusteSize[i]);
-			mediaCluster+=clusteSize[i];
-		}
-		mediaCluster/=i;
-		int p=0,n=0;
-		int cluster=0,cortou=0;
-		for(weka.core.Instance clusterNum : centroids) {
-			//example.put(clusterNum,data.get(i).toString());
-			////put(clusterNum,data.get(i));
-			//System.out.println(data.get(i) + "          "+  centroids.instance(clusterNum));
-			if(clusteSize[cluster++]<=3){
-				//System.out.println("cortou o bloco " + (cluster-1)+ " pq tinha "+ clusteSize[cluster-1]);
-				cortou++;
-				continue;				
-			}
-			
-		    trainingInstances.add(clusterNum);
-		    if(clusterNum.toString().split(",")[5].equals("1"))
-		    	p++;
-		    else
-		    	n++;
-		}
-		System.out.println("cortou --->" + (cortou) + " MEDIA --> " + mediaCluster*1.5);
-		for (int k = 0; k < 3; k++) {
-			for (int k2 = 0; k2 < 6; k2++) {
-				System.out.print( trainingInstances.get(k).value(k2) +"  ");
-			}
-		System.out.println();
-		}
-		
-		System.out.println("trainingInstances ---> " + trainingInstances.size());
-			
-		sampleMatches.add((double) p);
-		sampleNonMatches.add((double) n);
+//		Instances centroids = kmeans.getClusterCentroids();			
+//		double[] clusteSize = kmeans.getClusterSizes();
+//		double mediaCluster=0;
+//		int i;
+//		for (i = 0; i < clusteSize.length; i++) {
+//			System.out.println(i + "   "+ clusteSize[i]);
+//			mediaCluster+=clusteSize[i];
+//		}
+//		mediaCluster/=i;
+//		int p=0,n=0;
+//		int cluster=0,cortou=0;
+//		
+//		for(weka.core.Instance clusterNum : centroids) {
+//			//example.put(clusterNum,data.get(i).toString());
+//			////put(clusterNum,data.get(i));
+//			System.out.println(data.get(i) + "          ");
+//			if(clusteSize[cluster++]<=3){
+//				//System.out.println("cortou o bloco " + (cluster-1)+ " pq tinha "+ clusteSize[cluster-1]);
+//				cortou++;
+//				continue;				
+//			}
+//			
+//		    trainingInstances.add(clusterNum);
+//		    if(clusterNum.toString().split(",")[5].equals("1"))
+//		    	p++;
+//		    else
+//		    	n++;
+//		}
+//		System.out.println("cortou --->" + (cortou) + " MEDIA --> " + mediaCluster*1.5);
+//		for (int k = 0; k < 3; k++) {
+//			for (int k2 = 0; k2 < 6; k2++) {
+//				System.out.print( trainingInstances.get(k).value(k2) +"  ");
+//			}
+//		System.out.println();
+//		}
+//		
+//		System.out.println("trainingInstances ---> " + trainingInstances.size());
+//			
+//		sampleMatches.add((double) p);
+//		sampleNonMatches.add((double) n);
 		
 		
 //		instanceValues[5] = 1;
@@ -182,29 +209,40 @@ public class kmeans {
 //		int[] assignments = kmeans.getAssignments();
 //		Instances centroids = kmeans.getClusterCentroids();		
 ////		
-//		int[] assignments = em.get  .getAssignments();
-//		Instances centroids = kmeans.getClusterCentroids();
 //////////////////////////////////////////		
 //		int i=0;
-//		double vector[]=new double[tamanho*3];
-//		String vInstance[]=new String[tamanho*3];
-//		int position[]=new int[tamanho*3];
+//		tamanho=10000;
+//		double matrix[][]=new double[tamanho*10][2];
+//		String vInstance[]=new String[tamanho*10];
+//		int position[]=new int[tamanho*10];
 //		for (int j = 0; j < tamanho*3; j++) {
-//			vector[j]=10000000;
+//			matrix[j][0]=0;
+//			matrix[j][1]=0;
 //		}
 //		int posição=0;
 //		for(int clusterNum : assignments) {
 //			//example.put(clusterNum,data.get(i).toString());
 //			////put(clusterNum,data.get(i));
-//			//System.out.println(data.get(i) + "          "+  centroids.instance(clusterNum));
-//			if(m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100)<vector[clusterNum]){
-//				vector[clusterNum]=m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100);
-//				vInstance[clusterNum]=data.get(i).toString();
-//				position[clusterNum]=i;
-//			}			
+//			System.out.println(data.get(i) + "          "+  centroids.instance(clusterNum) + " cluster "+ clusterNum);
+//			if(data.get(i).toString().split(",")[5].contains("1"))
+//				matrix[clusterNum][1]++;
+//			else
+//				matrix[clusterNum][0]++;
+////			if(m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100)<vector[clusterNum]){
+////				vector[clusterNum]=m_DistanceFunction.distance(centroids.instance(clusterNum), data.get(i),100);
+////				vInstance[clusterNum]=data.get(i).toString();
+////				position[clusterNum]=i;
+////			}			
 //		    i++;
 //		}		
-		
+//		int contador=0;
+//		for (int j = 0; j < i; j++) {
+//			if(matrix[j][1]!=0){
+//				System.out.println("matrix + "+ j +"  ---"+ matrix[j][0] + " --- "+ matrix[j][1] );
+//				contador++;
+//			}
+//		}
+//		System.out.println("contador " + contador);
 //		posição=i;
 //		i=0;
 //		for(int clusterNum : assignments) {
