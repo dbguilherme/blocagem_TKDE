@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -233,7 +234,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			raccb += 1.0 / comparisonsPerBlock[index];
 		}
 		if (raccb < 1.0E-6) {
-			raccb = 1.0E-6;
+			raccb = 0.0000006;
 		}
 
 		instanceValues[1] = raccb;
@@ -363,10 +364,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						}
 
 						//if(comparison.sim==0.0)
-						//	comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
+						comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
 						//int k=controle;
 						//for (int k = 0; k < 9; k++)
-						comparison.sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
+						//comparison.sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 						
 						
 						int level=(int) Math.floor(comparison.sim *10);
@@ -386,7 +387,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 									//	System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 									continue;
 								}
-
+									
 								//							String label="false";
 								//							IdDuplicates duplicatePair1 = new IdDuplicates(comparison.getEntityId1(), comparison.getEntityId2());
 								//							if (duplicates.contains(duplicatePair1)) {
@@ -1181,9 +1182,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					if (commonBlockIndices == null) {
 						continue;
 					}
-					double sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(c.getEntityId1()), ebc.exportEntityB(c.getEntityId2()));
+					//double sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(c.getEntityId1()), ebc.exportEntityB(c.getEntityId2()));
 					
-					//Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),names);
+					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),names);
 					c.sim=sim;
 					blockSize[((int)Math.floor(sim*10))]++;
 
@@ -1651,10 +1652,14 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //					if(random.nextInt(10000)>80)
 //						return 0;
 				
-					
+				DecimalFormat decimalFormatter = new DecimalFormat("############");
+				String temp;
 				for (int j = 0; j < newInstanceTemp.numAttributes()-1; j++) {
-					psarff.print((newInstanceTemp.value(j)) + ", ");
-					psarff_level[controle].print((newInstanceTemp.value(j)) + ", ");
+					
+					temp = decimalFormatter.format(newInstanceTemp.value(j));
+					//System.out.println(temp);
+					psarff.print(temp + ", ");
+					psarff_level[controle].print(temp + ", ");
 				}
 				psarff.println(newInstanceTemp.value(newInstanceTemp.numAttributes()-1)==1.0?1:0);
 				psarff_level[controle].println(newInstanceTemp.value(newInstanceTemp.numAttributes()-1)==1.0?1:0);
