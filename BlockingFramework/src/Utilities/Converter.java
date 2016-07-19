@@ -25,7 +25,7 @@ import DataStructures.Attribute;
 public class Converter {
 
 	
-	public static String  atributos_value[] = { "id", "title" , "authors", "venue", "year"};
+	public static String  atributos_value[] = { "id", "title" , "authors", "year"};
 	
 	//public static String  atributos_value[] = { "id", "starring" , "writer", "year"};
 	//public static String  atributos_value[] = { "id",  "price", "title" };

@@ -49,6 +49,7 @@ public class SizeBasedBlockPurging extends AbstractEfficiencyMethod {
         final List<AbstractBlock> purgedBlocks = new ArrayList<AbstractBlock>();
         for (AbstractBlock block : blocks) {
             final BilateralBlock bilBlock = (BilateralBlock) block;
+            
             if (maxInnerBlockSize < Math.min(bilBlock.getIndex1Entities().length, bilBlock.getIndex2Entities().length)) {
                 purgedBlocks.add(block);
             } else {

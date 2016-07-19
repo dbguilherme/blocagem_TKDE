@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import BlockBuilding.MemoryBased.QGramsBlocking;
 import BlockBuilding.MemoryBased.TokenBlocking;
 import BlockProcessing.AbstractEfficiencyMethod;
 import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
@@ -127,10 +128,10 @@ public class SupervisedMetablocking {
 		//		}
 		//classifiers[3].setOptions( optionsArray );
 
-		Classifier[] classifiers = new Classifier[3];
+		Classifier[] classifiers = new Classifier[1];
 		classifiers[0] =naiveBayes;// naiveBayes;
-		classifiers[1] = j48;
-		classifiers[2] = smo;
+		///classifiers[1] = j48;
+		//classifiers[2] = smo;
 	//	classifiers[1] = j48;
 	//	classifiers[2] = rf;
 		return classifiers;
@@ -208,7 +209,7 @@ public class SupervisedMetablocking {
 	
 		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath);
 		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
-		List<AbstractBlock> blocks;
+		List<AbstractBlock> blocks = null;
 		List<EntityProfile>[] profiles ;
 		if(profilesPathB != null){
 					profiles = new List[2];
@@ -216,14 +217,24 @@ public class SupervisedMetablocking {
 					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 					TokenBlocking imtb = new TokenBlocking(profiles);
 					 blocks = imtb.buildBlocks();
+					 
+			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
+			//		blocks = imtb.buildBlocks();
 					SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 					sbb.applyProcessing(blocks);
+					
+					
+					
+					
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
 			TokenBlocking imtb = new TokenBlocking(profiles);
 			 blocks = imtb.buildBlocks();
-			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+//			QGramsBlocking imtb = new QGramsBlocking(3, profiles);
+//			blocks = imtb.buildBlocks();
+			 
+			 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 			blockPurging.applyProcessing(blocks);
 		}
 
