@@ -15,7 +15,7 @@
 package MetaBlocking;
 
 public enum WeightingScheme {
-        ARCS,
+      //  ARCS,
         CBS,
         ECBS,
         JS,
