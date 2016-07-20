@@ -2,9 +2,12 @@ package Experiments;
 
 import DataStructures.AbstractBlock;
 import DataStructures.EntityProfile;
+import BlockProcessing.AbstractEfficiencyMethod;
+import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.AbstractDuplicatePropagation;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
+import BlockProcessing.ComparisonRefinement.UnilateralDuplicatePropagation;
 import MetaBlocking.WeightedEdgePruning;
 import MetaBlocking.CardinalityEdgePruning;
 import Utilities.BlockStatistics;
@@ -49,16 +52,27 @@ public class MetaBlockingExperiments {
     }
     
     public static void main(String[] args) throws IOException {
-    	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-		String profilesPathA = mainDirectory+"/token/dataset1_imdb";
-		String profilesPathB = mainDirectory+"/token/dataset2_dbpedia";
-		String duplicatesPath =  mainDirectory+ "/ground/groundtruth"; 
+    	
+    	
+//    	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica/";
+//		String profilesPathA = mainDirectory+"50Kprofiles";
+//		//String profilesPathB = mainDirectory+"/token/dataset2_dbpedia";
+//		String duplicatesPath =  mainDirectory+ "50KIdDuplicates"; 
+    	
+    	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
+    	String profilesPathA= mainDirectory+"/dblp";
+    	String profilesPathB= mainDirectory+"/scholar";
+    	String duplicatesPath =  mainDirectory+ "/groundtruth"; 
+    	
 		List[] profiles = new List[2];
 		profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
 		profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 		TokenBlocking imtb = new TokenBlocking(profiles);
-		 List<AbstractBlock> blocks = imtb.buildBlocks();
-    	
+		
+		// final AbstractDuplicatePropagation adp = new UnilateralDuplicatePropagation(duplicatesPath);
+         //System.out.println("Existing Duplicates\t:\t" + adp.getDuplicates().size());
+
+		
     	//String mainDirectory = "C:\\Data\\Movies\\";
         //String[] indexDir = { mainDirectory+"Indices\\tokenBlocking" };
        // String duplicatesPath = mainDirectory + "moviesIdGroundTruth";
@@ -69,9 +83,11 @@ public class MetaBlockingExperiments {
         System.out.println("=================================================");
         for (WeightingScheme scheme : WeightingScheme.values()) {
             System.out.println("\n\n\n\n\nWeighting scheme\t:\t" + scheme);
-            
+            List<AbstractBlock> blocks = imtb.buildBlocks();
            // List<AbstractBlock> blocks = imtb.buildBlocks();
          //   List<AbstractBlock> blocks = getBlocks(indexDir);
+          //  AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.025);
+			//blockPurging.applyProcessing(blocks);
             AbstractDuplicatePropagation adp = new BilateralDuplicatePropagation(duplicatesPath);
             
             WeightedEdgePruning ep = new WeightedEdgePruning(scheme);
@@ -88,7 +104,7 @@ public class MetaBlockingExperiments {
         for (WeightingScheme scheme : WeightingScheme.values()) {
             System.out.println("\n\n\n\n\nWeighting scheme\t:\t" + scheme);
            // List<AbstractBlock> blocks = getBlocks(indexDir);
-           
+            List<AbstractBlock> blocks = imtb.buildBlocks();
             AbstractDuplicatePropagation adp = new BilateralDuplicatePropagation(duplicatesPath);
             
             CardinalityEdgePruning tked = new CardinalityEdgePruning(scheme);
@@ -105,7 +121,7 @@ public class MetaBlockingExperiments {
         for (WeightingScheme scheme : WeightingScheme.values()) {
             System.out.println("\n\n\n\n\nWeighting scheme\t:\t" + scheme);
             //List<AbstractBlock> blocks = getBlocks(indexDir);
-           // List<AbstractBlock> blocks = imtb.buildBlocks();
+           List<AbstractBlock> blocks = imtb.buildBlocks();
             AbstractDuplicatePropagation adp = new BilateralDuplicatePropagation(duplicatesPath);
             
             WeightedNodePruning np = new WeightedNodePruning(scheme);
@@ -122,7 +138,7 @@ public class MetaBlockingExperiments {
         for (WeightingScheme scheme : WeightingScheme.values()) {
             System.out.println("\n\n\n\n\nWeighting scheme\t:\t" + scheme);
            // List<AbstractBlock> blocks = getBlocks(indexDir);
-          //  List<AbstractBlock> blocks = imtb.buildBlocks();
+           List<AbstractBlock> blocks = imtb.buildBlocks();
             AbstractDuplicatePropagation adp = new BilateralDuplicatePropagation(duplicatesPath);
             
             CardinalityNodePruning knen = new CardinalityNodePruning(scheme);

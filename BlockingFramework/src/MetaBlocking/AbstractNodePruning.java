@@ -86,17 +86,17 @@ public abstract class AbstractNodePruning extends AbstractMetablocking {
         if (cleanCleanER) {
             if (entityIndex.getDatasetLimit() <= entityId1) {
                 //entity 1 belongs to the second/right partition and its id should be normalized
-                return new Comparison(cleanCleanER, entityId2, entityId1-entityIndex.getDatasetLimit());
+                return new Comparison(cleanCleanER, entityId2, entityId1-entityIndex.getDatasetLimit(), blockAssingments);
             } else {
-                return new Comparison(cleanCleanER, entityId1, entityId2);
+                return new Comparison(cleanCleanER, entityId1, entityId2, blockAssingments);
             }
         }
         
         if (entityId1 < entityId2) {
-            return new Comparison(cleanCleanER, entityId1, entityId2);
+            return new Comparison(cleanCleanER, entityId1, entityId2, blockAssingments);
         }
         
-        return new Comparison(cleanCleanER, entityId2, entityId1);
+        return new Comparison(cleanCleanER, entityId2, entityId1, blockAssingments);
     }
     
     protected abstract void processPartition(int firstId, int lastId, List<AbstractBlock> blocks);

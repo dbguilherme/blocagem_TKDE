@@ -100,17 +100,17 @@ public abstract class AbstractMetablocking extends AbstractEfficiencyMethod {
 
     protected double getWeight(int blockIndex, Comparison comparison) {
         switch (weightingScheme) {
-//            case ARCS:
-//                final List<Integer> commonIndices = entityIndex.getCommonBlockIndices(blockIndex, comparison);
-//                if (commonIndices == null) {
-//                    return -1;
-//                }
-//
-//                double totalWeight = 0;
-//                for (Integer index : commonIndices) {
-//                    totalWeight += 1.0 / comparisonsPerBlock[index];
-//                }
-//                return totalWeight;
+            case ARCS:
+                final List<Integer> commonIndices = entityIndex.getCommonBlockIndices(blockIndex, comparison);
+                if (commonIndices == null) {
+                    return -1;
+                }
+
+                double totalWeight = 0;
+                for (Integer index : commonIndices) {
+                    totalWeight += 1.0 / comparisonsPerBlock[index];
+                }
+                return totalWeight;
             case CBS:
                 return entityIndex.getNoOfCommonBlocks(blockIndex, comparison);
             case ECBS:
