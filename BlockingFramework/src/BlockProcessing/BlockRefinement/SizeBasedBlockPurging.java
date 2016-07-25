@@ -61,6 +61,7 @@ public class SizeBasedBlockPurging extends AbstractEfficiencyMethod {
         System.out.println("Purged blocks\t:\t" + purgedBlocks.size());
         System.out.println("Retained blocks\t:\t" + blocks.size());
         System.out.println("Retained comparisons\t:\t" + totalComparisons);
+       // return null;
     }
     
     private int getMaxInnerBlockSize(List<AbstractBlock> blocks) {

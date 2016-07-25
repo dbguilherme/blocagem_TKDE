@@ -30,7 +30,7 @@ public class MetaBlockingOnDisk {
     public static void main(String[] args) throws IOException {
     	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica/";
         //       String[] datasets = {"10K", "50K", "100K", "200K", "300K", "1M", "2M"};
-        String[] datasets = {"50K"};
+        String[] datasets = {"10K"};
         for (String dataset : datasets) {
             System.out.println("\n\nCurrent dataset name\t:\t" + dataset);
             String profilesPath = mainDirectory + dataset + "profiles";

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import BlockBuilding.MemoryBased.ExtendedQGramsBlocking;
 import BlockBuilding.MemoryBased.QGramsBlocking;
 import BlockBuilding.MemoryBased.TokenBlocking;
 import BlockProcessing.AbstractEfficiencyMethod;
@@ -72,68 +73,89 @@ public class SupervisedMetablocking {
 	}
 
 	private static Classifier[] getSupervisedWepClassifiers() {
-		NaiveBayes naiveBayes = new NaiveBayes();
-		//naiveBayes.setUseKernelEstimator(false);
-		//naiveBayes.setUseSupervisedDiscretization(false);
-
+//		NaiveBayes naiveBayes = new NaiveBayes();
+//		//naiveBayes.setUseKernelEstimator(false);
+//		//naiveBayes.setUseSupervisedDiscretization(false);
+//
+//		
+//		//RandomForest rf= new RandomForest();
+//		RandomForest rf = new RandomForest();
+//	//	rf.setNumTrees(10);
+//		
+//	//	rf.setNumTrees(200);
+//		//rf.setNumTrees(10);
+//		//rf.
+//		//rf.setN
+//		//Ibk
+//		J48 j48 = new J48();
+//		j48.setMinNumObj(2);
+//		j48.setConfidenceFactor((float) 0.05);
+//
+////		LibSVM libSVM=new LibSVM();
+//		SMO smo = new SMO();
+//		//smo.setBuildLogisticModels(true);
+////		smo.setKernel(new RBFKernel());
+////		smo.setC(9.0);
+//
+//		BayesNet bayesNet = new BayesNet();
+//		//bayesNet.
+////		LibSVM sv = new LibSVM();
+////		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+//		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
+//		//sv.setCost(2);
+//
+//
+//
+//
+//		//		svm_parameter param;
+//		//		param = new svm_parameter();
+//		//		
+//		//		param=	get_grid(param);
+//		//		// default values
+//		//		
+//		//		sv.setGamma(param.gamma);
+//		//		sv.setCost(param.C);
+//
+//
+//		//	svm_problem prob = new svm_problem();
+//
+//		//String options = ( "-S 0 -K 0 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1" );
+//		//String[] optionsArray = options.split( " " );
+//		//		try {
+//		//			sv.setOptions(optionsArray);
+//		//		} catch (Exception e) {
+//		//			// TODO Auto-generated catch block
+//		//			e.printStackTrace();
+//		//		}
+//		//classifiers[3].setOptions( optionsArray );
+//
+//		Classifier[] classifiers = new Classifier[1];
+//		classifiers[0] =naiveBayes;// naiveBayes;
+//		///classifiers[1] = j48;
+//		//classifiers[2] = smo;
+//	//	classifiers[1] = j48;
+//	//	classifiers[2] = rf;
 		
-		//RandomForest rf= new RandomForest();
-		RandomForest rf = new RandomForest();
-	//	rf.setNumTrees(10);
-		
-	//	rf.setNumTrees(200);
-		//rf.setNumTrees(10);
-		//rf.
-		//rf.setN
-		//Ibk
-		J48 j48 = new J48();
-		j48.setMinNumObj(2);
-		j48.setConfidenceFactor((float) 0.05);
+	     NaiveBayes naiveBayes = new NaiveBayes();
+	        naiveBayes.setUseKernelEstimator(false);
+	        naiveBayes.setUseSupervisedDiscretization(false);
 
-//		LibSVM libSVM=new LibSVM();
-		SMO smo = new SMO();
-		//smo.setBuildLogisticModels(true);
-//		smo.setKernel(new RBFKernel());
-//		smo.setC(9.0);
+	        J48 j48 = new J48();
+	        j48.setMinNumObj(5);
+	        j48.setConfidenceFactor((float) 0.10);
 
-		BayesNet bayesNet = new BayesNet();
-		//bayesNet.
-//		LibSVM sv = new LibSVM();
-//		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
-		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
-		//sv.setCost(2);
+	        SMO smo = new SMO();
+	       //((Object) smo).setBuildLogisticModels(true);
+	        smo.setKernel(new PolyKernel());
+	        smo.setC(9.0);
 
+	        BayesNet bayesNet = new BayesNet();
 
-
-
-		//		svm_parameter param;
-		//		param = new svm_parameter();
-		//		
-		//		param=	get_grid(param);
-		//		// default values
-		//		
-		//		sv.setGamma(param.gamma);
-		//		sv.setCost(param.C);
-
-
-		//	svm_problem prob = new svm_problem();
-
-		//String options = ( "-S 0 -K 0 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1" );
-		//String[] optionsArray = options.split( " " );
-		//		try {
-		//			sv.setOptions(optionsArray);
-		//		} catch (Exception e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
-		//classifiers[3].setOptions( optionsArray );
-
-		Classifier[] classifiers = new Classifier[1];
-		classifiers[0] =naiveBayes;// naiveBayes;
-		///classifiers[1] = j48;
-		//classifiers[2] = smo;
-	//	classifiers[1] = j48;
-	//	classifiers[2] = rf;
+	        Classifier[] classifiers = new Classifier[1];
+	        classifiers[0] = naiveBayes;
+//	        classifiers[1] = j48;
+//	        classifiers[2] = smo;
+//	        classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -201,9 +223,9 @@ public class SupervisedMetablocking {
 			break;
 		case "3":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-			profilesPathA= mainDirectory+"/dataset1_imdb";
-			profilesPathB= mainDirectory+"/dataset2_dbpedia";
-			groundTruthPath =  mainDirectory+ "/groundtruth"; 
+			profilesPathA= mainDirectory+"/token/dataset1_imdb";
+			profilesPathB= mainDirectory+"/token/dataset2_dbpedia";
+			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
 			break;
 		}
 	
@@ -216,31 +238,24 @@ public class SupervisedMetablocking {
 					profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
 					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 					TokenBlocking imtb = new TokenBlocking(profiles);
-					 blocks = imtb.buildBlocks();
-					 
+					 blocks = imtb.buildBlocks();					 
+					//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
+					//blocks = method.buildBlocks();
 			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
 			//		blocks = imtb.buildBlocks();
 					SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 					sbb.applyProcessing(blocks);
-					
-					
-					
-					
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
 			TokenBlocking imtb = new TokenBlocking(profiles);
-			 blocks = imtb.buildBlocks();
-//			QGramsBlocking imtb = new QGramsBlocking(3, profiles);
-//			blocks = imtb.buildBlocks();
-			 
-			 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+			 blocks = imtb.buildBlocks();			
+			//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
+			//QGramsBlocking imtb = new QGramsBlocking(6, profiles);
+			//blocks = method.buildBlocks();			 
+			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 			blockPurging.applyProcessing(blocks);
 		}
-
-
-
-
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
 		
@@ -288,10 +303,10 @@ public class SupervisedMetablocking {
 		//		            scnp.printStatistics();
 		Random r=new Random();
 		int n=r.nextInt(100);
-		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"));
-		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"));
-		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"));
-		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"));
+		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
+		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
+		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
+		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
 
        
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
@@ -315,7 +330,7 @@ public class SupervisedMetablocking {
 				writer4.write("level "+tamanho +"\n");
 				for (j = 0;j< 10; j++) 
 				{
-					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i);
+					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
 					writer1.flush();
 					writer2.flush();
 					writer3.flush();
