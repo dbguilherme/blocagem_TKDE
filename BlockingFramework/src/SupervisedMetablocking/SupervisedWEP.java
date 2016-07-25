@@ -86,7 +86,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
                   //  continue;
                 }
 
-                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0);
+                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,1.0);
                 int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
                 if (instanceLabel == DUPLICATE) {
                 	count++;

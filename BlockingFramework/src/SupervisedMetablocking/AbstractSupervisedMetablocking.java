@@ -181,7 +181,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		attributes.add(new Attribute("NodeDegree2"));
 	//	attributes.add(new Attribute("teste1"));
 	//	attributes.add(new Attribute("teste2"));
-		attributes.add(new Attribute("sim"));
+	//	attributes.add(new Attribute("sim"));
 	//	attributes.add(new Attribute("teste3"));
 
 		classLabels = new ArrayList<String>();
@@ -221,7 +221,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 	}
   
-	protected Instance getFeatures(int match, List<Integer> commonBlockIndices, Comparison comparison, double similarity) {
+	protected Instance getFeatures(int match, List<Integer> commonBlockIndices, Comparison comparison, double flag) {
 		double[] instanceValues = new double[noOfAttributes];
 
 		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
@@ -251,12 +251,16 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues[4] = nonRedundantCPE[entityId2];;
 		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
-		instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2())); 
+//		
+//		if(flag==1.0)
+//			instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
+//		else 
+//			instanceValues[5] =0.0;
 		 //ebcX.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
 				
 		
 		
-		instanceValues[6] = match;
+		instanceValues[5] = match;
 
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
 		newInstance.setDataset(trainingInstances);
@@ -554,264 +558,21 @@ if(true){
 		//trainingInstances.add(data.get(0));
 		//ArrayList<Attribute>
 
-		//		Instance P_maior= new DenseInstance(5);
-		//		Instance P_menor= new DenseInstance(5);
-		//		Instance N_maior= new DenseInstance(5);
-		//		Instance N_menor= new DenseInstance(5);
-//		Double [][] matrix_inP = new Double[data.size()][6];
-//		Double [][] matrix_inN = new Double[data.size()][6];
-//		Double [][] matrix_out = new Double[data.size()][6];
-//
-//		for (int i = 0; i < matrix_out.length; i++) {
-//			for (int j = 0; j < 6; j++) {
-//				matrix_inP[i][j]=matrix_inN[i][j]=matrix_out[i][j]= 0.0;
-//			}
-//		}
-//
-//		int iP=0,iN=0;
-//		for (Instance instance : data) {
-//			String st =instance.toString();
-//			String vetor[]=st.split(",");
-//			for (int j = 0; j < 6; j++) {
-//				if(Double.parseDouble(vetor[5])==1.0){
-//					matrix_inP[iP][j]=Double.parseDouble(vetor[j]);
-//				}
-//				else{
-//					matrix_inN[iN][j]=Double.parseDouble(vetor[j]);
-//				}
-//			}
-//			if(Double.parseDouble(vetor[5])==1.0)
-//				iP++;
-//			else
-//				iN++;
-//		}	
-//
-//		/////////////////////////////
-//		int i, index_matrix=0;
-//		for (i = 0; i < len; i++) {//coluna positio maior
-//			Arrays.sort(matrix_inP, new ArrayComparator<>(i));
-//
-//			for (int linha = 0; linha < 1; linha++) {  //mais de uma linha
-//				//if(matrix_inP[linha][5]==1)
-//				for (int j = 0; j <6; j++) {
-//					matrix_out[index_matrix][j]=matrix_inP[linha][j];
-//				}
-//				matrix_out[index_matrix++][5]=(double) 1;
-//			}	
-//		}
-//		System.out.println("index matrix " + index_matrix);
-		////////
-//		int linha;
-//		System.out.println( matrix_inP.length);
-//		for (i = 0; i < 1; i++) {//coluna positivo menor 
-//			Arrays.sort(matrix_inP, new ArrayComparator<>(i));
-//
-//			int linha_start = matrix_inP.length-1;
-//
-//			while(matrix_inP[linha_start][0]==0.0 ){
-//				linha_start--;
-//
-//				//System.out.println(matrix_inP[linha][i] +" "+ i);
-//			}
-//
-//			//int linha;
-//			for (linha= linha_start-1; linha > linha_start-2; linha--) {
-//				//if(matrix_inP[matrix_inP.length-linha+6-1][5]==1)
-//
-//
-//
-//				//else
-//				{
-//					for (int j = 0; j < 6; j++) {
-//						matrix_out[index_matrix][j]=matrix_inP[linha][j];
-//					}
-//
-//					//System.out.println(matrix_inP[linha][i]);
-//				}
-//				matrix_out[index_matrix++][5]=(double) 1;
-//			}
-//		}
-
-//		int linha;
-//		for (i = 0; i < len; i++) {//coluna negativa menor 
-//			Arrays.sort(matrix_inN, new ArrayComparator<>(i));
-//			int linha_start = matrix_inN.length-1;
-//			while(matrix_inN[linha_start][0]==0.0 ){
-//				linha_start--;
-//			}
-//			linha=0;
-//			for (linha= linha_start-1; linha > linha_start-2; linha--) {
-//				//if(matrix_inP[matrix_inP.length-linha+6-1][5]==1)
-//
-//				for (int j = 0; j < 6; j++) {
-//					matrix_out[index_matrix][j]=matrix_inN[linha][j];
-//				}
-//				matrix_out[index_matrix++][5]=(double) 0;
-//			}
-//		}
-		
-//		System.out.println("index matrix " + index_matrix);
-//
-//		for (i = 0; i < len; i++) {//coluna negativo maior 
-//			Arrays.sort(matrix_inN, new ArrayComparator<>(i));
-//
-//			for (int linha = 0; linha < 1; linha++) {
-//				//if(matrix_inN[linha][5]==0)
-//				for (int j = 0; j < 6; j++) {
-//					matrix_out[index_matrix][j]=matrix_inN[linha][j];
-//				}
-//				{					
-//
-//					//	System.out.println(matrix_inN[linha][i]);
-//				}
-//				matrix_out[index_matrix++][5]=(double) 0;
-//			}
-//
-//		}
-
-
-		//		
-		//	
-		//		
-		//		//System.out.println(x1);
-
-
-		//		for (i = 0; i < len*4; i++) {
-		//			for (int j = 0; j < 6; j++) {
-		//				System.out.print(matrix_out[i][j]+ ", ");
-		//			}			
-		//			System.out.println();
-		//		}
-		////		
-
-//		for (int j = 0; j < len*2; j++) {
-//			double[] instanceValues = new double[noOfAttributes];
-//			for (int k = 0; k < 6; k++) {
-//				instanceValues[k]= matrix_out[j][k];
-//			}
-//			Instance newInstance = new DenseInstance(1.0, instanceValues);
-//			newInstance.setDataset(trainingInstances);
-//			trainingInstances.add(newInstance);
-//			if(matrix_out[j][5]==1)
-//				countP++;
-//			else
-//				countN++;
-//		}
-//
-//		int elemento_matrix=len*2;
-//		double memoria_pares = 0;
-//		int tentativaP=len;
-//		int tentativaN=len;
-//		
-//		
-//		for (int j = 0; j < 900;j++) 
-//		{
-//			//data2.add(data.get(linha++));
-//			//linha_arff++;
-//
-//			memoria_pares =valida_pares(j,memoria_pares);
-//
-//			
-//			
-//			if(matrix_inP[tentativaP-1][0]==0.0)
-//				tentativaP=matrix_inP.length;
-//			if(matrix_inN[tentativaN-1][0]==0.0)
-//				tentativaN=matrix_inN.length;
-//			if(tentativaN>=matrix_inN.length-1){
-//				
-//				System.out.println("_________________________________________");
-//				valida_pares(j,memoria_pares);
-//				
-//				return;
-//			}
-//						
-//		//if(j%2==0){
-//			if(tentativaP<=matrix_inP.length-1){
-//				double[] instanceValues = new double[noOfAttributes];
-//				for (int k = 0; k < 6; k++) {
-//					instanceValues[k]= matrix_inP[tentativaP][k];
-//				}
-//				elemento_matrix++;
-//				Instance newInstance = new DenseInstance(1.0, instanceValues);
-//				newInstance.setDataset(trainingInstances);
-//				trainingInstances.add(newInstance);
-//				tentativaP++;
-//			}		
-//			else		
-//			if(tentativaN<=matrix_inN.length-1){
-//				System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-//				double[] instanceValues = new double[noOfAttributes];
-//				for (int k = 0; k < 6; k++) {
-//					instanceValues[k]= matrix_inN[tentativaN][k];
-//				}
-//				elemento_matrix++;
-//				Instance newInstance = new DenseInstance(1.0, instanceValues);
-//				newInstance.setDataset(trainingInstances);
-//				trainingInstances.add(newInstance);
-//				tentativaN++;
-//			}
-//		
-//			for ( int l = 0; l < trainingInstances.size(); l++) {
-//				for (int j2 = 0; j2 < 6; j2++) {
-//					System.out.print(trainingInstances.get(l).value(j2)+ " ");
-//				}
-//				System.out.println();
-//			}	
-//			
-//		}
-
-
-
-
-
-		//		for (int i = 0; i < 5; i++) {
-		//			P_maior.setValue(i, 0);
-		//			P_menor.setValue(i, 100000);
-		//			N_maior.setValue(i, 0);
-		//			N_menor.setValue(i, 100000);
-		//		}
-		//		double  historiaP_maior[] = new double[5];
-		//		double  historiaP_menor[] = new double[5];
-		//		for (Instance instance : data) {
-		//			if(instance.value(5)==1){				
-		//				for (int i = 0; i < 5; i++) {
-		//					if(instance.value(i)>P_maior.value(i)){
-		//						historiaP_maior[i]=instance.value(i);
-		//						P_maior.setValue(i,instance.value(i));
-		//						
-		//					}
-		//					if(instance.value(i)<P_menor.value(i)){
-		//						historiaP_menor[i]=instance.value(i);
-		//						//historia[i]=instance.value(i);
-		//						P_menor.setValue(i,instance.value(i));
-		//					}
-		//						
-		//				}			
-		//			}
-		//			if(instance.value(5)==0){				
-		//				for (int i = 0; i < 5; i++) {
-		//					if(instance.value(i)>N_maior.value(i))
-		//						N_maior.setValue(i,instance.value(i));
-		//					if(instance.value(i)<N_menor.value(i))
-		//						N_menor.setValue(i,instance.value(i));
-		//				}			
-		//			}
-		//		}
 
 
 
 		//		
 				for (Instance instance : data) {
-					if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(data.numAttributes() -2))>0.1){
+					if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(0))>70){
 						//countN++;
 						System.out.println("descartando..........");
 						continue;
 					}
-					
-					for (int j = 0; j < 6; j++) {
-						//instance.setValue(j, 0.5);
-					}
-					
+//					
+//					for (int j = 0; j < 6; j++) {
+//						//instance.setValue(j, 0.5);
+//					}
+						//instance.setValue(5,0.0);
 						trainingInstances.add(instance);
 						if((instance.value(data.numAttributes() -1))==1)  
 							countP++;
@@ -1679,7 +1440,7 @@ if(true){
 				//
 				//double similarity = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(i, comparison);
-				Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,comparison.sim);
+				Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,0.0);
 				
 				
 //				if(newInstanceTemp.value(0)<80){
