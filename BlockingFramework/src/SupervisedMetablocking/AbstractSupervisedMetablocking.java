@@ -481,6 +481,7 @@ if(true){
 					try {
 						File f = new File("/tmp/lock");
 						while(f.exists() ) { 
+							System.out.println("sleeping................");
 							Thread.sleep(10000);
 						}
 						f.createNewFile();
