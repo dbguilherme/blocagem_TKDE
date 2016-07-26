@@ -181,7 +181,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		attributes.add(new Attribute("NodeDegree2"));
 	//	attributes.add(new Attribute("teste1"));
 	//	attributes.add(new Attribute("teste2"));
-	//	attributes.add(new Attribute("sim"));
+		attributes.add(new Attribute("sim"));
 	//	attributes.add(new Attribute("teste3"));
 
 		classLabels = new ArrayList<String>();
@@ -222,7 +222,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	}
   
 	protected Instance getFeatures(int match, List<Integer> commonBlockIndices, Comparison comparison, double flag) {
-		double[] instanceValues = new double[noOfAttributes];
+		double[] instanceValues =null;
+		if(flag==0.0)
+			instanceValues = new double[noOfAttributes-1];
+		else
+			instanceValues = new double[noOfAttributes];
 
 		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
 		//	System.out.println(noOfBlocks +"   "+ entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
@@ -252,15 +256,19 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
 //		
-//		if(flag==1.0)
-//			instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
-//		else 
-//			instanceValues[5] =0.0;
+		if(flag==1.0){
+			instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
+			instanceValues[6] = match;
+			//instanceValues.
+		}
+		else {
+			instanceValues[5] = match;
+		}
 		 //ebcX.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
 				
 		
 		
-		instanceValues[5] = match;
+		//instanceValues[6] = match;
 
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
 		newInstance.setDataset(trainingInstances);
@@ -486,7 +494,7 @@ if(true){
 						File f = new File("/tmp/lock");
 						while(f.exists() ) { 
 							System.out.println("sleeping................");
-							Thread.sleep(10000);
+							Thread.sleep(1000);
 						}
 						f.createNewFile();
 						
@@ -550,7 +558,7 @@ if(true){
 	private void loadFileTrainingSet() throws Exception {
 		// TODO Auto-generated method stub
 		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/final_treina.arff"));
-		//BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arff.arff"));
+		//BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arffdataset1_amazon.arff"));
 		Instances data = new Instances(alac_result);
 		data.setClassIndex(data.numAttributes() -1);
 		int countP=0,countN=0;
@@ -563,7 +571,7 @@ if(true){
 
 		//		
 				for (Instance instance : data) {
-					if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(0))>70){
+					if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(5))>0.1){
 						//countN++;
 						System.out.println("descartando..........");
 						continue;
@@ -572,7 +580,7 @@ if(true){
 //					for (int j = 0; j < 6; j++) {
 //						//instance.setValue(j, 0.5);
 //					}
-						//instance.setValue(5,0.0);
+						instance.setMissing(5); //deleteAttributeAt(5);  
 						trainingInstances.add(instance);
 						if((instance.value(data.numAttributes() -1))==1)  
 							countP++;
@@ -1440,7 +1448,7 @@ if(true){
 				//
 				//double similarity = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(i, comparison);
-				Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,0.0);
+				Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,1.0);
 				
 				
 //				if(newInstanceTemp.value(0)<80){

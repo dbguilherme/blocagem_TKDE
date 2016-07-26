@@ -227,6 +227,12 @@ public class SupervisedMetablocking {
 			profilesPathB= mainDirectory+"/token/dataset2_dbpedia";
 			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
 			break;
+		case "4":
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/acm";
+			profilesPathA= mainDirectory+"/dataset";
+			//profilesPathB= mainDirectory+"/dataset2_gp";
+			groundTruthPath =  mainDirectory+ "/groundtruth"; 
+			break;
 		}
 	
 		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath);
