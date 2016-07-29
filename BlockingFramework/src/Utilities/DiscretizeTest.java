@@ -113,5 +113,61 @@ public class DiscretizeTest {
     // save output
      save(inputTrain, outFile);
   }
+  public static void run_short (String infile,String outFile) throws Exception {
+	    Instances     inputTrain;
+	    Instances     outputTrain;
+	   
+
+	  
+	    
+	    
+	    inputTrain = apllyNormalization(infile);
+	    // setup filter
+	   // filter = new Discretize();
+	   // filter.setInputFormat(inputTrain);
+
+	    // apply filter
+	  //  outputTrain = Filter.useFilter(inputTrain, filter);
+	   
+
+	    // save output
+	     save(inputTrain, outFile);
+	  }
+  
+  protected static Instances apllyNormalization(String filename) throws Exception {
+	    Instances       result;
+	    BufferedReader  reader;
+
+	    reader = new BufferedReader(new FileReader(filename));
+	    result = new Instances(reader);
+	           
+	    result.setClassIndex(result.numAttributes() - 1);
+	        
+//	    for (int i = 0; i < result.size(); i++) {
+//	    	//System.out.println(result.get(i).value(1));
+//	    	for (int j = 0; j < result.get(i).numValues(); j++) {
+//	    		if(result.get(i).value(j)>values[j])
+//	    			values[j]=result.get(i).value(j);
+//			}
+//	    }    
+//	    
+//	    for (int i = 0; i < values.length; i++) {
+//			System.out.println(values[i]);
+//		}
+	    
+	    for (int i = 0; i < result.size(); i++) {
+	    //	System.out.println(result.get(i).value(1));
+	    	for (int j = 0; j < result.get(i).numValues()-1; j++) {
+	    		
+	         // System.out.println(values[j] + " " + result.get(i).value(j) + "   " +result.get(i).value(j)/values[j]);
+	          result.get(i).setValue(j, result.get(i).value(j)/values[j]);
+			}
+	    }
+	    reader.close();
+
+	    return result;
+	  }
+
+
 
 }

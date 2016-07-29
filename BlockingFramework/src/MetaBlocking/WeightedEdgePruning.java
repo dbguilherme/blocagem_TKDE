@@ -38,13 +38,13 @@ public class WeightedEdgePruning extends AbstractMetablocking {
     }
 
     @Override
-    public void applyProcessing(List<AbstractBlock> blocks) {
+    public List<AbstractBlock> applyProcessing(List<AbstractBlock> blocks) {
         getStatistics(blocks);
         setAverageWeight(blocks);
-        filterComparisons(blocks);
+       return filterComparisons(blocks);
     }
 
-    protected void filterComparisons(List<AbstractBlock> blocks) {
+    protected List<AbstractBlock>  filterComparisons(List<AbstractBlock> blocks) {
         boolean cleanCleanER = blocks.get(0) instanceof BilateralBlock;
         final List<AbstractBlock> newBlocks = new ArrayList<AbstractBlock>();
         for (AbstractBlock block : blocks) {
@@ -65,7 +65,9 @@ public class WeightedEdgePruning extends AbstractMetablocking {
             newBlocks.add(getDecomposedBlock(cleanCleanER, entities1, entities2));
         }
         blocks.clear();
+       // blocks.
         blocks.addAll(newBlocks);
+        return newBlocks;
     }
 
     protected void setAverageWeight(List<AbstractBlock> blocks) {

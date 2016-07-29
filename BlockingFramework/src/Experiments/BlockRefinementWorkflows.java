@@ -1,6 +1,7 @@
 package Experiments;
 
 import DataStructures.AbstractBlock;
+import DataStructures.EntityProfile;
 import BlockProcessing.AbstractEfficiencyMethod;
 import BlockProcessing.BlockRefinement.BlockPruning;
 import BlockProcessing.BlockRefinement.BlockScheduling;
@@ -8,8 +9,12 @@ import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
 import Utilities.BlockStatistics;
 import Utilities.ExportBlocks;
+import Utilities.SerializationUtilities;
+
 import java.io.IOException;
 import java.util.List;
+
+import BlockBuilding.MemoryBased.TokenBlocking;
 
 /**
  *
@@ -18,13 +23,26 @@ import java.util.List;
 public class BlockRefinementWorkflows {
 
     public static void main(String[] args) throws IOException {
-        String mainDirectory = "/bigwork/nhvqgpap/bigDataset/";
-        String[] indexDirs = {mainDirectory + "indices/characterTrigramAC1",
-            mainDirectory + "indices/characterTrigramAC2"};
-        String duplicatesPath = mainDirectory + "data/groundtruth";
+//        String mainDirectory = "/bigwork/nhvqgpap/bigDataset/";
+//        String[] indexDirs = {mainDirectory + "indices/characterTrigramAC1",
+//            mainDirectory + "indices/characterTrigramAC2"};
+//       
+//        
+//        String duplicatesPath = mainDirectory + "data/groundtruth";
 
-        ExportBlocks exportBlocks = new ExportBlocks(indexDirs);
-        List<AbstractBlock> blocks = exportBlocks.getBlocks();
+        String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
+        String profilesPathA= mainDirectory+"/dblp";
+    	String profilesPathB= mainDirectory+"/scholar";
+    	String duplicatesPath =  mainDirectory+ "/groundtruth"; 
+    	List[] profiles = new List[2];
+		profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
+		profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
+		TokenBlocking imtb = new TokenBlocking(profiles);
+		 List<AbstractBlock> blocks = imtb.buildBlocks();
+    	
+        
+      //  ExportBlocks exportBlocks = new ExportBlocks(indexDirs);
+      //  List<AbstractBlock> blocks = exportBlocks.getBlocks();
         System.out.println("Blocks\t:\t" + blocks.size());
 
         long startingTime = System.currentTimeMillis();

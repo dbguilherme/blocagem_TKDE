@@ -33,16 +33,27 @@ public class ProfileComparison {
             String[] tokens = attribute.getValue().split("[\\W_]");
             tokensFrequency.addAll(Arrays.asList(tokens));
         }
-
         return tokensFrequency;
     }
     
     public static double getJaccardSimilarity(Set<Attribute> profile1, Set<Attribute> profile2) {
+    	
         final Set<String> tokenizedProfile1 = getDistinctTokens(profile1);
         final Set<String> tokenizedProfile2 = getDistinctTokens(profile2);
         
         Iterator<String> it = tokenizedProfile1.iterator();
-        
+//        while(it.hasNext()){
+//        	System.out.print(it.next() + " ");
+//        	
+//        }
+//        System.out.println();
+     
+        Iterator<String> it2 = tokenizedProfile2.iterator();
+//        while(it2.hasNext()){
+//        	System.out.print("-  "+ it2.next());
+//        	
+//        }
+//        System.out.println();
         final Set<String> allTokens = new HashSet<String>(tokenizedProfile1);
         allTokens.addAll(tokenizedProfile2);
         

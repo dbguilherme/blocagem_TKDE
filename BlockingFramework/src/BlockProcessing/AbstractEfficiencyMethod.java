@@ -47,5 +47,6 @@ public abstract class AbstractEfficiencyMethod {
 
         System.out.println("Detected duplicates\t:\t" + adp.getNoOfDuplicates());
         System.out.println("Executed comparisons\t:\t" + comparisons);
+       // return null;
     }
 }

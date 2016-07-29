@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.35-bin.jar"/>
 	<classpathentry kind="lib" path="lib/OpenJGraph.jar"/>
 	<classpathentry kind="lib" path="lib/SentenceSplitter.jar"/>
-	<classpathentry kind="lib" path="lib/weka.jar"/>
 	<classpathentry kind="lib" path="lib/simmetrics_jar_v1_6_2_d07_02_07.jar"/>
+	<classpathentry kind="lib" path="/home/dbguilherme/Downloads/weka-3-8-0/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

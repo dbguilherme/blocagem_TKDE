@@ -229,6 +229,7 @@ public class BlockStatistics implements Constants {
         detectedDuplicates = abstractDP.getNoOfDuplicates();
         pc = ((double)abstractDP.getNoOfDuplicates()) / abstractDP.getExistingDuplicates();
         pq = abstractDP.getNoOfDuplicates() / totalComparisons;
+        System.out.println("detectedDuplicates -->"+ detectedDuplicates+ " \n total== "+ totalComparisons);
         System.out.println("Detected duplicates\t:\t" + abstractDP.getNoOfDuplicates());
         System.out.println("PC\t:\t" + pc);
         System.out.println("PQ\t:\t" + pq);

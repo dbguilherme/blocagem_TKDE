@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import BlockBuilding.MemoryBased.TokenBlocking;
+
 /**
  *
  * @author gap2
@@ -26,14 +28,19 @@ import java.util.List;
 public class MetaBlockingOnDisk {
 
     public static void main(String[] args) throws IOException {
-        String mainDirectory = "C:\\Data\\BlockAnalysis\\syntheticDatasets\\";
+    	String mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica/";
         //       String[] datasets = {"10K", "50K", "100K", "200K", "300K", "1M", "2M"};
         String[] datasets = {"10K"};
         for (String dataset : datasets) {
             System.out.println("\n\nCurrent dataset name\t:\t" + dataset);
-
             String profilesPath = mainDirectory + dataset + "profiles";
-            String[] indexPath = { mainDirectory + dataset + "index" };
+            List[] profiles = new List[1];
+    		profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath);
+    		//profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
+    		TokenBlocking imtb = new TokenBlocking(profiles);
+    		
+    		
+           // String[] indexPath = { mainDirectory + dataset + "index" };
 
             final List<EntityProfile> entityProfiles = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath);
             System.out.println("Total Entity Profiles\t:\t" + entityProfiles.size());
@@ -52,9 +59,9 @@ public class MetaBlockingOnDisk {
             System.out.println("=================================================");
             for (WeightingScheme scheme : WeightingScheme.values()) {
                 System.out.println("\n\n\n\n\nWeighting scheme\t:\t" + scheme);
-
-                ExportBlocks exportBlocks = new ExportBlocks(indexPath);
-                List<AbstractBlock> blocks = exportBlocks.getBlocks();
+                List<AbstractBlock> blocks = imtb.buildBlocks();
+//                ExportBlocks exportBlocks = new ExportBlocks(indexPath);
+//                List<AbstractBlock> blocks = exportBlocks.getBlocks();
                 System.out.println("Blocks\t:\t" + blocks.size());
 
                 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.025);
@@ -69,26 +76,26 @@ public class MetaBlockingOnDisk {
                 BlockStatistics blStats = new BlockStatistics(blocks, duplicatePropagation);
                 blStats.applyProcessing();
 
-                for (AbstractBlock block : blocks) {
-                    Iterator<Comparison> iterator = block.getComparisonIterator();
-                    while (iterator.hasNext()) {
-                        Comparison comparison = iterator.next();
-                        EntityProfile profile1 = entityProfiles.get(comparison.getEntityId1());
-                        EntityProfile profile2 = entityProfiles.get(comparison.getEntityId2());
-
-                        double similarity = ProfileComparison.getJaccardSimilarity(profile1.getAttributes(), profile2.getAttributes());
-                        System.out.println("\n\nMATCH\t:\t" + similarity);
-                        System.out.print("URL : " + profile1.getEntityUrl() + ", ");
-                        for (Attribute attribute : profile1.getAttributes()) {
-                            System.out.print(attribute.getName() + " = " + attribute.getValue() + ", ");
-                        }
-                        System.out.print("\nURL : " + profile2.getEntityUrl() + ", ");
-                        for (Attribute attribute : profile2.getAttributes()) {
-                            System.out.print(attribute.getName() + " = " + attribute.getValue() + ", ");
-                        }
-                        System.out.println();
-                    }
-                }
+//                for (AbstractBlock block : blocks) {
+//                    Iterator<Comparison> iterator = block.getComparisonIterator();
+//                    while (iterator.hasNext()) {
+//                        Comparison comparison = iterator.next();
+//                        EntityProfile profile1 = entityProfiles.get(comparison.getEntityId1());
+//                        EntityProfile profile2 = entityProfiles.get(comparison.getEntityId2());
+//
+//                        double similarity = ProfileComparison.getJaccardSimilarity(profile1.getAttributes(), profile2.getAttributes());
+//                       // System.out.println("\n\nMATCH\t:\t" + similarity);
+//                      //  System.out.print("URL : " + profile1.getEntityUrl() + ", ");
+////                        for (Attribute attribute : profile1.getAttributes()) {
+////                          //  System.out.print(attribute.getName() + " = " + attribute.getValue() + ", ");
+////                        }
+////                        System.out.print("\nURL : " + profile2.getEntityUrl() + ", ");
+////                        for (Attribute attribute : profile2.getAttributes()) {
+////                            System.out.print(attribute.getName() + " = " + attribute.getValue() + ", ");
+////                        }
+////                        System.out.println();
+//                    }
+//                }
             }
         }
     }

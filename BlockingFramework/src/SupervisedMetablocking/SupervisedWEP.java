@@ -86,7 +86,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
                   //  continue;
                 }
 
-                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0);
+                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0.0);
                 int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
                 if (instanceLabel == DUPLICATE) {
                 	count++;
@@ -159,7 +159,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         sampleDuplicates[classifierId].add((double)detectedDuplicates.size());
         try {
         	if(classifierId==0){
-        		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
+        		Double d =((double)detectedDuplicates.size())/(duplicates.size())*100.0;
         		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
         		//armazena++;
         	}else
@@ -210,32 +210,32 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
           for (int i1 = 0; i1 < entityIds1.length; i1++) {
           	//System.out.println(i1 +"  "+entityIds1[i1] +" ---" + entityIds2[i1]);
 	           teste++;
-	           Set<Attribute> setAtributtes = ebc.exportEntityA(entityIds1[i1]);
-	           String sA[]=Converter.createVector(setAtributtes,entityIds1[i1]);
-	           concatStringA=sA[0]+"::";
-	           for (int j = 0; j < sA.length; j++) {
-	        	   concatStringA=concatStringA.concat(sA[j]+":");
-	           }
-	           //System.out.println(concatStringA);
-	           setAtributtes = ebc.exportEntityB(entityIds2[i1]);
-	           String sB[]=Converter.createVector(setAtributtes,entityIds2[i1]);
-	           
-	           concatStringB= sB[0]+"::";
-	           for (int j = 0; j < sB.length; j++) {
-	        	   concatStringB=concatStringB.concat(sB[j]+":");
-	           }
-	           //System.out.println(" 		"+concatStringB);
-	           String label="false";
-	             Comparison comparison = new Comparison(dirtyER, entityIds1[i1], entityIds2[i1],0.0);
-	             if (areMatching(comparison)) {
-	                 label="true";
-	             }
-	            try {
-	            	pstxt.print(concatStringA +": "+ ebc.getSImilarity(entityIds1[i1],entityIds2[i1])+ ": "+ concatStringB +" :"+label);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//	           Set<Attribute> setAtributtes = ebc.exportEntityA(entityIds1[i1]);
+//	           String sA[]=Converter.createVector(setAtributtes,entityIds1[i1]);
+//	           concatStringA=sA[0]+"::";
+//	           for (int j = 0; j < sA.length; j++) {
+//	        	   concatStringA=concatStringA.concat(sA[j]+":");
+//	           }
+//	           //System.out.println(concatStringA);
+//	           setAtributtes = ebc.exportEntityB(entityIds2[i1]);
+//	           String sB[]=Converter.createVector(setAtributtes,entityIds2[i1]);
+//	           
+//	           concatStringB= sB[0]+"::";
+//	           for (int j = 0; j < sB.length; j++) {
+//	        	   concatStringB=concatStringB.concat(sB[j]+":");
+//	           }
+//	           //System.out.println(" 		"+concatStringB);
+//	           String label="false";
+//	             Comparison comparison = new Comparison(dirtyER, entityIds1[i1], entityIds2[i1],0.0);
+//	             if (areMatching(comparison)) {
+//	                 label="true";
+//	             }
+//	            try {
+//	            	pstxt.print(concatStringA +": "+ ebc.getSImilarity(entityIds1[i1],entityIds2[i1])+ ": "+ concatStringB +" :"+label);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 //          	try {
 //  				load_data_db(entityIds1[i1], entityIds2[i1],st);
 //  			} catch (SQLException e) {

@@ -1,3 +1,10 @@
-/Experiments/
 /SupervisedMetablocking/
 /Utilities/
+<<<<<<< HEAD
+=======
+/Experiments/
+>>>>>>> teste
+/BlockProcessing/
+/DataStructures/
+/MetaBlocking/
+/OnTheFlyMethods/

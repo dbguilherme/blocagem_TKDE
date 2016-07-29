@@ -140,7 +140,7 @@ public class ExportBlocks implements Constants {
                     if (!hashedBlocks.containsKey(text.utf8ToString())) {
                         continue;
                     }
-
+                   // System.out.println(text.utf8ToString());
                     final List<Integer> entityIds = new ArrayList<>();
                     DocsEnum de = MultiFields.getTermDocsEnum(d2Index, MultiFields.getLiveDocs(d2Index), field, text);
                     int doc;
@@ -150,6 +150,7 @@ public class ExportBlocks implements Constants {
 
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
                     int[] d1Entities = hashedBlocks.get(text.utf8ToString());
+                    
                     blocks.add(new BilateralBlock(d1Entities, idsArray));
                 }
             }
@@ -171,7 +172,7 @@ public class ExportBlocks implements Constants {
                     if (termsEnum.docFreq() < 2) {
                         continue;
                     }
-
+                   // System.out.println(text.utf8ToString());
                     final List<Integer> entityIds = new ArrayList<>();
                     DocsEnum de = MultiFields.getTermDocsEnum(d1Index, MultiFields.getLiveDocs(d1Index), field, text);
                     int doc;
