@@ -979,10 +979,14 @@ if(true){
 		for ( AbstractBlock b:blocks) {
 
 
+			ComparisonIterator iterator = b.getComparisonIterator();
+						Comparison c;
+						while(iterator.hasNext()){			
+								 c= iterator.next(); 
 
 
 
-
+			
 					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
 					if (commonBlockIndices == null) {
 						continue;
@@ -1009,7 +1013,7 @@ if(true){
 
 			}
 
-		}
+		
 
 
 		//
@@ -1063,7 +1067,7 @@ if(true){
 		}
 		return perc;
 	}
->>>>>>> teste
+
 
 	private void callGeraBins() throws IOException {
 		String line;
