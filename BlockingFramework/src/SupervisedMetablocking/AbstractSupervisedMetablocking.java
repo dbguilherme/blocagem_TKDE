@@ -376,7 +376,7 @@ if(true){
 						double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
 						double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
 						try{
-							valor = commonBlockIndices.size()*ibf1*ibf2;	
+							level = commonBlockIndices.size();	
 						}catch (Exception e ){
 							System.out.println(e.getMessage());
 						}
@@ -386,10 +386,10 @@ if(true){
 //						comparison.sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 //						
 //						
-						if(valor>800)
+						if(level>20)
 							level=20;
 						else
-							level=(int) Math.floor(valor /50);
+							level=(int) Math.floor(level);
 						{
 						//	if(comparison.sim>= ((double)level*0.1) && comparison.sim< ((double)(level+1)*0.1))
 							{	
@@ -986,14 +986,14 @@ if(true){
 					double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId1(), 0));
 					double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId2(), 1));
 					try{
-						sim = commonBlockIndices.size()*ibf1*ibf2;	
+						sim = commonBlockIndices.size();//*ibf1*ibf2;	
 					}catch (Exception e ){
 						System.out.println(e.getMessage());
 					}
-					if(sim>800)
+					if(sim>20)
 						blockSize[((int)Math.floor(20))]++;
 					else
-						blockSize[((int)Math.floor(sim/50))]++;
+						blockSize[((int)Math.floor(sim))]++;
 
 				}
 
