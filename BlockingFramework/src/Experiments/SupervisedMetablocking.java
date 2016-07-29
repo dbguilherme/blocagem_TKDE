@@ -200,7 +200,7 @@ public class SupervisedMetablocking {
 		System.out.println("depois do grid.py----------");
 		return null;    
 	}
-
+vvdfgfds
 	public static void main(String[] args) throws IOException, Exception {
 		System.out.println( System.getProperty("user.home"));
 		String mainDirectory;
