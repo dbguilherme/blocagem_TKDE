@@ -228,10 +228,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
   
 	protected Instance getFeatures(int match, List<Integer> commonBlockIndices, Comparison comparison, double flag) {
 		double[] instanceValues =null;
-		if(flag==0.0)
-			instanceValues = new double[noOfAttributes-1];
-		else
-			instanceValues = new double[noOfAttributes];
+		instanceValues = new double[noOfAttributes];
 
 		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
 		//	System.out.println(noOfBlocks +"   "+ entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
@@ -261,14 +258,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
 //		
-		if(flag==1.0){
+		//if(flag==1.0){
 			instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
 			instanceValues[6] = match;
 			//instanceValues.
-		}
-		else {
-			instanceValues[5] = match;
-		}
+		
 		 //ebcX.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
 				
 		
@@ -408,41 +402,7 @@ if(true){
 								
 								if(temp> tamanho)
 									continue;
-							//	System.out.println(level + "   "+ comparison.sim);
-//								Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,comparison.sim);
-//								if(level<3 && areMatching(comparison)){
-//									//if(random.nextInt(100)<99)
-//									//	continue;
-//									l++;
-//								}else 
-//									if(temp> tamanho)
-//										continue;
-//									
-//								
-							
-//								if(newInstanceTemp.value(0)>100){
-//									if(random.nextInt(10)>4)
-//										continue;
-//								}else	{								
-//									if(temp>tamanho)
-//									continue;
-//								}
-//								if(!areMatching(comparison))
-//									continue;
-//								
-//								if (blocks.get(i).getNoOfComparisons()<5 && newInstanceTemp.value(0)>100){ 
-//									if(random.nextInt(10)>1)
-//										continue;
-//									System.out.println(".... " +l++);
-//								}else{
-//									if(areMatching(comparison)){
-//										if(random.nextInt(10)>8)
-//											continue;
-//									}else
-//									if(random.nextInt(853975)>100){
-//										continue;
-//									}
-//							//	}
+
 								
 						
 
@@ -483,28 +443,14 @@ if(true){
 				pstxt_level[m].close();
 				psarff_level[m].close();
 			}
-//					try {			
-//						//loadFileTrainingSet(kmeans.run("/tmp/levels_arff.arff",100, trainingInstances));
-//						//trainingInstances=kmeans.run("/tmp/levels_arff.arff",tamanho, trainingInstances,sampleMatches,sampleNonMatches);
-//					} catch (Exception e2) {
-//						e2.printStackTrace();
-//					}
-					//System.out.println("training match Instances ---" + sampleMatches.get(0));
-					//System.out.println("training match Instances ---" + sampleNonMatches.get(0));
-//					for (int k = 0; k < trainingInstances.size(); k++) {
-//						for (int k2 = 0; k2 < 6; k2++) {
-//							System.out.print( trainingInstances.get(k).value(k2) +"  ");
-//						}
-//						System.out.println();
-//					}	
 
 					try {
-						File f = new File("/tmp/lock");
-						while(f.exists() ) { 
-							System.out.println("sleeping................");
-							Thread.sleep(1000);
-						}
-						f.createNewFile();
+//						File f = new File("/tmp/lock");
+//						while(f.exists() ) { 
+//							System.out.println("sleeping................");
+//							Thread.sleep(1000);
+//						}
+//						f.createNewFile();
 						
 						callGeraBins();
 						for (int i = 8; i >=8; i--) {
@@ -516,7 +462,7 @@ if(true){
 						//teste_tree(trainingInstances);
 						//loadFileTrainingSet(trainingInstances);
 						loadFileTrainingSet();
-						f.delete();
+						//f.delete();
 					}  catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -583,13 +529,13 @@ if(true){
 					if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(5))>0.1){
 						//countN++;
 						System.out.println("descartando..........");
-						continue;
+					//	continue;
 					}
 //					
 //					for (int j = 0; j < 6; j++) {
 //						//instance.setValue(j, 0.5);
 //					}
-						instance.setMissing(5); //deleteAttributeAt(5);  
+					//	instance.setMissing(5); //deleteAttributeAt(5);  
 						trainingInstances.add(instance);
 						if((instance.value(data.numAttributes() -1))==1)  
 							countP++;

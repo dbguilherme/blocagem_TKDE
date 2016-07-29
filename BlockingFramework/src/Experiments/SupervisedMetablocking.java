@@ -432,7 +432,7 @@ public class SupervisedMetablocking {
 			//blockHash.produceHash(blocks, ebc);
 
 			int tamanho = 50;
-			while(tamanho <=10000)
+		//	while(tamanho <=10000)
 			{				
 
 				writer1.write("level "+tamanho +"\n");
