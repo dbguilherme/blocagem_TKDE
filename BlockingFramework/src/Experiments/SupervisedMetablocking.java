@@ -215,42 +215,7 @@ public class SupervisedMetablocking {
 	}
 
 	
-	private static int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc) {
 
-		int[] blockSize=  new int[10];
-		for (int i = 0; i < 10; i++) {
-			blockSize[i]=0;
-			//	primeiroBlock[i]=0;
-		}
-		EntityIndex entityIndex = new EntityIndex(blocks);
-		for ( AbstractBlock b:blocks) {
-			if(b!=null){
-				ComparisonIterator comparisonit = b.getComparisonIterator();
-				b.getBlockIndex();
-				while(comparisonit.hasNext()){
-					DataStructures.Comparison c=comparisonit.next();
-
-					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
-					if (commonBlockIndices == null) {
-						continue;
-					}
-
-					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),Converter.atributos_value);
-					c.sim=sim;
-					if(sim==10)
-						sim--;
-					blockSize[((int)Math.floor(sim*10))]++;
-				}
-			}
-		}
-		for (int i = 0; i < 10; i++) {
-			//	perc[i]=(((double)tamanho)/(blockSize[i]));
-			System.out.println(i + " tamanho do bloco "+  "  " + blockSize[i] );
-			//totalPares += blockHash.blockSize[i];
-		}
-		return blockSize;
-	}
-	
 	private static ArrayList<Comparison>[] testeParaGerarAscomparações(List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc) {
 
 		List<AbstractBlock> blocks_select = new ArrayList<AbstractBlock>();
@@ -331,6 +296,12 @@ public class SupervisedMetablocking {
 			//profilesPathB= mainDirectory+"/dataset2_gp";
 
 			groundTruthPath =  mainDirectory+ "/groundtruth"; 
+			break;
+			
+		case "5":
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/cddb/";
+			profilesPathA =  mainDirectory+"/"+"cddbProfiles"	;	
+			groundTruthPath =  mainDirectory+"/"+"cddbIdDuplicates";	
 			break;
 		}
 	
@@ -431,8 +402,8 @@ public class SupervisedMetablocking {
 
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 50;
-		//	while(tamanho <=10000)
+			int tamanho = 100;
+			while(tamanho <=10000)
 			{				
 
 				writer1.write("level "+tamanho +"\n");

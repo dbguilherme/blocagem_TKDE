@@ -28,6 +28,7 @@ import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -90,7 +91,15 @@ public class ExecuteBlockComparisons {
     
     private EntityProfile[] loadProfiles(String profilesPath) {
         List<EntityProfile> entityProfiles = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath);
-        return entityProfiles.toArray(new EntityProfile[entityProfiles.size()]);
+        EntityProfile[] e =entityProfiles.toArray(new EntityProfile[entityProfiles.size()]);
+        for (EntityProfile entityProfile : entityProfiles) {
+        	//entityProfile.getatt(entityProfile);
+        	entityProfile.x="";
+        	for ( Attribute att : entityProfile.getAttributes() ) {
+        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", "")+ "  ");
+    		}
+		}
+        return e;
     }
 
 	public Set<Attribute> exportEntityA(int entityIds1) {
@@ -126,81 +135,17 @@ public class ExecuteBlockComparisons {
 		 
 	}
 
-//	
-	int count=0;
-	public double  getSImilarityAttribute (int entityIds1, int entityIds2, String[] names){
-		double sim=0.0;
-		//String vector[]=new String[atributos_value.length+1];
-		Set<Attribute> profile1= new HashSet(); 
-		Set<Attribute> profile2= new HashSet();
-		//((new Converter()).atributos_value[2]);
+	public double  getSimilarityAttribute (int entityIds1, int entityIds2){
+
 		TokeniserQGram3 tok =new TokeniserQGram3();
 		JaccardSimilarity jc =new JaccardSimilarity(tok);
-		JaroWinkler jw = new JaroWinkler();
-		Levenshtein le= new Levenshtein();
-		//String[] name=((new Converter()).atributos_value);
-		profile1= dataset1[entityIds1].getAttributes();
-<<<<<<< HEAD
+		//JaroWinkler jw = new JaroWinkler();
+		//Levenshtein le= new Levenshtein();
+		//System.out.println(dataset1[entityIds1].x + " --------" + dataset1[entityIds2].x);
 		if(dataset2!=null)
-			profile2=dataset2[entityIds2].getAttributes();
+			return jc.getSimilarity(dataset1[entityIds1].x,dataset2[entityIds2].x );
 		else
-		profile2=dataset1[entityIds2].getAttributes();
-=======
-		if(dataset2!=null)		
-			profile2=dataset2[entityIds2].getAttributes();
-		else
-			profile2=dataset1[entityIds2].getAttributes();
->>>>>>> teste
+			return jc.getSimilarity(dataset1[entityIds1].x,dataset1[entityIds2].x);
 		
-		String[] vetA =new String[names.length];
-		String[] vetB =new String[names.length];
-		try{
-			for(Attribute att:profile1){
-				for (int i = 1; i < vetA.length; i++) {
-					if(att.getName().equals(names[i])){
-		    			vetA[i]= att.getValue().toLowerCase().trim();
-		    	
-					}
-				}
-			}
-			for(Attribute att:profile2){
-				for (int i = 1; i < vetB.length; i++) {
-					if(att.getName().equals(names[i])){
-		    			vetB[i]= att.getValue().toLowerCase().trim();
-		    			
-					}
-				}
-			}
-	
-//			for (int i = 1; i < vetB.length && i < vetA.length; i++) {
-//				System.out.println(i +" xxxx -->" + vetA[i] + "  "+ vetB[i]);
-//			}
-		
-			for (int i = 1; i < vetB.length && i < vetA.length; i++) {
-				if(!(vetA[i]==null) && !(vetB[i]==null) && !vetA[i].isEmpty() && !vetB[i].isEmpty()  )
-				{
-					//if(vetB[i].contains("\\("))
-						sim+=le.getSimilarity(vetA[i], vetB[i].replaceAll("\\(.+\\)",""));
-					//else
-					//	sim+=jc.getSimilarity(vetA[i], vetB[i]);
-				//	System.out.println("name a "+ vetA[i] +"-------- "+ vetB[i] + " " +sim );
-				}
-					
-			}
-//		if(sim>0.9){
-//			for (int i = 1; i < vetB.length && i < vetA.length; i++) {
-//				System.out.println(names[i] + "  "+  vetA[i] + " ---- " +  vetB[i] + "  "+ sim);
-//			}
-//		}
-				
-		//System.out.println("sim -> " + ((sim)) + " --- "+ vetB.length);
-		}catch(Exception e ){
-			System.out.println("erro " +e.getMessage());
-			e.printStackTrace();
-			 return ProfileComparison.getJaccardSimilarity(dataset1[entityIds1].getAttributes(), 
-	                 dataset1[entityIds2].getAttributes()); 
-		}
-		//System.out.println(((sim)/(vetB.length)) + " "+ vetB.length);
-		 return ((sim)/(vetB.length-1));
 	}
 }
