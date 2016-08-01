@@ -392,7 +392,8 @@ public class SupervisedMetablocking {
 		SupervisedWEP swep;
 
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
-		
+		File f=new File("/tmp/lock");
+		f.delete();
 
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=1,j=5;
@@ -402,7 +403,7 @@ public class SupervisedMetablocking {
 
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 100;
+			int tamanho = 10;
 			while(tamanho <=10000)
 			{				
 
@@ -431,9 +432,8 @@ public class SupervisedMetablocking {
 				else if(tamanho==50)
 					tamanho*=2;
 				else if(tamanho==100)
-					tamanho+=100;
-				else if(tamanho==200)
 					tamanho=500;
+				
 				else if( tamanho==500)
 					tamanho=1000;
 				else tamanho*=tamanho;

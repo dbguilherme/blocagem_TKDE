@@ -85,7 +85,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
                 if (trainingSet.contains(comparison)) {
                   //  continue;
                 }
-                if(count++%10000==1)
+                if(count++%100000==1)
                 	System.out.println("processados -->" + count);
                 Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0.0);
                 int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
@@ -161,7 +161,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         try {
         	if(classifierId==0){
         		Double d =((double)detectedDuplicates.size())/(duplicates.size())*100.0;
-        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" time " + overheadTimes[classifierId].get(iteration) +" \n");
         		//armazena++;
         	}else
         	if(classifierId==1){

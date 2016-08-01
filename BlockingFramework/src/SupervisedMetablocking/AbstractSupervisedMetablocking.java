@@ -77,6 +77,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected List<Double>[] resolutionTimes;
 	protected List<Double> sampleMatches;
 	protected List<Double> sampleNonMatches;
+	protected List<Double> sampleNonMatchesNotUsed;
 	protected List<Double>[] sampleComparisons;
 	protected List<Double>[] sampleDuplicates;
 	protected List<String> classLabels;
@@ -119,7 +120,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		set=profilesPathA;
 		getTrainingSet_original(iteration,ebc,tamanho,r,profilesPathA);
 
-		//getTrainingSet(iteration,ebc,tamanho);
+		//getTrainingSet(iteration);
 		System.out.println(trainingInstances.size() + "  ----- " +temp);
 
 		for (int i = 0; i < classifiers.length; i++) {
@@ -239,7 +240,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
 		//		
 		//if(flag==1.0){
-		instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());//ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
+		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
+		instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
 		instanceValues[6] = match;
 		//instanceValues.
 		//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());  //
@@ -260,7 +262,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		sampleMatches.clear();
 		sampleNonMatches.clear();
-
+		sampleNonMatchesNotUsed.clear();
 		int trueMetadata=0;
 		int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size());
 		double nonMatchRatio = matchingInstances / (validComparisons - duplicates.size());
@@ -355,13 +357,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					}catch (Exception e ){
 						System.out.println(e.getMessage());
 					}
-					//						comparison.sim=ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);//ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2())); //ebc.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
-					//						if(comparison.sim>=1.0)
-					//							comparison.sim=0.99;
-					//						comparison.sim = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
-					//						
-					//						
-					if(valor>500)
+						if(valor>500)
 						level=20;
 					else
 						level=(int) Math.floor(valor/30);
@@ -441,7 +437,47 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 	}
 
+	 protected void getTrainingSet(int iteration) {
+	        int trueMetadata = 0;
+	        Random random = new Random(iteration);
+	        int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size()+1);
+	        double nonMatchRatio = matchingInstances / (validComparisons - duplicates.size());
 
+	        trainingSet = new HashSet<Comparison>(4*matchingInstances);
+	        trainingInstances = new Instances("trainingSet", attributes, 2*matchingInstances);
+	        trainingInstances.setClassIndex(noOfAttributes - 1);
+
+	        for (AbstractBlock block : blocks) {
+	            ComparisonIterator iterator = block.getComparisonIterator();
+	            while (iterator.hasNext()) {
+	                Comparison comparison = iterator.next();
+	                final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
+	                if (commonBlockIndices == null) {
+	                    continue;
+	                }
+
+	                int match = NON_DUPLICATE; // false
+	                if (areMatching(comparison)) {
+	                    if (random.nextDouble() < SAMPLE_SIZE) {
+	                        trueMetadata++;
+	                        match = DUPLICATE; // true
+	                    } else {
+	                        continue;
+	                    }
+	                } else if (nonMatchRatio <= random.nextDouble()) {
+	                    continue;
+	                }
+
+	                trainingSet.add(comparison);
+	                Instance newInstance = getFeatures(match, commonBlockIndices, comparison, nonMatchRatio);
+	                trainingInstances.add(newInstance);
+	            }
+	        }
+
+	        sampleMatches.add((double) trueMetadata);
+	        sampleNonMatches.add((double) (trainingSet.size() - trueMetadata));
+	        sampleNonMatchesNotUsed.add(0.0);
+	    }
 
 	private void loadFileTrainingSet() throws Exception {
 		// TODO Auto-generated method stub
@@ -449,18 +485,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arffdataset1_amazon.arff"));
 		Instances data = new Instances(alac_result);
 		data.setClassIndex(data.numAttributes() -1);
-		int countP=0,countN=0;
+		int countP=0,countN=0, countDesc=0;
+		double menorP=1.0;
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(5))>0.1){
-				//countN++;
-				System.out.println("descartando..........");
+			if(menorP>instance.value(instance.numAttributes()-2) && instance.value(instance.numAttributes()-1)==1.0)
+				menorP=instance.value(instance.numAttributes()-2);
+		}
+		
+		double limiar =Math.floor(menorP*10);
+		System.out.println(menorP+ " menor positivo é " + limiar/10);
+		for (Instance instance : data) {
+			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=limiar/10){
+				
+				countDesc++;
+				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
 			}
-			//					
-			//					for (int j = 0; j < 6; j++) {
-			//						//instance.setValue(j, 0.5);
-			//					}
-			//	instance.setMissing(5); //deleteAttributeAt(5);  
+			
 			trainingInstances.add(instance);
 			if((instance.value(data.numAttributes() -1))==1)  
 				countP++;
@@ -469,17 +510,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//}
 
 		}
-		//	
-		//		for (int j = 0; j < trainingInstances.size(); j++) {
-		//			for (int j2 = 0; j2 < 6; j2++) {
-		//				System.out.print(trainingInstances.get(j).value(j2)+ " ");
-		//			}
-		//			System.out.println();
-		//		}
-
-		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+countN);
+		
+		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN+countDesc) + "   countDesc -->"+countDesc);
 		sampleMatches.add((double) countP);///positivos
-		sampleNonMatches.add((double) (countN)); //negativos
+		sampleNonMatches.add((double) (countN+countDesc)); //negativos
+		sampleNonMatchesNotUsed.add((double) (countDesc)); //negativos
 	}
 
 
@@ -728,6 +763,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	private void prepareStatistics() {
 		sampleMatches = new ArrayList<Double>();
 		sampleNonMatches = new ArrayList<Double>();
+		sampleNonMatchesNotUsed= new ArrayList<Double>();
 		overheadTimes = new ArrayList[noOfClassifiers];
 		resolutionTimes = new ArrayList[noOfClassifiers];
 		sampleComparisons = new ArrayList[noOfClassifiers];
@@ -740,14 +776,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 	}
 
-	//	public void printStatisticsB(BufferedWriter writer)throws IOException {
-	//		
-	//		for (int i = 0; i < overheadTimes.length; i++) {
-	//			Double d = (sampleDuplicates[0].get(i))/(duplicates.size())*100.0;
-	//			writer.write("dup  " + sampleMatches.get(i).toString() + " nondup "+ sampleNonMatches.get(i).toString() +" sampleComparisons " + sampleComparisons[0].get(i).toString() + " pc " + d.toString() );
-	//		}
-	//		
-	//	}
 
 	public void printStatistics() throws IOException {
 		System.out.println("\n\n\n\n\n+++++++++++++++++++++++Printing overall statistics+++++++++++++++++++++++");

@@ -96,7 +96,7 @@ public class ExecuteBlockComparisons {
         	//entityProfile.getatt(entityProfile);
         	entityProfile.x="";
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", "")+ "  ");
+        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ "  ");
     		}
 		}
         return e;
@@ -138,7 +138,7 @@ public class ExecuteBlockComparisons {
 	public double  getSimilarityAttribute (int entityIds1, int entityIds2){
 
 		TokeniserQGram3 tok =new TokeniserQGram3();
-		JaccardSimilarity jc =new JaccardSimilarity(tok);
+		JaccardSimilarity jc =new JaccardSimilarity();
 		//JaroWinkler jw = new JaroWinkler();
 		//Levenshtein le= new Levenshtein();
 		//System.out.println(dataset1[entityIds1].x + " --------" + dataset1[entityIds2].x);
