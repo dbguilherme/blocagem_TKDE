@@ -88,7 +88,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected int elements[];
 	protected Hashtable balance = new Hashtable();
 	protected final String names[]=(new Converter()).atributos_value;
-	int Nblocks[];
+	int Nblocks[][];
 	ExecuteBlockComparisons ebcX;
 	String set="";
 
@@ -241,7 +241,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//		
 		//if(flag==1.0){
 		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
-		instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+		//if(instanceValues[0]>200)
+			instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+		//else
+		//	instanceValues[5] =0.0;
 		instanceValues[6] = match;
 		//instanceValues.
 		//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());  //
@@ -357,8 +360,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					}catch (Exception e ){
 						System.out.println(e.getMessage());
 					}
-						if(valor>500)
-						level=20;
+						if(valor>1000)
+						level=35;
 					else
 						level=(int) Math.floor(valor/30);
 					{
@@ -366,7 +369,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						{	
 							//if(level>1 && level< 5)
 							//	continue;
-							int temp=random.nextInt(Nblocks[level]);
+							int temp=random.nextInt(Nblocks[level][0]);
 
 
 							if(temp> tamanho)
@@ -374,18 +377,18 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 
 
-
-							//																			int match = NON_DUPLICATE; // false
-							//																			if (areMatching(comparison)) {
-							//																				if (random.nextDouble() < SAMPLE_SIZE) {
-							//																					trueMetadata++;
-							//																					match = DUPLICATE; // true
-							//																				} else {
-							//																					continue;
-							//																				}
-							//																			} else if (nonMatchRatio <= random.nextDouble()) {
-							//																				continue;
-							//																			}
+//
+//																										int match = NON_DUPLICATE; // false
+//																										if (areMatching(comparison)) {
+//																											if (random.nextDouble() < SAMPLE_SIZE) {
+//																												trueMetadata++;
+//																												match = DUPLICATE; // true
+//																											} else {
+//																												continue;
+//																											}
+//																										} else if (nonMatchRatio <= random.nextDouble()) {
+//																											continue;
+//																										}
 
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
@@ -488,27 +491,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		int countP=0,countN=0, countDesc=0;
 		double menorP=1.0;
 		for (Instance instance : data) {
-			if(menorP>instance.value(instance.numAttributes()-2) && instance.value(instance.numAttributes()-1)==1.0)
+			if(menorP>instance.value(instance.numAttributes()-2) && instance.value(instance.numAttributes()-1)==0.1)
 				menorP=instance.value(instance.numAttributes()-2);
 		}
 		
 		double limiar =Math.floor(menorP*10);
 		System.out.println(menorP+ " menor positivo é " + limiar/10);
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=limiar/10){
-				
+			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=0.1){				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
-			}
-			
+			}			
 			trainingInstances.add(instance);
 			if((instance.value(data.numAttributes() -1))==1)  
 				countP++;
 			else
 				countN++;
-			//}
-
 		}
 		
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN+countDesc) + "   countDesc -->"+countDesc);
@@ -518,14 +517,18 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	}
 
 
-	private int[] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc) {
+	private int[][] conta_niveis_hash(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc) {
 
-		int[] blockSize=  new int[100];
+		int[][] blockSize=  new int[100][3];
 		for (int i = 0; i < 100; i++) {
-			blockSize[i]=0;
+			blockSize[i][0]=0;
+			blockSize[i][1]=0;
+			blockSize[i][2]=0;
 			//	primeiroBlock[i]=0;
 		}
 		double sim=0.0;
+		
+		
 		for ( AbstractBlock b:blocks) {
 
 
@@ -546,18 +549,26 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				}catch (Exception e ){
 					System.out.println(e.getMessage());
 				}
-				if(sim>500)
-					blockSize[((int)Math.floor(20))]++;
+				int level=0;
+				if(sim>1000){
+					level=((int)Math.floor(35));
+				}else
+					level=((int)Math.floor(sim/30));
+				
+				blockSize[level][0]++;
+				if(areMatching(c))
+					blockSize[level][2]++;
 				else
-					blockSize[((int)Math.floor(sim/30))]++;
-
+					blockSize[level][1]++;
+//				else
+//					blockSize[((int)Math.floor(sim/30))][0]++;
 			}
 
 		}
 		for (int i = 0; i < 100; i++) {
-			if(blockSize[i] !=0)
+			if(blockSize[i][0] !=0)
 				//	perc[i]=(((double)tamanho)/(blockSize[i]));
-				System.out.println(i + " tamanho do bloco "+  "  " + blockSize[i] );
+				System.out.println(i + " tamanho do bloco "+  "  " + blockSize[i][0] + " " +  blockSize[i][1]  +"  "+ blockSize[i][2]);
 			//totalPares += blockHash.blockSize[i];
 		}
 		return blockSize;

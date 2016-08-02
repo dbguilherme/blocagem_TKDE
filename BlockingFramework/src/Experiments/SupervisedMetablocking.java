@@ -163,11 +163,11 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[1];
+	        Classifier[] classifiers = new Classifier[2];
 	        classifiers[0] = naiveBayes;
 //	        classifiers[1] = j48;
 //	        classifiers[2] = smo;
-//	        classifiers[3] = bayesNet;
+	        classifiers[1] = bayesNet;
 		return classifiers;
 	}
 
@@ -299,9 +299,10 @@ public class SupervisedMetablocking {
 			break;
 			
 		case "5":
-			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/cddb/";
-			profilesPathA =  mainDirectory+"/"+"cddbProfiles"	;	
-			groundTruthPath =  mainDirectory+"/"+"cddbIdDuplicates";	
+			//alto desbalanceamento descartar essa base
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/produtos/";
+			profilesPathA =  mainDirectory+"/"+"amazon"	;	
+			groundTruthPath =  mainDirectory+"/"+"groundtruth";	
 			break;
 		}
 	
