@@ -262,8 +262,9 @@ public class SupervisedMetablocking {
 		return listComparison;
 	}
 	
-	
+	   
 	public static void main(String[] args) throws IOException, Exception {
+		System.out.println( System.getProperty("user.home"));
 		System.out.println( System.getProperty("user.home"));
 		String mainDirectory;
 		String profilesPathA=null;
