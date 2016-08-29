@@ -41,7 +41,7 @@ public class ExecuteBlockComparisons {
  
     private final EntityProfile[] dataset1;
     private final EntityProfile[] dataset2;
-    
+    public double temp_limiar=0.05;
     
 //    public void exportdataset(){
 //    	dataset1[0].getAttributes()

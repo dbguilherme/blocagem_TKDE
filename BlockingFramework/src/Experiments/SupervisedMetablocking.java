@@ -405,8 +405,8 @@ public class SupervisedMetablocking {
 
 			//blockHash.produceHash(blocks, ebc);
 
-			int tamanho = 10;
-			while(tamanho <=10000)
+			int tamanho = 50;
+			while(ebc.temp_limiar <=.5)
 			{				
 
 				writer1.write("level "+tamanho +"\n");
@@ -425,20 +425,21 @@ public class SupervisedMetablocking {
 				}
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
-				System.out.println("size of level : "+ tamanho);
+				System.out.println("size of level : "+ ebc.temp_limiar);
 
-				if(tamanho==5)
-					tamanho=10;
-				else if(tamanho==10)
-					tamanho=50;
-				else if(tamanho==50)
-					tamanho*=2;
-				else if(tamanho==100)
-					tamanho=500;
-				
-				else if( tamanho==500)
-					tamanho=1000;
-				else tamanho*=tamanho;
+//				if(tamanho==5)
+//					tamanho=10;
+//				else if(tamanho==10)
+//					tamanho=50;
+//				else if(tamanho==50)
+//					tamanho*=2;
+//				else if(tamanho==100)
+//					tamanho=500;
+//				
+//				else if( tamanho==500)
+//					tamanho=1000;
+//				else tamanho*=tamanho;
+				ebc.temp_limiar+=0.05;
 
 			}
 		}
