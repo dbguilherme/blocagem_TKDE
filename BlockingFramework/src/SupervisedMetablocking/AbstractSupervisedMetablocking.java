@@ -489,25 +489,41 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		Instances data = new Instances(alac_result);
 		data.setClassIndex(data.numAttributes() -1);
 		int countP=0,countN=0, countDesc=0;
-		double menorP=1.0;
+		double positivos=0.0, negativos=0.0;
+		int histograma[][]=new int[11][2];
 		for (Instance instance : data) {
-			if(menorP>instance.value(instance.numAttributes()-2) && instance.value(instance.numAttributes()-1)==0.1)
-				menorP=instance.value(instance.numAttributes()-2);
+			if((instance.value(data.numAttributes() -1))==1){
+				positivos+=instance.value(data.numAttributes() -2);
+				histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][0]++;
+				//System.out.println(instance.value(data.numAttributes()-2));
+			}
+			else{
+				negativos+=instance.value(data.numAttributes() -2);
+				histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][1]++;
+				//System.out.println(instance.value(data.numAttributes()-2) +"   "+ (int) Math.floor(instance.value(data.numAttributes() -2)*10));
+			}
+			
+			if((instance.value(data.numAttributes() -1))==1.0)  
+				countP++;
+			else
+				countN++;
+			
+		}
+		for (int i = 0; i < histograma.length; i++) {
+			System.out.println("hist "+ histograma[i][0] +"  "+ histograma[i][1]);
 		}
 		
-		double limiar =Math.floor(menorP*10);
-		System.out.println(menorP+ " menor positivo é " + limiar/10);
+	//	double limiar =Math.floor(menorP*10);
+		System.out.println(" media " + (negativos/countN)*1.3);
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=0.1){				
+			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=(negativos/countN)*1.3){				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
 			}			
+			
 			trainingInstances.add(instance);
-			if((instance.value(data.numAttributes() -1))==1)  
-				countP++;
-			else
-				countN++;
+			
 		}
 		
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN+countDesc) + "   countDesc -->"+countDesc);

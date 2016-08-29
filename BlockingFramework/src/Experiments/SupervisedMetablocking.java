@@ -272,13 +272,13 @@ public class SupervisedMetablocking {
 		String groundTruthPath = null;
 		
 		switch(args[0]){
-		case "1":	       
+		case "sint":	       
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
 			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
 			System.out.println("-----------"+mainDirectory);
 			break;
-		case "2":
+		case "dblp":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
 			profilesPathA= mainDirectory+"/dblp";
 			profilesPathB= mainDirectory+"/scholar";
@@ -291,7 +291,7 @@ public class SupervisedMetablocking {
 			profilesPathB= mainDirectory+"/token/dataset2_dbpedia";
 			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
 			break;
-		case "4":
+		case "acm":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/acm";
 			profilesPathA= mainDirectory+"/dataset";
 			//profilesPathB= mainDirectory+"/dataset2_gp";
@@ -406,13 +406,13 @@ public class SupervisedMetablocking {
 			//blockHash.produceHash(blocks, ebc);
 
 			int tamanho = 10;
-			while(tamanho <=10000)
+			while(tamanho<=1000)
 			{				
 
-				writer1.write("level "+tamanho +"\n");
-				writer2.write("level "+tamanho +"\n");
-				writer3.write("level "+tamanho +"\n");
-				writer4.write("level "+tamanho +"\n");
+				writer1.write("level "+ebc.temp_limiar +"\n");
+				writer2.write("level "+ebc.temp_limiar +"\n");
+				writer3.write("level "+ebc.temp_limiar +"\n");
+				writer4.write("level "+ebc.temp_limiar +"\n");
 
 				for (j = 0;j< 10; j++) 
 				{
@@ -425,7 +425,7 @@ public class SupervisedMetablocking {
 				}
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
-				System.out.println("size of level : "+ tamanho);
+				System.out.println("size of level : "+ ebc.temp_limiar);
 
 				if(tamanho==5)
 					tamanho=10;
@@ -439,6 +439,7 @@ public class SupervisedMetablocking {
 				else if( tamanho==500)
 					tamanho=1000;
 				else tamanho*=tamanho;
+				//ebc.temp_limiar+=0.1;
 
 			}
 		}
