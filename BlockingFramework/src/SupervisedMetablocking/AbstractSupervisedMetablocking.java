@@ -377,7 +377,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 
 
-//
+
 //																										int match = NON_DUPLICATE; // false
 //																										if (areMatching(comparison)) {
 //																											if (random.nextDouble() < SAMPLE_SIZE) {
@@ -491,16 +491,23 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		int countP=0,countN=0, countDesc=0;
 		double positivos=0.0, negativos=0.0;
 		int histograma[][]=new int[11][2];
+		double lposit=1.0;
 		for (Instance instance : data) {
 			if((instance.value(data.numAttributes() -1))==1){
 				positivos+=instance.value(data.numAttributes() -2);
-				histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][0]++;
-				//System.out.println(instance.value(data.numAttributes()-2));
+				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][0]++;
+				System.out.println(instance.value(data.numAttributes()-2)+ " P");
+				if(lposit>instance.value(data.numAttributes() -2)){
+					//System.out.println(instance.value(data.numAttributes() -2));
+					lposit=instance.value(data.numAttributes() -2);
+					
+				}
 			}
 			else{
 				negativos+=instance.value(data.numAttributes() -2);
-				histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][1]++;
-				//System.out.println(instance.value(data.numAttributes()-2) +"   "+ (int) Math.floor(instance.value(data.numAttributes() -2)*10));
+				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][1]++;
+				//System.out.println(instance.value(data.numAttributes()-2)  +"   "+ (int) Math.floor(instance.value(data.numAttributes() -2)*10));
+				System.out.println(instance.value(data.numAttributes()-2)+ " N");
 			}
 			
 			if((instance.value(data.numAttributes() -1))==1.0)  
@@ -509,14 +516,16 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				countN++;
 			
 		}
-		for (int i = 0; i < histograma.length; i++) {
-			System.out.println("hist "+ histograma[i][0] +"  "+ histograma[i][1]);
-		}
+//		for (int i = 0; i < histograma.length; i++) {
+//			System.out.println("hist "+ histograma[i][0] +"  "+ histograma[i][1]);
+//		}
 		
 	//	double limiar =Math.floor(menorP*10);
-		System.out.println(" media " + (negativos/countN)*1.3);
+		System.out.println("positivos --> " +lposit);//Math.ceil(a / 100.0)
+		System.out.println(" media " + Math.ceil((negativos/countN)*10)/10);
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=(negativos/countN)*1.3){				
+			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=0.1)
+			{				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
@@ -734,7 +743,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(i, comparison);
 		Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,1.0);
 
-
+//		if(controle>4)
+//			return 0;
 
 		DecimalFormat decimalFormatter = new DecimalFormat("############.#####");
 		String temp;

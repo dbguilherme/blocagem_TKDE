@@ -19,44 +19,37 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import BlockBuilding.MemoryBased.ExtendedQGramsBlocking;
-import BlockBuilding.MemoryBased.QGramsBlocking;
 import BlockBuilding.MemoryBased.TokenBlocking;
 import BlockProcessing.AbstractEfficiencyMethod;
 import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
 import DataStructures.AbstractBlock;
-import DataStructures.Comparison;
 import DataStructures.EntityIndex;
 import DataStructures.EntityProfile;
 import DataStructures.IdDuplicates;
 import SupervisedMetablocking.SupervisedCNP;
 import SupervisedMetablocking.SupervisedWEP;
 import Utilities.BlockStatistics;
-import Utilities.ComparisonIterator;
-import Utilities.Converter;
 import Utilities.ExecuteBlockComparisons;
 import Utilities.ExportBlocks;
 import Utilities.SerializationUtilities;
 import Utilities.blockHash;
-
 import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_parameter;
 import libsvm.svm_problem;
-import sun.font.StrikeCache;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-
+import weka.classifiers.functions.LibSVM;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RBFKernel;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.SelectedTag;
-
+import weka.classifiers.functions.LibSVM;;
 
 /**
  *
@@ -103,7 +96,7 @@ public class SupervisedMetablocking {
 //		j48.setMinNumObj(2);
 //		j48.setConfidenceFactor((float) 0.05);
 //
-////		LibSVM libSVM=new LibSVM();
+		
 //		SMO smo = new SMO();
 //		//smo.setBuildLogisticModels(true);
 ////		smo.setKernel(new RBFKernel());
@@ -119,17 +112,24 @@ public class SupervisedMetablocking {
 //
 //
 //
-//		//		svm_parameter param;
-//		//		param = new svm_parameter();
-//		//		
-//		//		param=	get_grid(param);
-//		//		// default values
-//		//		
-//		//		sv.setGamma(param.gamma);
-//		//		sv.setCost(param.C);
-//
-//
-//		//	svm_problem prob = new svm_problem();
+	
+		LibSVM sv = new LibSVM();
+		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+		////sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
+		sv.setCost(2);
+		
+		//sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+				svm_parameter param;
+				param = new svm_parameter();
+				
+				//param=	get_grid(param);
+				// default values
+				
+				//sv.setGamma(param.gamma);
+				//sv.setCost(2);
+
+
+		//	svm_problem prob = new svm_problem();
 //
 //		//String options = ( "-S 0 -K 0 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1" );
 //		//String[] optionsArray = options.split( " " );
@@ -163,11 +163,11 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[2];
+	        Classifier[] classifiers = new Classifier[4];
 	        classifiers[0] = naiveBayes;
-//	        classifiers[1] = j48;
-//	        classifiers[2] = smo;
-	        classifiers[1] = bayesNet;
+	        classifiers[1] = sv;
+	        classifiers[2] = smo;
+	        classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -181,7 +181,7 @@ public class SupervisedMetablocking {
 		String userHome = System.getProperty("user.home");
 		System.out.println(userHome);
 		try {
-			proc = Runtime.getRuntime().exec("/bin/bash", null, new File(userHome+"/Downloads/libsvm-3.20/tools/"));
+			proc = Runtime.getRuntime().exec("/bin/bash", null, new File(userHome+"/Downloads/libsvm-3.21/tools/"));
 			if (proc != null) {
 				in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 				out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())), true);
@@ -216,51 +216,51 @@ public class SupervisedMetablocking {
 
 	
 
-	private static ArrayList<Comparison>[] testeParaGerarAscomparações(List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc) {
-
-		List<AbstractBlock> blocks_select = new ArrayList<AbstractBlock>();
-		ArrayList<Comparison>[] listComparison = (ArrayList<Comparison>[])new ArrayList[10];
-		EntityIndex entityIndex = new EntityIndex(blocks);
-		for (int i = 0; i < 10; i++) {
-			listComparison[i]= new ArrayList<Comparison>();
-		}
-		//List<Comparison>[] listComparison= new ArrayList<Comparison>()[10];
-		Random r = new Random();
-		for (int i = 0; i < blocks.size(); i++) {		
-			//blocks_select.add(blocks.get(i));
-			//if(blocks.get(i).getNoOfComparisons()>2)
-			{
-				AbstractBlock b = blocks.get(i);
-				List<Comparison> c = b.getComparisons();
-				
-				for(Comparison com:c){
-					
-					com.teste=blocks.get(i).getBlockIndex();
-					com.sim=ebc.getSImilarity(com.getEntityId1(),com.getEntityId2());
-					int level=(int) Math.floor(com.sim*10);
-					
-					final List<Integer> commonBlockIndices =  entityIndex.getCommonBlockIndices(com.teste, com);
-					if (commonBlockIndices == null) {
-						continue;
-					}
-//					if(commonBlockIndices.size()<1)
-//						System.out.println(commonBlockIndices.size());
-					if(com.sim>= ((double)level*0.1) && com.sim<= ((double)(level+1)*0.1)){							
-						int temp=r.nextInt(nblocks[level]);
-						if((temp<500) || (temp<(nblocks[level]*0.1))){
-							//continue;
-							listComparison[level].add(com);
-						}
-						
-					}
-				}
-			}
-		}		
-		for (int j= 0; j < 10; j++) {
-			System.err.println("list size ---"+ listComparison[j].size());			
-		}		
-		return listComparison;
-	}
+//	private static ArrayList<Comparison>[] testeParaGerarAscomparações(List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc) {
+//
+//		List<AbstractBlock> blocks_select = new ArrayList<AbstractBlock>();
+//		ArrayList<Comparison>[] listComparison = (ArrayList<Comparison>[])new ArrayList[10];
+//		EntityIndex entityIndex = new EntityIndex(blocks);
+//		for (int i = 0; i < 10; i++) {
+//			listComparison[i]= new ArrayList<Comparison>();
+//		}
+//		//List<Comparison>[] listComparison= new ArrayList<Comparison>()[10];
+//		Random r = new Random();
+//		for (int i = 0; i < blocks.size(); i++) {		
+//			//blocks_select.add(blocks.get(i));
+//			//if(blocks.get(i).getNoOfComparisons()>2)
+//			{
+//				AbstractBlock b = blocks.get(i);
+//				List<Comparison> c = b.getComparisons();
+//				
+//				for(Comparison com:c){
+//					
+//					com.teste=blocks.get(i).getBlockIndex();
+//					com.sim=ebc.getSImilarity(com.getEntityId1(),com.getEntityId2());
+//					int level=(int) Math.floor(com.sim*10);
+//					
+//					final List<Integer> commonBlockIndices =  entityIndex.getCommonBlockIndices(com.teste, com);
+//					if (commonBlockIndices == null) {
+//						continue;
+//					}
+////					if(commonBlockIndices.size()<1)
+////						System.out.println(commonBlockIndices.size());
+//					if(com.sim>= ((double)level*0.1) && com.sim<= ((double)(level+1)*0.1)){							
+//						int temp=r.nextInt(nblocks[level]);
+//						if((temp<500) || (temp<(nblocks[level]*0.1))){
+//							//continue;
+//							listComparison[level].add(com);
+//						}
+//						
+//					}
+//				}
+//			}
+//		}		
+//		for (int j= 0; j < 10; j++) {
+//			System.err.println("list size ---"+ listComparison[j].size());			
+//		}		
+//		return listComparison;
+//	}
 	
 	   
 	public static void main(String[] args) throws IOException, Exception {
@@ -404,15 +404,9 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-
-<<<<<<< HEAD
-			int tamanho = 50;
-			while(ebc.temp_limiar <=.5)
-=======
 			int tamanho = 10;
 			while(tamanho<=1000)
->>>>>>> branch 'master' of https://github.com/dbguilherme/blocagem.git
-			{				
+			{
 
 				writer1.write("level "+ebc.temp_limiar +"\n");
 				writer2.write("level "+ebc.temp_limiar +"\n");
@@ -432,21 +426,7 @@ public class SupervisedMetablocking {
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ ebc.temp_limiar);
 
-<<<<<<< HEAD
-//				if(tamanho==5)
-//					tamanho=10;
-//				else if(tamanho==10)
-//					tamanho=50;
-//				else if(tamanho==50)
-//					tamanho*=2;
-//				else if(tamanho==100)
-//					tamanho=500;
-//				
-//				else if( tamanho==500)
-//					tamanho=1000;
-//				else tamanho*=tamanho;
-				ebc.temp_limiar+=0.05;
-=======
+
 				if(tamanho==5)
 					tamanho=10;
 				else if(tamanho==10)
@@ -460,7 +440,7 @@ public class SupervisedMetablocking {
 					tamanho=1000;
 				else tamanho*=tamanho;
 				//ebc.temp_limiar+=0.1;
->>>>>>> branch 'master' of https://github.com/dbguilherme/blocagem.git
+
 
 			}
 		}
