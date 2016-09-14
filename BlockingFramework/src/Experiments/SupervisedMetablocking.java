@@ -42,14 +42,14 @@ import libsvm.svm_problem;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.LibSVM;
+//import weka.classifiers.functions.LibSVM;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RBFKernel;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.SelectedTag;
-import weka.classifiers.functions.LibSVM;;
+//import weka.classifiers.functions.LibSVM;;
 
 /**
  *
@@ -113,10 +113,10 @@ public class SupervisedMetablocking {
 //
 //
 	
-		LibSVM sv = new LibSVM();
-		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+		//LibSVM sv = new LibSVM();
+		//sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
 		////sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
-		sv.setCost(2);
+		//sv.setCost(2);
 		
 		//sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
 				svm_parameter param;
@@ -163,11 +163,11 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[4];
+	        Classifier[] classifiers = new Classifier[2];
 	        classifiers[0] = naiveBayes;
-	        classifiers[1] = sv;
-	        classifiers[2] = smo;
-	        classifiers[3] = bayesNet;
+	        classifiers[1] = smo;
+	        //classifiers[2] = smo;
+	        //classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -265,17 +265,23 @@ public class SupervisedMetablocking {
 	   
 	public static void main(String[] args) throws IOException, Exception {
 		System.out.println( System.getProperty("user.home"));
-		System.out.println( System.getProperty("user.home"));
+		System.out.println( "versão 13/09" );
 		String mainDirectory;
 		String profilesPathA=null;
 		String profilesPathB=null;
 		String groundTruthPath = null;
+		String[] args1 =new String[2];
+		args1[0]="sint";
+		args1[1]="300K";
 		
-		switch(args[0]){
+		//args1[0]="acm";
+		//args1[0]="dblp";
+		
+		switch(args1[0]){
 		case "sint":	       
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
-			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
-			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
+			profilesPathA =  mainDirectory+"/"+args1[1]+"profiles"	;	
+			groundTruthPath =  mainDirectory+"/"+args1[1]+"IdDuplicates";	
 			System.out.println("-----------"+mainDirectory);
 			break;
 		case "dblp":
@@ -404,8 +410,8 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
-			while(tamanho<=1000)
+			int tamanho = 50;
+			//while(ebc.temp_limiar<=0.5)
 			{
 
 				writer1.write("level "+ebc.temp_limiar +"\n");
@@ -427,19 +433,19 @@ public class SupervisedMetablocking {
 				System.out.println("size of level : "+ ebc.temp_limiar);
 
 
-				if(tamanho==5)
-					tamanho=10;
-				else if(tamanho==10)
-					tamanho=50;
-				else if(tamanho==50)
-					tamanho*=2;
-				else if(tamanho==100)
-					tamanho=500;
-				
-				else if( tamanho==500)
-					tamanho=1000;
-				else tamanho*=tamanho;
-				//ebc.temp_limiar+=0.1;
+//				if(tamanho==5)
+//					tamanho=10;
+//				else if(tamanho==10)
+//					tamanho=50;
+//				else if(tamanho==50)
+//					tamanho*=2;
+//				else if(tamanho==100)
+//					tamanho=500;
+//				
+//				else if( tamanho==500)
+//					tamanho=1000;
+//				else tamanho*=tamanho;
+			//	ebc.temp_limiar+=0.1;
 
 
 			}

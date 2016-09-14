@@ -91,6 +91,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	int Nblocks[][];
 	ExecuteBlockComparisons ebcX;
 	String set="";
+	double th=0;
 
 	public AbstractSupervisedMetablocking (int classifiers, List<AbstractBlock> bls, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
 		blocks = bls;
@@ -108,7 +109,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
 	protected abstract List<AbstractBlock> gatherComparisons();
 	protected abstract void initializeDataStructures();
-	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, BufferedWriter writer2, BufferedWriter writer3,BufferedWriter writer4);
+	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, BufferedWriter writer2, BufferedWriter writer3,BufferedWriter writer4, double th2);
 	protected abstract void savePairs(int i, ExecuteBlockComparisons ebc);
 	protected abstract int getCount();
 
@@ -142,7 +143,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			System.out.println("CL"+i+" Classification time\t:\t" + (comparisonsTime+overheadTime));
 			resolutionTimes[i].add(new Double(comparisonsTime+overheadTime));
 
-			processComparisons(i, iteration, writer1, writer2,writer3, writer4);
+			processComparisons(i, iteration, writer1, writer2,writer3, writer4,th);
 			savePairs(i,ebc);
 		}
 	}
@@ -220,7 +221,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}catch (Exception e ){
 			System.out.println(e.getMessage());
 		}
-
+//		if(flag==1.0){
+//			if(instanceValues[0]<50)
+//				return null;
+//		}
 		//CF 	IBF -RACCB 	Jaccard	Sim	,Node Degree
 
 		double raccb = 0;
@@ -239,10 +243,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
 		//		
-		//if(flag==1.0){
+	
 		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
 		//if(instanceValues[0]>200)
-			instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+		instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
 		//else
 		//	instanceValues[5] =0.0;
 		instanceValues[6] = match;
@@ -507,7 +511,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				negativos+=instance.value(data.numAttributes() -2);
 				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][1]++;
 				//System.out.println(instance.value(data.numAttributes()-2)  +"   "+ (int) Math.floor(instance.value(data.numAttributes() -2)*10));
-				System.out.println(instance.value(data.numAttributes()-2)+ " N");
+				//System.out.println(instance.value(data.numAttributes()-2)+ " N");
 			}
 			
 			if((instance.value(data.numAttributes() -1))==1.0)  
@@ -521,23 +525,27 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //		}
 		
 	//	double limiar =Math.floor(menorP*10);
-		System.out.println("positivos --> " +lposit);//Math.ceil(a / 100.0)
-		System.out.println(" media " + Math.ceil((negativos/countN)*10)/10);
+		//System.out.println("positivos --> " +lposit);//Math.ceil(a / 100.0)
+		th=Math.ceil((negativos/countN)*10)/10;
+		System.out.println(" media " + th);
+		if(set.contains("acm"))
+			th+=0.1;
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>=0.1)
+			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>= th)
 			{				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
-			}			
-			
+			}		
+			if((instance.value(data.numAttributes() -1)==0.0))
+				System.out.println(instance.value(instance.numAttributes()-2)  + "  "+ ebcX.temp_limiar);
 			trainingInstances.add(instance);
 			
 		}
 		
 		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN+countDesc) + "   countDesc -->"+countDesc);
 		sampleMatches.add((double) countP);///positivos
-		sampleNonMatches.add((double) (countN+countDesc)); //negativos
+		sampleNonMatches.add((double) (countN)); //negativos
 		sampleNonMatchesNotUsed.add((double) (countDesc)); //negativos
 	}
 
@@ -741,7 +749,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//
 		//double similarity = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 		final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(i, comparison);
-		Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,1.0);
+		Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,0.0);
 
 //		if(controle>4)
 //			return 0;
