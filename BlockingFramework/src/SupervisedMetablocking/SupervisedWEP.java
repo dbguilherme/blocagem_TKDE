@@ -25,6 +25,7 @@ import Utilities.ComparisonIterator;
 import Utilities.Converter;
 import Utilities.ExecuteBlockComparisons;
 import Utilities.FileUtilities;
+import Utilities.testeThread;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -59,7 +60,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     private List<Integer> retainedEntities1;
     private List<Integer> retainedEntities2;
     Statement st;
-    Connection con;
+  //  Connection con;
     
     public int getCount (){
     	
@@ -72,6 +73,10 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     int count=0;
     @Override
     protected void applyClassifier(Classifier classifier) throws Exception {
+    	
+    	
+    //	System.out.println("testando thread " + testeThread.teste(blocks,entityIndex,classifier,null,retainedEntities1,retainedEntities2));
+    	
         for (AbstractBlock block : blocks) {
             ComparisonIterator iterator = block.getComparisonIterator();
             while (iterator.hasNext()) {

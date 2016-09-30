@@ -15,16 +15,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import BlockBuilding.MemoryBased.TokenBlocking;
 import BlockProcessing.AbstractEfficiencyMethod;
+import BlockProcessing.BlockRefinement.BlockFiltering;
 import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.BilateralDuplicatePropagation;
 import DataStructures.AbstractBlock;
+import DataStructures.Attribute;
 import DataStructures.EntityIndex;
 import DataStructures.EntityProfile;
 import DataStructures.IdDuplicates;
@@ -271,10 +274,10 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="sint";
-		args1[1]="300K";
+		args1[0]="dblp";
+		args1[1]="10K";
 		
-		//args1[0]="acm";
+		args1[0]="acm";
 		//args1[0]="dblp";
 		
 		switch(args1[0]){
@@ -298,10 +301,10 @@ public class SupervisedMetablocking {
 			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
 			break;
 		case "acm":
-			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/acm";
-			profilesPathA= mainDirectory+"/dataset";
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/acm_cleanB";
+			profilesPathA= mainDirectory+"//dblpB";
+			profilesPathB= mainDirectory+"//acmB";
 			//profilesPathB= mainDirectory+"/dataset2_gp";
-
 			groundTruthPath =  mainDirectory+ "/groundtruth"; 
 			break;
 			
@@ -331,8 +334,13 @@ public class SupervisedMetablocking {
 			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
 			//		blocks = imtb.buildBlocks();
 
-					SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
-					sbb.applyProcessing(blocks);
+					//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
+					//sbb.applyProcessing(blocks);
+					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.05);
+						blockPurging.applyProcessing(blocks);
+//						
+					 BlockFiltering bf = new BlockFiltering(0.9);
+					    bf.applyProcessing(blocks);	
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
@@ -351,8 +359,39 @@ public class SupervisedMetablocking {
 
 		//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
 		
+	//	String  atributos_value[] = { "id", "given_name" , "surname", "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
 
 
+//    	String vector[]=new String[atributos_value.length+1];
+//		
+//		for (int i = 0; i < profiles[0].size(); i++) {
+//			EntityProfile x = profiles[0].get(i);
+//			Set<Attribute> st=x.getAttributes();
+//		//	System.out.print(i +" ");
+////			for(Attribute at:st){
+////				System.out.print(at.getValue() +"; ");
+////			}
+////			System.out.println();
+//			
+//			
+//			for(Attribute att:st){
+//	   			//vector[0]=String.valueOf(entityIds1) ;
+//	    		for (int j = 1; j < atributos_value.length; j++) {
+//	    			if(att.getName().equals(atributos_value[j]))
+//		    			vector[j]=att.getValue();
+//				}
+//	   			
+//	    		
+//	    	//	if(att.getName().equals(atributos_value[4]))
+//	    	//		vector[4]=att.getValue();   			
+//	    	}
+//			for (int j = 0; j < vector.length; j++) {
+//				System.out.print(vector[j]+ "  ");
+//			}
+//			System.out.println();
+//		}
+		
+		//for(profiles)
 		//System.out.println(" numero comparações --> "+ num_blocks);
 
 
@@ -410,14 +449,14 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 50;
-			//while(ebc.temp_limiar<=0.5)
+			int tamanho = 10;
+			while(tamanho<=1000)
 			{
 
-				writer1.write("level "+ebc.temp_limiar +"\n");
-				writer2.write("level "+ebc.temp_limiar +"\n");
-				writer3.write("level "+ebc.temp_limiar +"\n");
-				writer4.write("level "+ebc.temp_limiar +"\n");
+				writer1.write("level "+tamanho +"\n");
+				writer2.write("level "+tamanho +"\n");
+				writer3.write("level "+tamanho+"\n");
+				writer4.write("level "+tamanho+"\n");
 
 				for (j = 0;j< 10; j++) 
 				{
@@ -430,20 +469,23 @@ public class SupervisedMetablocking {
 				}
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
-				System.out.println("size of level : "+ ebc.temp_limiar);
+				System.out.println("size of level : "+ tamanho);
 
 
-//				if(tamanho==5)
-//					tamanho=10;
-//				else if(tamanho==10)
-//					tamanho=50;
-//				else if(tamanho==50)
-//					tamanho*=2;
-//				else if(tamanho==100)
-//					tamanho=500;
+				if(tamanho==5)
+					tamanho=10;
+				else if(tamanho==10)
+					tamanho=50;
+				else if(tamanho==50)
+					tamanho*=2;
+				else if(tamanho==100)
+					tamanho=500;
 //				
-//				else if( tamanho==500)
-//					tamanho=1000;
+				else if( tamanho==500)
+					tamanho=1000;
+				else
+				if(tamanho==1000)
+					tamanho+=tamanho;
 //				else tamanho*=tamanho;
 			//	ebc.temp_limiar+=0.1;
 

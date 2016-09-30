@@ -236,6 +236,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 
 		instanceValues[1] = raccb;
+		
 		//	ProfileComparison.getJaccardSimilarity(profiles1[comparison.getEntityId1()].getAttributes(), profiles2[comparison.getEntityId2()].getAttributes());
 		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
@@ -247,6 +248,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
 		//if(instanceValues[0]>200)
 		instanceValues[5] =ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+		
 		//else
 		//	instanceValues[5] =0.0;
 		instanceValues[6] = match;
@@ -423,11 +425,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				f.createNewFile();
 
 				callGeraBins();
-				for (int i = 8; i >=8; i--) {
+			//	for (int i = 8; i >=8; i--)
+				{
 					//System.out.println("chamando allac " + i	);
 					//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
 					//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-					callAllac(i,r);  
+					callAllac(8,r);  
 				}
 				//teste_tree(trainingInstances);
 				//loadFileTrainingSet(trainingInstances);
@@ -489,7 +492,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	private void loadFileTrainingSet() throws Exception {
 		// TODO Auto-generated method stub
 		BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/final_treina.arff"));
-		//BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arffdataset1_amazon.arff"));
+		//BufferedReader alac_result = new BufferedReader(new FileReader("/tmp/levels_arffdataset.arff"));
 		Instances data = new Instances(alac_result);
 		data.setClassIndex(data.numAttributes() -1);
 		int countP=0,countN=0, countDesc=0;
@@ -528,8 +531,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		//System.out.println("positivos --> " +lposit);//Math.ceil(a / 100.0)
 		th=Math.ceil((negativos/countN)*10)/10;
 		System.out.println(" media " + th);
-		if(set.contains("acm"))
-			th+=0.1;
+//		if(set.contains("dblp"))
+		//	th-=0.1;
+		//if(set.contains("dblp"))
+		//	th=0.2;
 		for (Instance instance : data) {
 			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>= th)
 			{				
@@ -653,7 +658,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		String userHome = System.getProperty("user.home");
 		//String file ="/tmp/levels_arff_level"+i+"" + " /tmp/teste";
 		String file ="/tmp/levels_arff" +set + " /tmp/teste";
-
+		System.out.println(" ----" + file + " ----");
 		int att=6;
 		Process proc = null;		
 		BufferedReader read, buf;

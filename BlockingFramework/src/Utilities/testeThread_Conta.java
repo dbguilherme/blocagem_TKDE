@@ -40,35 +40,35 @@ public class testeThread_Conta {
   
         public int[] call()   throws Exception{
         	
-    		EntityIndex entityIndex = new EntityIndex(blocks);
-    		
-    		for (int i = from; i < to; i++) {
-    			AbstractBlock b=blocks.get(i);
-    			if(b!=null){
-    				ComparisonIterator comparisonit = b.getComparisonIterator();
-    				b.getBlockIndex();
-    				while(comparisonit.hasNext()){
-    					DataStructures.Comparison c=comparisonit.next();
-
-    					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
-    					if (commonBlockIndices == null) {
-    						continue;
-    					}
-
-    					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),Converter.atributos_value);
-    					c.sim=sim;
-    					if(sim==10)
-    						sim--;
-    					 try {
-    				            lock.lock();
-    				            nblocks[((int)Math.floor(sim*10))]++;
-    				        } finally {
-    				            lock.unlock();
-    				        }
-    					
-    				}
-    			}
-    		}
+//    		EntityIndex entityIndex = new EntityIndex(blocks);
+//    		
+//    		for (int i = from; i < to; i++) {
+//    			AbstractBlock b=blocks.get(i);
+//    			if(b!=null){
+//    				ComparisonIterator comparisonit = b.getComparisonIterator();
+//    				b.getBlockIndex();
+//    				while(comparisonit.hasNext()){
+//    					DataStructures.Comparison c=comparisonit.next();
+//
+//    					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
+//    					if (commonBlockIndices == null) {
+//    						continue;
+//    					}
+//
+//    					Double sim=ebc.getSImilarityAttribute(c.getEntityId1(),c.getEntityId2(),Converter.atributos_value);
+//    					c.sim=sim;
+//    					if(sim==10)
+//    						sim--;
+//    					 try {
+//    				            lock.lock();
+//    				            nblocks[((int)Math.floor(sim*10))]++;
+//    				        } finally {
+//    				            lock.unlock();
+//    				        }
+//    					
+//    				}
+//    			}
+//    		}
     	
     		return nblocks;
         }                
@@ -77,13 +77,13 @@ public class testeThread_Conta {
     public static int teste (List<AbstractBlock> blocks, int[] nblocks, ExecuteBlockComparisons ebc) throws Exception {
     	ExecutorService executor = Executors.newFixedThreadPool(8);
     	long startingTime = System.currentTimeMillis();
-    	Collections.shuffle(blocks);
+    	//Collections.shuffle(blocks);
 //    	List<Future<ArrayList<Comparison>[]>> results= executor.invokeAll(asList(
 //                new testeThreads(0,blocks.size(),blocks,nblocks,ebc,listComparison)
 //        ));
 
     	List<Future<int[]>> results= executor.invokeAll(asList(
-               new testeThreads(0,blocks.size()/4,blocks,nblocks,ebc,nblocks),
+               new testeThreads(0,blocks.size()/4,blocks,nblocks,ebc,nblocks ),
                new testeThreads(blocks.size()/4 ,blocks.size()/2,blocks,nblocks,ebc,nblocks),
                new testeThreads(blocks.size()/2,3*blocks.size()/4, blocks,nblocks,ebc,nblocks)  ,
                new testeThreads(3*blocks.size()/4,blocks.size(), blocks,nblocks,ebc,nblocks)      ));
