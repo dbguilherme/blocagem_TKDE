@@ -268,16 +268,16 @@ public class SupervisedMetablocking {
 	   
 	public static void main(String[] args) throws IOException, Exception {
 		System.out.println( System.getProperty("user.home"));
-		System.out.println( "versão 13/09" );
+		System.out.println( "versão 02/10" );
 		String mainDirectory;
 		String profilesPathA=null;
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="dblp";
+		args1[0]="acm";
 		args1[1]="10K";
 		
-		args1[0]="acm";
+		//args1[0]="acm";
 		//args1[0]="dblp";
 		
 		switch(args1[0]){
@@ -336,10 +336,10 @@ public class SupervisedMetablocking {
 
 					//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 					//sbb.applyProcessing(blocks);
-					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.05);
+					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 						blockPurging.applyProcessing(blocks);
 //						
-					 BlockFiltering bf = new BlockFiltering(0.9);
+					 BlockFiltering bf = new BlockFiltering(0.8);
 					    bf.applyProcessing(blocks);	
 		}else	{
 			profiles= new List[1];

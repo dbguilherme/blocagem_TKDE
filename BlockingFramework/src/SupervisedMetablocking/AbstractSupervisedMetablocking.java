@@ -503,7 +503,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			if((instance.value(data.numAttributes() -1))==1){
 				positivos+=instance.value(data.numAttributes() -2);
 				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][0]++;
-				System.out.println(instance.value(data.numAttributes()-2)+ " P");
+				//System.out.println(instance.value(data.numAttributes()-2)+ " P");
 				if(lposit>instance.value(data.numAttributes() -2)){
 					//System.out.println(instance.value(data.numAttributes() -2));
 					lposit=instance.value(data.numAttributes() -2);
@@ -532,14 +532,14 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		th=Math.ceil((negativos/countN)*10)/10;
 		System.out.println(" media " + th);
 //		if(set.contains("dblp"))
-		//	th-=0.1;
+			th-=0.1;
 		//if(set.contains("dblp"))
 		//	th=0.2;
 		for (Instance instance : data) {
 			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>= th)
 			{				
 				countDesc++;
-				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
+				//System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
 				continue;
 			}		
 			if((instance.value(data.numAttributes() -1)==0.0))
