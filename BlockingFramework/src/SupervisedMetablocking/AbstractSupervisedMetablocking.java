@@ -642,7 +642,9 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 				}
 				//if(label=="true")
 				//if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.2)
+
 				if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.5)
+
 				{
 					System.out.print(concatStringA + " --- " + concatStringB);				
 					System.out.print( "  "+ label +" "+ ebc.getSimilarityAttribute(concatStringA, concatStringB)   +"\n" );
