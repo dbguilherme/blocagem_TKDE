@@ -149,4 +149,14 @@ public class ExecuteBlockComparisons {
 			return jc.getSimilarity(dataset1[entityIds1].x,dataset1[entityIds2].x);
 		
 	}
+	public double  getSimilarityAttribute (String entityIds1, String  entityIds2){
+
+		TokeniserQGram3 tok =new TokeniserQGram3();
+		JaccardSimilarity jc =new JaccardSimilarity(tok);
+		//JaroWinkler jw = new JaroWinkler();
+		//Levenshtein le= new Levenshtein();
+		//System.out.println(dataset1[entityIds1].x + " --------" + dataset1[entityIds2].x);
+		return jc.getSimilarity(entityIds1,entityIds2);
+	
+	}
 }
