@@ -29,15 +29,16 @@ public class Converter {
 
 //	public static String  atributos_value[] = { "id", "title" , "authors", "year"};
 	
-	//public static String  atributos_value[] = { "id", "starring" , "writer", "year"};
-	public static String  atributos_value[] = { "id",  "price", "title" };
+	public static String  atributos_valueA[] = { "id", "writer" ,  "title", "editor"};
+	public static String  atributos_valueB[] = { "id", "director name" ,  "title",  "year"};
+	//public static String  atributos_value[] = { "id",  "price", "title" };
 	//public static String  atributos_value[] = { "id", "name" , "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
 
 	
 	
-	public static String[] createVector( Set<Attribute> setAtributtes, int entityIds1){
+	public static String[] createVector( Set<Attribute> setAtributtes, int entityIds1, String atributos_value[]){
 			
-	    	String vector[]=new String[atributos_value.length+1];
+	    	String vector[]=new String[atributos_value.length];
 	    	
 	    	for(Attribute att:setAtributtes){
 	   			vector[0]=String.valueOf(entityIds1) ;

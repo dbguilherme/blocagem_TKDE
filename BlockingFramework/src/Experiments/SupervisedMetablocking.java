@@ -81,36 +81,36 @@ public class SupervisedMetablocking {
 //	}
 
 	private static Classifier[] getSupervisedWepClassifiers() {
-//		NaiveBayes naiveBayes = new NaiveBayes();
-//		//naiveBayes.setUseKernelEstimator(false);
-//		//naiveBayes.setUseSupervisedDiscretization(false);
-//
-//		
-//		//RandomForest rf= new RandomForest();
-//		RandomForest rf = new RandomForest();
-//	//	rf.setNumTrees(10);
-//		
-//	//	rf.setNumTrees(200);
-//		//rf.setNumTrees(10);
-//		//rf.
-//		//rf.setN
-//		//Ibk
-//		J48 j48 = new J48();
-//		j48.setMinNumObj(2);
-//		j48.setConfidenceFactor((float) 0.05);
-//
+		NaiveBayes naiveBayes = new NaiveBayes();
+		//naiveBayes.setUseKernelEstimator(false);
+		//naiveBayes.setUseSupervisedDiscretization(false);
+
 		
-//		SMO smo = new SMO();
-//		//smo.setBuildLogisticModels(true);
-////		smo.setKernel(new RBFKernel());
-////		smo.setC(9.0);
-//
-//		BayesNet bayesNet = new BayesNet();
-//		//bayesNet.
-////		LibSVM sv = new LibSVM();
-////		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
-//		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
-//		//sv.setCost(2);
+		//RandomForest rf= new RandomForest();
+		RandomForest rf = new RandomForest();
+	//	rf.setNumTrees(10);
+		
+	//	rf.setNumTrees(200);
+		//rf.setNumTrees(10);
+		//rf.
+		//rf.setN
+		//Ibk
+		J48 j48 = new J48();
+		j48.setMinNumObj(2);
+		j48.setConfidenceFactor((float) 0.05);
+
+		
+		SMO smo = new SMO();
+		//smo.setBuildLogisticModels(true);
+//		smo.setKernel(new RBFKernel());
+//		smo.setC(9.0);
+
+		BayesNet bayesNet = new BayesNet();
+		//bayesNet.
+//		LibSVM sv = new LibSVM();
+//		sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
+		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
+		//sv.setCost(2);
 //
 //
 //
@@ -151,21 +151,7 @@ public class SupervisedMetablocking {
 //	//	classifiers[1] = j48;
 //	//	classifiers[2] = rf;
 		
-	     NaiveBayes naiveBayes = new NaiveBayes();
-	        naiveBayes.setUseKernelEstimator(false);
-	        naiveBayes.setUseSupervisedDiscretization(false);
-
-	        J48 j48 = new J48();
-	        j48.setMinNumObj(5);
-	        j48.setConfidenceFactor((float) 0.10);
-
-	        SMO smo = new SMO();
-	       //((Object) smo).setBuildLogisticModels(true);
-	        smo.setKernel(new PolyKernel());
-	        smo.setC(9.0);
-
-	        BayesNet bayesNet = new BayesNet();
-
+	    
 	        Classifier[] classifiers = new Classifier[2];
 	        classifiers[0] = naiveBayes;
 	        classifiers[1] = smo;
@@ -268,13 +254,13 @@ public class SupervisedMetablocking {
 	   
 	public static void main(String[] args) throws IOException, Exception {
 		System.out.println( System.getProperty("user.home"));
-		System.out.println( "versão 02/10" );
+		System.out.println( "teste blast" );
 		String mainDirectory;
 		String profilesPathA=null;
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="acm";
+		args1[0]="3";
 		args1[1]="10K";
 		
 		//args1[0]="acm";
@@ -449,7 +435,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
+			int tamanho = 50;
 			while(tamanho<=1000)
 			{
 
@@ -460,7 +446,7 @@ public class SupervisedMetablocking {
 
 				for (j = 0;j< 10; j++) 
 				{
-					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
+					swep.applyProcessing(j, classifiers, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
 
 					writer1.flush();
 					writer2.flush();
