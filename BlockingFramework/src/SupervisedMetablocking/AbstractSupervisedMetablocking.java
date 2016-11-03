@@ -118,9 +118,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		elements=new int[10];
 
 		set=profilesPathA;
-		//getTrainingSet_original(iteration,ebc,tamanho,r,profilesPathA);
+		getTrainingSet_original(iteration,ebc,tamanho,r,profilesPathA);
 
-		getTrainingSet(iteration);
+		//getTrainingSet(iteration);
 		System.out.println(trainingInstances.size() + "  ----- " +temp);
 
 		for (int i = 0; i < classifiers.length; i++) {
@@ -166,7 +166,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		attributes.add(new Attribute("NodeDegree1"));
 		attributes.add(new Attribute("NodeDegree2"));
 		attributes.add(new Attribute("teste1"));
-		//	attributes.add(new Attribute("teste2"));
+		//attributes.add(new Attribute("teste2"));
 		//attributes.add(new Attribute("sim"));
 		//	attributes.add(new Attribute("teste3"));
 
@@ -240,14 +240,20 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
 		instanceValues[4] = nonRedundantCPE[entityId2];
-		instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
+		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
 		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
 		//		
 	
 		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
-		//if(instanceValues[0]>200)
-		instanceValues[5] =ebc.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
-		
+		//
+		//instanceValues[5] =ebc.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+		if(flag==1)
+			instanceValues[5]=ebc.getSimilarityAttributeB(comparison,ebc, match);
+		else
+			if(instanceValues[0]>50)
+				instanceValues[5]=ebc.getSimilarityAttributeB(comparison,ebc, match);
+			else
+			instanceValues[5]=0.0;
 		//else
 		//	instanceValues[5] =0.0;
 		instanceValues[6] = match;
@@ -372,21 +378,54 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					{
 						//	if(comparison.sim>= ((double)level*0.1) && comparison.sim< ((double)(level+1)*0.1))
 						{	
-							//if(level>1 && level< 5)
-							//	continue;
 							int temp=random.nextInt(Nblocks[level][0]);
-
-
 							if(temp> tamanho)
 								continue;
+							//if(level>1 && level< 5)
+							//	continue;
+//							
+//							if(ebc.getSimilarityAttributeB(comparison,ebc, 0)>0.1){
+//								if (random.nextDouble() < SAMPLE_SIZE) {
+//									
+//									//match = DUPLICATE; // true
+//								} else {
+//									continue;
+//								}
+//							} else if (nonMatchRatio <= random.nextDouble()) {
+//								continue;
+//							}
+								
+//							if(valor>0)
+//								continue;
+							
+//
+//							if(level>5 ){
+//								if(ebc.getSimilarityAttributeB(comparison,ebc, 0)>0.05){
+//									
+//									
+//								}else
+//									if(temp> tamanho)
+//										continue;
+//							}else
+//							{
 
-
-
+//								if(ebc.getSimilarityAttributeB(comparison,ebc, 0)>0.1){
+//									if(temp/10> tamanho)
+//										continue;
+//								}if(temp> tamanho)
+//									continue;
+//									
+//
+//								int match = NON_DUPLICATE; // false
+//								if (areMatching(comparison)) {
+//									System.out.println("matching...");
+//								}
 
 //																										int match = NON_DUPLICATE; // false
+//																										
 //																										if (areMatching(comparison)) {
 //																											if (random.nextDouble() < SAMPLE_SIZE) {
-//																												//trueMetadata++;
+//																												
 //																												match = DUPLICATE; // true
 //																											} else {
 //																												continue;
@@ -394,7 +433,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //																										} else if (nonMatchRatio <= random.nextDouble()) {
 //																											continue;
 //																										}
-
+																										//if(ebc.getSimilarityAttributeB(comparison,ebc, 0)>0.05)
+																										//      System.out.println("insert " + temp +"  "+    match);
+																										//else 
+																										//	continue;
+				                  //  System.out.println("insert " + temp +"  "+ Nblocks[level]);
+		//					}																						
 							//								if(controle==4)
 							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
 							if((getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,blocks.get(i).getNoOfComparisons()))<=0){
@@ -535,7 +579,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 		//if(set.contains("dblp"))
 		//	th=0.2;
 		for (Instance instance : data) {
-			if((instance.value(data.numAttributes() -1)==0.0) && (instance.value(instance.numAttributes()-2))>= th)
+			if((instance.value(data.numAttributes() -1)==0.0) && ((instance.value(0))>= 100 || instance.value(instance.numAttributes()-2)>=th/2) )
 			{				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
@@ -602,53 +646,53 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 				
 				
 				////////////////////////
-				String label="false";
-				IdDuplicates duplicatePair1 = new IdDuplicates(c.getEntityId1(), c.getEntityId2());
-				if (duplicates.contains(duplicatePair1)) {
-					label="true";
-					//System.out.println("duplicate pair " + concatStringA + "   "+ concatStringB);
-				}
-				
-				Set<DataStructures.Attribute> setAtributtes = ebc.exportEntityA(c.getEntityId1());
-				String sA[]=Converter.createVector(setAtributtes,c.getEntityId1(),Converter.atributos_valueA);
-				String concatStringA = "::";////title,
-
-				
-				for (int j = 1; j < sA.length; j++) {
-					try{
-						//System.err.print(sA[j]+ "  ");
-						if(!sA[j].isEmpty())
-							sA[j]=sA[j].replace(",", " ").replace(":", " ").replace("\n","");
-						concatStringA=concatStringA.concat(sA[j]+":");				
-
-					}catch(Exception e){
-						concatStringA=concatStringA.concat(": XXX :");	
-					}
-				}
-				
-				setAtributtes = ebc.exportEntityB(c.getEntityId2());
-				String sB[]=Converter.createVector(setAtributtes,c.getEntityId2(),Converter.atributos_valueB);
-				//    System.out.print( "  ---- ");
-				String concatStringB = "::";
-				for (int j = 1; j < sB.length; j++) {
-					try{
-						//System.err.print(sB[j]+ "  ");
-						if(!sB[j].isEmpty())
-							sB[j]=sB[j].replace(",", " ").replace(":", " ").replace("\n","");
-						concatStringB=concatStringB.concat(sB[j]+":");
-					}catch (Exception e ){
-						concatStringB=concatStringB.concat(": XXX :");
-					}
-				}
-				//if(label=="true")
-				//if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.2)
-
-				if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.5)
-
-				{
-					System.out.print(concatStringA + " --- " + concatStringB);				
-					System.out.print( "  "+ label +" "+ ebc.getSimilarityAttribute(concatStringA, concatStringB)   +"\n" );
-				}
+//				String label="false";
+//				IdDuplicates duplicatePair1 = new IdDuplicates(c.getEntityId1(), c.getEntityId2());
+//				if (duplicates.contains(duplicatePair1)) {
+//					label="true";
+//					//System.out.println("duplicate pair " + concatStringA + "   "+ concatStringB);
+//				}
+//				
+//				Set<DataStructures.Attribute> setAtributtes = ebc.exportEntityA(c.getEntityId1());
+//				String sA[]=Converter.createVector(setAtributtes,c.getEntityId1(),Converter.atributos_valueA);
+//				String concatStringA = "::";////title,
+//
+//				
+//				for (int j = 1; j < sA.length; j++) {
+//					try{
+//						//System.err.print(sA[j]+ "  ");
+//						if(!sA[j].isEmpty())
+//							sA[j]=sA[j].replace(",", " ").replace(":", " ").replace("\n","");
+//						concatStringA=concatStringA.concat(sA[j]+":");				
+//
+//					}catch(Exception e){
+//						concatStringA=concatStringA.concat(": XXX :");	
+//					}
+//				}
+//				
+//				setAtributtes = ebc.exportEntityB(c.getEntityId2());
+//				String sB[]=Converter.createVector(setAtributtes,c.getEntityId2(),Converter.atributos_valueB);
+//				//    System.out.print( "  ---- ");
+//				String concatStringB = "::";
+//				for (int j = 1; j < sB.length; j++) {
+//					try{
+//						//System.err.print(sB[j]+ "  ");
+//						if(!sB[j].isEmpty())
+//							sB[j]=sB[j].replace(",", " ").replace(":", " ").replace("\n","");
+//						concatStringB=concatStringB.concat(sB[j]+":");
+//					}catch (Exception e ){
+//						concatStringB=concatStringB.concat(": XXX :");
+//					}
+//				}
+//				//if(label=="true")
+//				//if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.2)
+//
+//				if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.5)
+//
+//				{
+//					System.out.print(concatStringA + " --- " + concatStringB);				
+//					System.out.print( "  "+ label +" "+ ebc.getSimilarityAttribute(concatStringA, concatStringB)   +"\n" );
+//				}
 			}
 		}
 		for (int i = 0; i < 100; i++) {
@@ -775,7 +819,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 				concatStringA=concatStringA.concat(":  :");	
 			}
 		}
-		System.out.println(concatStringA);
+		//System.out.println(concatStringA);
 		setAtributtes = ebc.exportEntityB(comparison.getEntityId2());
 		String sB[]=Converter.createVector(setAtributtes,comparison.getEntityId2(),Converter.atributos_valueB);
 		//    System.out.print( "  ---- ");
@@ -790,7 +834,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 				concatStringB=concatStringB.concat(": :");
 			}
 		}
-		System.out.println(concatStringB);
+		//System.out.println(concatStringB);
 		String label="false";
 		IdDuplicates duplicatePair1 = new IdDuplicates(comparison.getEntityId1(), comparison.getEntityId2());
 		if (duplicates.contains(duplicatePair1)) {
@@ -804,7 +848,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 		//
 		//double similarity = ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 		final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(i, comparison);
-		Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,0.0);
+		Instance newInstanceTemp = getFeatures(label.contains("true")?1:0, commonBlockIndices, comparison,1.0);
 
 //		if(controle>4)
 //			return 0;

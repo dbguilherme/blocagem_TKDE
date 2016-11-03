@@ -29,8 +29,8 @@ public class Converter {
 
 //	public static String  atributos_value[] = { "id", "title" , "authors", "year"};
 	
-	public static String  atributos_valueA[] = { "id", "writer" ,  "title", "editor"};
-	public static String  atributos_valueB[] = { "id", "director name" ,  "title",  "year"};
+	public static String  atributos_valueA[] = { "id", "writer" ,   "editor", "title"}; //,"starring"
+	public static String  atributos_valueB[] = { "id", "director name" ,  "title" }; //"actor name"
 	//public static String  atributos_value[] = { "id",  "price", "title" };
 	//public static String  atributos_value[] = { "id", "name" , "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
 
@@ -39,12 +39,21 @@ public class Converter {
 	public static String[] createVector( Set<Attribute> setAtributtes, int entityIds1, String atributos_value[]){
 			
 	    	String vector[]=new String[atributos_value.length];
-	    	
+	    	for (int i = 0; i < vector.length; i++) {
+	    		vector[i]="";
+			}
 	    	for(Attribute att:setAtributtes){
 	   			vector[0]=String.valueOf(entityIds1) ;
 	    		for (int i = 1; i < atributos_value.length; i++) {
-	    			if(att.getName().equals(atributos_value[i]))
-		    			vector[i]=att.getValue();
+	    			if(att.getName().contains(atributos_value[i])){
+	    				vector[i]+=" "+att.getValue();
+	    				//if(i==3)
+	    				//	System.out.println(vector[i]);
+	    				//if(vector[i].contains("Reema"))
+	    				//	System.out.println("aqui");
+	    				break;
+	    			}
+		    			
 				}
 	   			
 	    		

@@ -152,9 +152,9 @@ public class SupervisedMetablocking {
 //	//	classifiers[2] = rf;
 		
 	    
-	        Classifier[] classifiers = new Classifier[2];
+	        Classifier[] classifiers = new Classifier[1];
 	        classifiers[0] = naiveBayes;
-	        classifiers[1] = smo;
+	       // classifiers[1] = smo;
 	        //classifiers[2] = smo;
 	        //classifiers[3] = bayesNet;
 		return classifiers;
@@ -411,8 +411,8 @@ public class SupervisedMetablocking {
 		////		     		   System.out.println("------------" +teste[0] + "  "+ teste[1] + "  "+ teste[0]);
 		//		            }
 		//		            scnp.printStatistics();
-		Random r=new Random();
-		int n=r.nextInt(100);
+	//	Random r=new Random();
+	//	int n=r.nextInt(100);
 
 		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
 		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
@@ -435,7 +435,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 50;
+			int tamanho = 100;
 			while(tamanho<=1000)
 			{
 

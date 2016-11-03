@@ -159,4 +159,45 @@ public class ExecuteBlockComparisons {
 		return jc.getSimilarity(entityIds1,entityIds2);
 	
 	}
+public double getSimilarityAttributeB(Comparison c, ExecuteBlockComparisons ebc, int match) {
+		
+		Set<DataStructures.Attribute> setAtributtes = ebc.exportEntityA(c.getEntityId1());
+		String sA[]=Converter.createVector(setAtributtes,c.getEntityId1(),Converter.atributos_valueA);
+		String concatStringA = "::";////title,
+
+		for (int j = 1; j < sA.length; j++) {
+			try{
+				//System.err.print(sA[j]+ "  ");
+				if(!sA[j].isEmpty())
+					sA[j]=sA[j].replace(",", " ").replace(":", " ").replace("\n","");
+				concatStringA=concatStringA.concat(sA[j].trim().replaceAll("[\\W]|_", " ")+" ");				
+
+			}catch(Exception e){
+				concatStringA=concatStringA.concat(" ");	
+			}
+		}
+		
+		setAtributtes = ebc.exportEntityB(c.getEntityId2());
+		String sB[]=Converter.createVector(setAtributtes,c.getEntityId2(),Converter.atributos_valueB);
+		//    System.out.print( "  ---- ");
+		String concatStringB = "::";
+		for (int j = 1; j < sB.length; j++) {
+			try{
+				//System.err.print(sB[j]+ "  ");
+				if(!sB[j].isEmpty())
+					sB[j]=sB[j].replace(",", " ").replace(":", " ").replace("\n","");
+				concatStringB=concatStringB.concat(sB[j].trim().replaceAll("[\\W]|_", " ")+" ");
+			}catch (Exception e ){
+				concatStringB=concatStringB.concat(" ");
+			}
+		}
+		//if(label=="true")
+		//if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.2)
+		double sim=ebc.getSimilarityAttribute(concatStringA, concatStringB);
+		//if( match==1  ){
+			//System.out.println(concatStringA + " --- " + concatStringB +" --- " + sim);				
+		//	System.out.print( "  "+" "+ ebc.getSimilarityAttribute(concatStringA, concatStringB)   +"\n" );
+		//}
+		return sim;
+	}
 }
