@@ -144,9 +144,9 @@ public class ExecuteBlockComparisons {
 		//Levenshtein le= new Levenshtein();
 		//System.out.println(dataset1[entityIds1].x + " --------" + dataset1[entityIds2].x);
 		if(dataset2!=null)
-			return jc.getSimilarity(dataset1[entityIds1].x,dataset2[entityIds2].x );
+			return jc.getSimilarity(dataset1[entityIds1].x.toLowerCase(),dataset2[entityIds2].x.toLowerCase() );
 		else
-			return jc.getSimilarity(dataset1[entityIds1].x,dataset1[entityIds2].x);
+			return jc.getSimilarity(dataset1[entityIds1].x.toLowerCase(),dataset1[entityIds2].x.toLowerCase());
 		
 	}
 	public double  getSimilarityAttribute (String entityIds1, String  entityIds2){
@@ -191,6 +191,8 @@ public double getSimilarityAttributeB(Comparison c, ExecuteBlockComparisons ebc,
 				concatStringB=concatStringB.concat(" ");
 			}
 		}
+		
+		System.out.println(concatStringA+ " "+ concatStringB );
 		//if(label=="true")
 		//if(ebc.getSimilarityAttribute(concatStringA, concatStringB)>0.2)
 		double sim=ebc.getSimilarityAttribute(concatStringA, concatStringB);

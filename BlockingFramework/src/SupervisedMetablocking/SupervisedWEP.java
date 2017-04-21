@@ -69,6 +69,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     
     public SupervisedWEP (int noOfClassifiers, List<AbstractBlock> bls, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
         super (noOfClassifiers, bls, duplicatePairs,ebc);
+        
     }
     int count=0;
     @Override
@@ -92,7 +93,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
                 }
                 if(count++%1000000==1)
                 	System.out.println("processados -->" + count);
-                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,0.0);
+                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,1.0);
                 if(currentInstance!=null){
                     int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
 	                if (instanceLabel == DUPLICATE) {
