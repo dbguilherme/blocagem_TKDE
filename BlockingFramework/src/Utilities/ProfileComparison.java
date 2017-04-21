@@ -30,7 +30,7 @@ public class ProfileComparison {
     public static Set<String> getDistinctTokens(Set<Attribute> nameValuePairs) {
         final Set<String> tokensFrequency = new HashSet<String>(5*nameValuePairs.size());
         for (Attribute attribute : nameValuePairs) {
-            String[] tokens = attribute.getValue().split("[\\W_]");
+            String[] tokens = attribute.getValue().toLowerCase().split("[\\W_]");
             tokensFrequency.addAll(Arrays.asList(tokens));
         }
         return tokensFrequency;
