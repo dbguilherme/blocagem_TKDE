@@ -260,8 +260,8 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="dblp";
-		args1[1]="10K";
+		args1[0]="acm";
+		args1[1]="50K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -435,7 +435,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
+			int tamanho = 100;
 			while(tamanho<=1000)
 			{
 

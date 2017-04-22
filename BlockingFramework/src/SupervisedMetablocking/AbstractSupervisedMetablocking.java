@@ -131,8 +131,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		getTrainingSet_original(iteration,ebc,tamanho,r,profilesPathA);
 
 		//getTrainingSet(iteration);
-		System.out.println(trainingInstances.size() + "  ----- " +temp);
-
+//		System.out.println(trainingInstances.size() + "  ----- " +temp);
+//		trainingInstances.deleteAttributeAt(5);
+//		trainingInstances.delete(5);
+//		for (int i = 0; i < trainingInstances.numAttributes()-1 ; i++) {
+//			System.out.print("xxx---" + trainingInstances.get(0).value(i) +" "); 
+//		}
+		System.out.println();
 		for (int i = 0; i < classifiers.length; i++) {
 			System.out.println("\n\nClassifier id\t:\t" + i);
 			initializeDataStructures();
@@ -250,42 +255,34 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues[2] = commonBlockIndices.size() / (redundantCPE[comparison.getEntityId1()] + redundantCPE[entityId2] - commonBlockIndices.size());
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
 		instanceValues[4] = nonRedundantCPE[entityId2];
-		//instanceValues[5] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0);
-		//instanceValues[6] = entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1);
-		//		
 	
-		//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebcX.exportEntityA(comparison.getEntityId1()), ebcX.exportEntityB(comparison.getEntityId2()));
-		//
 		//instanceValues[5] =ebc.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
 		if(flag==1){
-			//instanceValues[5]=ebc.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
-			instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
-			//System.out.println("funao "+ instanceValues[5]);
+			instanceValues[5]=ebc.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());
+			//instanceValues[5] =ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
 		}
 		else		
-			if(instanceValues[0]>50)
-				instanceValues[5]=ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
-			else
+//			if(instanceValues[0]>50)
+//				instanceValues[5]=ProfileComparison.getJaccardSimilarity(ebc.exportEntityA(comparison.getEntityId1()), ebc.exportEntityB(comparison.getEntityId2()));
+//			else
 				instanceValues[5] =0.0;
-		//else
-		//	
-		
 		instanceValues[6] = match;
-		//instanceValues.
-		//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());  //
-		//ebcX.getSImilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2(),names);
-
-
-		//instanceValues[6] = match;
 
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
+		if(flag==0){
+			newInstance.deleteAttributeAt(5);
+//			for (int i = 0; i < newInstance.numAttributes()-1 ; i++) {
+//			System.out.print(newInstance.value(i) +" "); 
+//			}
+//			System.out.println();
+		}
 		newInstance.setDataset(trainingInstances);
 		return newInstance;
 	}
 
 
 
-	int temp=0;
+
 	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, String profilesPathA) throws FileNotFoundException {
 
 		sampleMatches.clear();
@@ -298,14 +295,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		trainingSet = new HashSet<Comparison>(4*matchingInstances);
 		trainingInstances = new Instances("trainingSet", attributes, 2*matchingInstances);
 		trainingInstances.setClassIndex(noOfAttributes - 1);
-		//double  vector[]={0,0,0,0,0};
 		Random random= new Random(iteration);
 		PrintStream pstxt = null;
 		PrintStream psarff = null;
 
 		if(true){
-			//encontraPares();
-
 			try {
 				pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff"+profilesPathA+".txt"),false));
 				//pstxt = new PrintStream(new FileOutputStream(new File("/tmp/final_treina.txt"),false));
@@ -320,7 +314,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}		
 			psarff.println("@attribute classe {0,1}");
 			psarff.println("@data");
-			//Vector<Comparison> randomInstances= new Vector<Comparison>(4*matchingInstances);;
 			Comparison comparison;
 
 
@@ -380,31 +373,15 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //																										} else if (nonMatchRatio <= random.nextDouble()) {
 //																											continue;
 //																										}
-																										//if(ebc.getSimilarityAttributeB(comparison,ebc, 0)>0.05)
-																										//      System.out.println("insert " + temp +"  "+    match);
-																										//else 
-																										//	continue;
-				                  //  System.out.println("insert " + temp +"  "+ Nblocks[level]);
-		//					}																						
-							//								if(controle==4)
-							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-							if((getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff, nonMatchRatio, tamanho,level,blocks.get(i).getNoOfComparisons()))<=0){
-
-							}
-							//pstxt_level[level].flush();
-							//psarff_level[level].flush();
-							//	
+																							
+							getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff, nonMatchRatio, tamanho,level,blocks.get(i).getNoOfComparisons());
 						}
 					}
 				}
 			}
-
 			pstxt.close();
 			psarff.close();
-//			for (int m = 0; m < 10; m++) {
-//				pstxt_level[m].close();
-//				psarff_level[m].close();
-//			}
+
 
 			try {
 				File f = new File("/tmp/lock");
@@ -415,24 +392,13 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				f.createNewFile();
 
 				callGeraBins();
-			//	for (int i = 8; i >=8; i--)
-				{
-					//System.out.println("chamando allac " + i	);
-					//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-					//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-					callAllac(8,r);  
-				}
-				//teste_tree(trainingInstances);
-				//loadFileTrainingSet(trainingInstances);
+				callAllac(8,r);  
 				loadFileTrainingSet();
 				f.delete();
 			}  catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.err.println(" ");
 			System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
-			//sampleMatches.add((double) trueMetadata);///positivos
-			//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
 		}
 
 	}
@@ -492,14 +458,9 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 		for (Instance instance : data) {
 			if((instance.value(data.numAttributes() -1))==1){
 				positivos+=instance.value(data.numAttributes() -2);
-				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][0]++;
-				//System.out.println(instance.value(data.numAttributes()-2)+ " P");				
 			}
 			else{
 				negativos+=instance.value(data.numAttributes() -2);
-				//histograma[(int) Math.floor(instance.value(data.numAttributes() -2)*10)][1]++;
-				//System.out.println(instance.value(data.numAttributes()-2)  +"   "+ (int) Math.floor(instance.value(data.numAttributes() -2)*10));
-				//System.out.println(instance.value(data.numAttributes()-2)+ " N");
 			}
 			
 			if((instance.value(data.numAttributes() -1))==1.0)  
@@ -516,6 +477,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 		//System.out.println("positivos --> " +lposit);//Math.ceil(a / 100.0)
 		th=Math.ceil((negativos/countN)*10)/10;
 		System.out.println(" media " + th);
+		//th=0.1;
 //		if(set.contains("dblp"))
 		//	th-=0.1;
 		//if(set.contains("dblp"))
@@ -525,11 +487,13 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 			{				
 				countDesc++;
 				System.out.println("descartando.........." + instance.value(instance.numAttributes()-2));
+			
+				
 				//instance.setValue(5, 0.0);
-				for (int i = 0; i < instance.numAttributes()-1 ; i++) {
-					System.out.print(instance.value(i) +" "); 
-				}
-				System.out.println();
+//				for (int i = 0; i < instance.numAttributes()-1 ; i++) {
+//					System.out.print(instance.value(i) +" "); 
+//				}
+//				System.out.println();
 				continue;
 			}		
 			//if((instance.value(data.numAttributes() -1)==0.0))
@@ -545,7 +509,7 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 			
 		}
 		
-		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN+countDesc) + "   countDesc -->"+countDesc);
+		System.out.println("valores  --> Positio -> " +countP  +"  negativos -> "+(countN) + "   countDesc -->"+countDesc);
 		sampleMatches.add((double) countP);///positivos
 		sampleNonMatches.add((double) (countN)); //negativos
 		sampleNonMatchesNotUsed.add((double) (countDesc)); //negativos
@@ -793,14 +757,14 @@ System.out.println("  trainingSet.size() - trueMetadata)  " + (trainingSet.size(
 
 
 	private int getLevels(Comparison comparison, ExecuteBlockComparisons ebc, int i, PrintStream pstxt, PrintStream psarff, double nonMatchRatio, double tamanho, int controle, double d) throws FileNotFoundException {
-		String concatStringA;
-		String concatStringB;
-		Double sim=comparison.sim;
+//		String concatStringA;
+//		String concatStringB;
+//		Double sim=comparison.sim;
 
-
-		Set<DataStructures.Attribute> setAtributtes = ebc.exportEntityA(comparison.getEntityId1());
-		String sA[]=Converter.createVector(setAtributtes,comparison.getEntityId1(),Converter.atributos_valueA);
-		concatStringA=sA[0]+"::";////title,
+//
+//		Set<DataStructures.Attribute> setAtributtes = ebc.exportEntityA(comparison.getEntityId1());
+//		String sA[]=Converter.createVector(setAtributtes,comparison.getEntityId1(),Converter.atributos_valueA);
+//		concatStringA=sA[0]+"::";////title,
 
 //		if(sA.length==0)
 //			return 1;
