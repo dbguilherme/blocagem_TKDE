@@ -260,8 +260,8 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="acm";
-		args1[1]="50K";
+		args1[0]="sint";
+		args1[1]="10K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
