@@ -260,7 +260,7 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="sint";
+		args1[0]="dblp";
 		args1[1]="10K";
 		
 		//args1[0]="acm";
@@ -430,13 +430,15 @@ public class SupervisedMetablocking {
 
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=1,j=5;
+		ebc.temp_limiar =10;
 		//for (int i = 1; i <= 2;i++)
 		{
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 100;
-			while(tamanho<=1000)
+			int tamanho = 50;
+			//while(tamanho<=1000)
+			//while(ebc.temp_limiar<=100)
 			{
 
 				writer1.write("level "+tamanho +"\n");
@@ -455,25 +457,26 @@ public class SupervisedMetablocking {
 				}
 				swep.printStatistics();
 				//swep.printStatisticsB(writer);
-				System.out.println("size of level : "+ tamanho);
+				System.out.println("size of level : "+ ebc.temp_limiar);
 
 
-				if(tamanho==5)
-					tamanho=10;
-				else if(tamanho==10)
-					tamanho=50;
-				else if(tamanho==50)
-					tamanho*=2;
-				else if(tamanho==100)
-					tamanho=500;
-//				
-				else if( tamanho==500)
-					tamanho=1000;
-				else
-				if(tamanho==1000)
-					tamanho+=tamanho;
+//				if(tamanho==5)
+//					tamanho=10;
+//				else if(tamanho==10)
+//					tamanho=50;
+//				else if(tamanho==50)
+//					tamanho*=2;
+//				else if(tamanho==100)
+//					tamanho=500;
+////				
+//				else if( tamanho==500)
+//					tamanho=1000;
+//				else
+//				if(tamanho==1000)
+//					tamanho+=tamanho;
+			//	ebc.
 //				else tamanho*=tamanho;
-			//	ebc.temp_limiar+=0.1;
+				ebc.temp_limiar+=10;
 
 
 			}

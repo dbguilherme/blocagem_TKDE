@@ -169,7 +169,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         try {
         	if(classifierId==0){
         		Double d =((double)detectedDuplicates.size())/(duplicates.size())*100.0;
-        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th +" \n");
+        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th + "  " + ebc.temp_limiar+" \n");
         		//armazena++;
         	}else
         	if(classifierId==1){
