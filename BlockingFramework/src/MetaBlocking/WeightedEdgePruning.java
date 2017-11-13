@@ -38,10 +38,10 @@ public class WeightedEdgePruning extends AbstractMetablocking {
     }
 
     @Override
-    public List<AbstractBlock> applyProcessing(List<AbstractBlock> blocks) {
+    public void applyProcessing(List<AbstractBlock> blocks) {
         getStatistics(blocks);
         setAverageWeight(blocks);
-       return filterComparisons(blocks);
+      // return filterComparisons(blocks);
     }
 
     protected List<AbstractBlock>  filterComparisons(List<AbstractBlock> blocks) {

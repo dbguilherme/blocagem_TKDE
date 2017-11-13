@@ -47,4 +47,5 @@ public class ProfileComparison {
         tokenizedProfile1.retainAll(tokenizedProfile2);
         return ((double)tokenizedProfile1.size())/allTokens.size();
     }
+    
 }

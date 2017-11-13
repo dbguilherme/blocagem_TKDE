@@ -166,9 +166,9 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[2];
+	        Classifier[] classifiers = new Classifier[1];
 	        classifiers[0] = naiveBayes;
-	        classifiers[1] = smo;
+	        //classifiers[1] = smo;
 	        //classifiers[2] = smo;
 	        //classifiers[3] = bayesNet;
 		return classifiers;
@@ -275,7 +275,7 @@ public class SupervisedMetablocking {
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
 		args1[0]="acm";
-		args1[1]="10K";
+		args1[1]="50K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -449,8 +449,8 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
-			while(tamanho<=1000)
+			int tamanho = 50;
+			//while(tamanho<=50)
 			{
 
 				writer1.write("level "+tamanho +"\n");
