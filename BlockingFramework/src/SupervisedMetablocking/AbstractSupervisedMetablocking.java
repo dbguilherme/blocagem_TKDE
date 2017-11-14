@@ -240,25 +240,32 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues[4] =nonRedundantCPE[comparison.getEntityId2()];
 		instanceValues[5] =commonBlockIndices.size();
 		
-//		if(flag ==0 && instanceValues[0]< lposit && commonBlockIndices.size()>2 ) {
-//			if(match==1) {
-////				for (int i = 0; i < instanceValues.length; i++) {
-////					System.out.print(instanceValues[i] +"  ");
-////				}
-////				System.out.println();
-//				System.out.print("eroooo.. "+ erros++ + " " + instanceValues[6] + " "+ instanceValues[5]);
-//				//ebcX.print(comparison.getEntityId1(),comparison.getEntityId2());
-//			}
-//			else {
-//				acertos++;
-//				if(acertos%100==0)
-//					System.out.println(acertos);
-//				
-//			}
-//				
-//			return null;
-//			
-//		}
+		if(flag ==0 && instanceValues[0]< lposit ) {
+			if(match==1) {
+				//for (int i = 0; i < instanceValues.length; i++) {
+					System.out.print(instanceValues[5] +"  ");
+					ebcX.print(comparison.getEntityId1(),comparison.getEntityId2());
+				//}
+				System.out.println();
+				System.out.print("eroooo.. "+ erros++ + " " + instanceValues[6] + " "+ instanceValues[5]);
+				try {
+					Thread.sleep(1000000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			else {
+				acertos++;
+				if(acertos%100==0)
+					System.out.println(acertos);
+				
+			}
+				
+			return null;
+			
+		}
 		
 		instanceValues[6] =ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
 

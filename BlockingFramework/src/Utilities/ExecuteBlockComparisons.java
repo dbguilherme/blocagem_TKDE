@@ -200,8 +200,8 @@ public class ExecuteBlockComparisons {
 
 	public void print(int entityId1, int entityId2) {
 		System.out.println();
-		System.out.println(dataset1[entityId1].x);
-		System.out.println(dataset1[entityId2].x);
+		//System.out.println(dataset1[entityId1].x);
+		//System.out.println(dataset1[entityId2].x);
 		Vector<Integer> a=dataset1[entityId1].set;
 		Vector<Integer> b=dataset1[entityId2].set;
 		for (int i = 0; i < a.size() && i< b.size(); i++) {
