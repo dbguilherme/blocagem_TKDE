@@ -151,9 +151,10 @@ public class SupervisedMetablocking {
 //	//	classifiers[1] = j48;
 //	//	classifiers[2] = rf;
 		
-	     NaiveBayes naiveBayes = new NaiveBayes();
-	        naiveBayes.setUseKernelEstimator(false);
-	        naiveBayes.setUseSupervisedDiscretization(false);
+				 NaiveBayes naiveBayes = new NaiveBayes();
+			        naiveBayes.setUseKernelEstimator(false);
+			        naiveBayes.setUseSupervisedDiscretization(false);
+
 
 	        J48 j48 = new J48();
 	        j48.setMinNumObj(5);
@@ -166,11 +167,11 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[2];
+	        Classifier[] classifiers = new Classifier[4];
 	        classifiers[0] = naiveBayes;
-	        classifiers[1] = smo;
-	        //classifiers[2] = smo;
-	        //classifiers[3] = bayesNet;
+	        classifiers[1] = j48;
+	        classifiers[2] = smo;
+	        classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -274,8 +275,8 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="acm";
-		args1[1]="10K";
+		args1[0]="sint";
+		args1[1]="50K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -352,6 +353,8 @@ public class SupervisedMetablocking {
 			//blocks = method.buildBlocks();			 
 			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 			blockPurging.applyProcessing(blocks);
+			//BlockFiltering bf = new BlockFiltering(0.7);
+		   // bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -449,8 +452,8 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
-			while(tamanho<=1000)
+			int tamanho = 50;
+			//while(tamanho<=1000)
 			{
 
 				writer1.write("level "+tamanho +"\n");
@@ -458,7 +461,7 @@ public class SupervisedMetablocking {
 				writer3.write("level "+tamanho+"\n");
 				writer4.write("level "+tamanho+"\n");
 
-				for (j = 0;j< 10; j++) 
+				for (j = 0;j< 5; j++) 
 				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
 

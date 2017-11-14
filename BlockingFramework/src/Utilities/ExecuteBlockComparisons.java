@@ -14,23 +14,20 @@
 
 package Utilities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
 import DataStructures.AbstractBlock;
 import DataStructures.Attribute;
 import DataStructures.Comparison;
 import DataStructures.EntityProfile;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.tokenisers.InterfaceTokeniser;
-import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserQGram2;
 import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserQGram3;
-import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserWhitespace;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -39,9 +36,9 @@ import java.util.Set;
  */
 public class ExecuteBlockComparisons {
  
-    private final EntityProfile[] dataset1;
+    private  final EntityProfile[] dataset1;
     private final EntityProfile[] dataset2;
-
+    Map<String,Integer> index = new HashMap<String,Integer>(); 
     public double temp_limiar=0.00;
 
 //    public void exportdataset(){
@@ -93,12 +90,35 @@ public class ExecuteBlockComparisons {
     private EntityProfile[] loadProfiles(String profilesPath) {
         List<EntityProfile> entityProfiles = (ArrayList<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPath);
         EntityProfile[] e =entityProfiles.toArray(new EntityProfile[entityProfiles.size()]);
+       // Map<string, integer> mapaNomes = new HashMap<string, integer>();
+        
+        int contador=1;
         for (EntityProfile entityProfile : entityProfiles) {
         	//entityProfile.getatt(entityProfile);
         	entityProfile.x="";
+        	entityProfile.set= new Vector<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
         		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ "  ");
+        		String splitted=(att.getValue().toLowerCase().replaceAll("[\\W]|_", ""));
+        		
+        		
+        			//System.out.println(splitted +"-------"+ att.getValue());
+        		
+        			if((splitted.length())==0)
+        				continue;
+					if(index.get(splitted)!=null) {
+						entityProfile.set.add(index.get(splitted));					
+					}
+					else {
+						index.put(splitted, contador);
+						entityProfile.set.add(contador++);
+					}
+						
+				
+        		//if(index.get(key))
     		}
+        	//System.out.println("  " + entityProfile.set.size());
+        	
 		}
         return e;
     }
@@ -113,6 +133,30 @@ public class ExecuteBlockComparisons {
 		return dataset1[entityIds1].getAttributes();
 		
 	}
+	public double jaccardSimilarity_l(int entityIds1 , int entityIds2) {
+		
+			Vector<Integer> a=dataset1[entityIds1].set;
+			Vector<Integer> b;
+			if(dataset2!=null)
+				b=dataset2[entityIds2].set;
+			else
+				b=dataset1[entityIds2].set;
+			
+			Set<Integer> s1 = new LinkedHashSet<Integer>();
+	        for(int i =0; i< a.size(); i++){
+	            s1.add(a.get(i));
+	        }
+	        Set<Integer> s2 = new LinkedHashSet<Integer>();
+	        for(int i =0; i< b.size(); i++){
+	            s2.add(b.get(i));
+	        }
+	        Set<Integer> intersection = new LinkedHashSet<>(s1);
+	        intersection.retainAll(s2);
+	        Set<Integer> union = new LinkedHashSet<Integer>(s1); 
+	        union.addAll(s2); 
+        return (double)intersection.size()/ (double)union.size();
+    }
+	
 	public double  getSImilarity (int entityIds1, int entityIds2){
 //		for(Attribute att:dataset1[entityIds1].getAttributes()){
 //			//if(att.getName().value(""))
@@ -147,6 +191,21 @@ public class ExecuteBlockComparisons {
 			return jc.getSimilarity(dataset1[entityIds1].x,dataset2[entityIds2].x );
 		else
 			return jc.getSimilarity(dataset1[entityIds1].x,dataset1[entityIds2].x);
+		
+	}
+
+
+
+	public void print(int entityId1, int entityId2) {
+		System.out.println();
+		System.out.println(dataset1[entityId1].x);
+		System.out.println(dataset1[entityId2].x);
+		Vector<Integer> a=dataset1[entityId1].set;
+		Vector<Integer> b=dataset1[entityId2].set;
+		for (int i = 0; i < a.size() && i< b.size(); i++) {
+			System.out.println("print a "+ a.get(i)+"  "+ b.get(i));
+		}
+		
 		
 	}
 }

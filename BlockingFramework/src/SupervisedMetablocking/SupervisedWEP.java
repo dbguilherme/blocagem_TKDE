@@ -72,39 +72,70 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     }
     int count=0;
     @Override
+//    protected void applyClassifier(Classifier classifier) throws Exception {
+//    	
+//    	
+//    //	System.out.println("testando thread " + testeThread.teste(blocks,entityIndex,classifier,null,retainedEntities1,retainedEntities2));
+//    	
+//        for (AbstractBlock block : blocks) {
+//            ComparisonIterator iterator = block.getComparisonIterator();
+//            while (iterator.hasNext()) {
+//            	
+//                Comparison comparison = iterator.next();
+//                final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
+//                if (commonBlockIndices == null) {
+//                    continue;
+//                }
+//
+////                if (trainingSet.contains(comparison)) {
+////                  //  continue;
+////                }
+//               // if(count++%1000000==1)
+//               // 	System.out.println("processados -->" + count);
+//                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,1.0);
+//                if(currentInstance!=null){
+//                    int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
+////	                if (instanceLabel == DUPLICATE) {
+////	                	
+////	                    retainedEntities1.add(comparison.getEntityId1());
+////	                    retainedEntities2.add(comparison.getEntityId2());
+////	                }
+//                }
+//            }
+//        }
+//    }
+
     protected void applyClassifier(Classifier classifier) throws Exception {
-    	
-    	
-    //	System.out.println("testando thread " + testeThread.teste(blocks,entityIndex,classifier,null,retainedEntities1,retainedEntities2));
-    	
         for (AbstractBlock block : blocks) {
             ComparisonIterator iterator = block.getComparisonIterator();
+            int instanceLabel=0;
             while (iterator.hasNext()) {
-            	
                 Comparison comparison = iterator.next();
                 final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
                 if (commonBlockIndices == null) {
                     continue;
                 }
-
-                if (trainingSet.contains(comparison)) {
-                  //  continue;
-                }
+                
+//                if (trainingSet.contains(comparison)) {
+//                    continue;
+//                }
                 if(count++%1000000==1)
-                	System.out.println("processados -->" + count);
-                Instance currentInstance = getFeatures(NON_DUPLICATE, commonBlockIndices, comparison,1.0);
-                if(currentInstance!=null){
-                    int instanceLabel = (int) classifier.classifyInstance(currentInstance);  
-	                if (instanceLabel == DUPLICATE) {
-	                	
-	                    retainedEntities1.add(comparison.getEntityId1());
-	                    retainedEntities2.add(comparison.getEntityId2());
-	                }
+                    	System.out.println("processados -->" + count);
+                Instance currentInstance = getFeatures(areMatching(comparison)==true?1:0, commonBlockIndices, comparison,0.0);
+                if(currentInstance==null)
+                	continue;
+                instanceLabel = (int) classifier.classifyInstance(currentInstance);  
+                if (instanceLabel == DUPLICATE) {
+                    retainedEntities1.add(comparison.getEntityId1());
+                    retainedEntities2.add(comparison.getEntityId2());
                 }
+                
             }
         }
+        System.out.println("count " + count );
     }
 
+    
     @Override
     protected List<AbstractBlock> gatherComparisons() {
         int[] entityIds1 = Converter.convertCollectionToArray(retainedEntities1);

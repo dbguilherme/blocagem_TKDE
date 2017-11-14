@@ -17,6 +17,7 @@ package DataStructures;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  *
@@ -30,7 +31,8 @@ public class EntityProfile implements Serializable {
     private final Set<Attribute> attributes;
     private final String entityUrl;
    // private StringBuilder sb= new StringBuilder();
-    public  String x="";
+    public String x="";
+    public Vector<Integer> set= new Vector<Integer>();
     public EntityProfile(String url) {
         entityUrl = url;
         attributes = new HashSet();
@@ -51,5 +53,7 @@ public class EntityProfile implements Serializable {
     public Set<Attribute> getAttributes() {
         return attributes;
     }
-
+    public Vector<Integer> getSet() {
+        return set;
+    }
 }
