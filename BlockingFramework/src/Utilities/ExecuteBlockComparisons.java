@@ -99,21 +99,23 @@ public class ExecuteBlockComparisons {
         	entityProfile.set= new Vector<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
         		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ "  ");
-        		String splitted=(att.getValue().toLowerCase().replaceAll("[\\W]|_", ""));
+        		String splitted[]=(att.getValue().toLowerCase().replaceAll("[\\W]|_", " ")).split(" ");
         		
         		
-        			//System.out.println(splitted +"-------"+ att.getValue());
-        		
-        			if((splitted.length())==0)
-        				continue;
-					if(index.get(splitted)!=null) {
-						entityProfile.set.add(index.get(splitted));					
-					}
-					else {
-						index.put(splitted, contador);
-						entityProfile.set.add(contador++);
-					}
+        			for (int i = 0; i < splitted.length; i++) {
 						
+					
+        		
+	        			if((splitted[i].length())==0)
+	        				continue;
+						if(index.get(splitted[i])!=null) {
+							entityProfile.set.add(index.get(splitted[i]));					
+						}
+						else {
+							index.put(splitted[i], contador);
+							entityProfile.set.add(contador++);
+						}
+        			}	
 				
         		//if(index.get(key))
     		}

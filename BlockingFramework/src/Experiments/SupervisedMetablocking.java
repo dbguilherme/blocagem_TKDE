@@ -329,7 +329,7 @@ public class SupervisedMetablocking {
 					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 					TokenBlocking imtb = new TokenBlocking(profiles);
 
-					 blocks = imtb.buildBlocks();					 
+					blocks = imtb.buildBlocks();					 
 					//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
 					//blocks = method.buildBlocks();
 			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
