@@ -158,7 +158,7 @@ public class SupervisedMetablocking {
 
 	        J48 j48 = new J48();
 	        j48.setMinNumObj(5);
-	        j48.setConfidenceFactor((float) 0.10);
+	        j48.setConfidenceFactor((float) 0.010);
 
 	        SMO smo = new SMO();
 	       //((Object) smo).setBuildLogisticModels(true);
@@ -167,11 +167,11 @@ public class SupervisedMetablocking {
 
 	        BayesNet bayesNet = new BayesNet();
 
-	        Classifier[] classifiers = new Classifier[4];
+	        Classifier[] classifiers = new Classifier[1];
 	        classifiers[0] = naiveBayes;
-	        classifiers[1] = j48;
-	        classifiers[2] = smo;
-	        classifiers[3] = bayesNet;
+//	        classifiers[1] = j48;
+//	        classifiers[2] = smo;
+//	        classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -276,7 +276,7 @@ public class SupervisedMetablocking {
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
 		args1[0]="sint";
-		args1[1]="50K";
+		args1[1]="300K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -321,6 +321,7 @@ public class SupervisedMetablocking {
 		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
 
 		List<AbstractBlock> blocks = null;
+		List<AbstractBlock> blocks_copy = new ArrayList<AbstractBlock>();
 
 		List<EntityProfile>[] profiles ;
 		if(profilesPathB != null){
@@ -329,7 +330,8 @@ public class SupervisedMetablocking {
 					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 					TokenBlocking imtb = new TokenBlocking(profiles);
 
-					blocks = imtb.buildBlocks();					 
+					blocks = imtb.buildBlocks();
+					//blocks_copy=blocks.c
 					//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
 					//blocks = method.buildBlocks();
 			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
@@ -347,14 +349,19 @@ public class SupervisedMetablocking {
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
 			TokenBlocking imtb = new TokenBlocking(profiles);
 
-			 blocks = imtb.buildBlocks();			
+			 blocks = imtb.buildBlocks();	
+			 for(AbstractBlock b: blocks) {
+				    blocks_copy.add(b);
+				}
 			//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
 			//QGramsBlocking imtb = new QGramsBlocking(6, profiles);
 			//blocks = method.buildBlocks();			 
 			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 			blockPurging.applyProcessing(blocks);
+			
+			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
 			//BlockFiltering bf = new BlockFiltering(0.7);
-		   // bf.applyProcessing(blocks);	
+		    //bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -449,7 +456,7 @@ public class SupervisedMetablocking {
 		int i=1,j=5;
 		//for (int i = 1; i <= 2;i++)
 		{
-			swep = new SupervisedWEP(classifiers.length, blocks, duplicatePairs,ebc);
+			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
 			int tamanho = 50;

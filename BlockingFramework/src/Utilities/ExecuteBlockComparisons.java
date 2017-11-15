@@ -98,8 +98,8 @@ public class ExecuteBlockComparisons {
         	entityProfile.x="";
         	entityProfile.set= new Vector<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ "  ");
-        		String splitted[]=(att.getValue().toLowerCase().replaceAll("[\\W]|_", " ")).split(" ");
+        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " --- ");
+        		String splitted[]=att.getValue().toLowerCase().split(" ");
         		
         		
         			for (int i = 0; i < splitted.length; i++) {
@@ -135,7 +135,7 @@ public class ExecuteBlockComparisons {
 		return dataset1[entityIds1].getAttributes();
 		
 	}
-	public double jaccardSimilarity_l(int entityIds1 , int entityIds2) {
+	public double jaccardSimilarity_l(int entityIds1 , int entityIds2, int inter ) {
 		
 			Vector<Integer> a=dataset1[entityIds1].set;
 			Vector<Integer> b;
@@ -143,20 +143,25 @@ public class ExecuteBlockComparisons {
 				b=dataset2[entityIds2].set;
 			else
 				b=dataset1[entityIds2].set;
-			
-			Set<Integer> s1 = new LinkedHashSet<Integer>();
-	        for(int i =0; i< a.size(); i++){
-	            s1.add(a.get(i));
-	        }
-	        Set<Integer> s2 = new LinkedHashSet<Integer>();
-	        for(int i =0; i< b.size(); i++){
-	            s2.add(b.get(i));
-	        }
-	        Set<Integer> intersection = new LinkedHashSet<>(s1);
-	        intersection.retainAll(s2);
-	        Set<Integer> union = new LinkedHashSet<Integer>(s1); 
-	        union.addAll(s2); 
-        return (double)intersection.size()/ (double)union.size();
+//			
+//			Set<Integer> s1 = new LinkedHashSet<Integer>();
+//	        for(int i =0; i< a.size(); i++){
+//	            s1.add(a.get(i));
+//	        }
+//	        Set<Integer> s2 = new LinkedHashSet<Integer>();
+//	        for(int i =0; i< b.size(); i++){
+//	            s2.add(b.get(i));
+//	        }
+//	        Set<Integer> intersection = new LinkedHashSet<>(s1);
+//	        intersection.retainAll(s2);
+//	        Set<Integer> union = new LinkedHashSet<Integer>(s1); 
+//	        union.addAll(s2); 
+//	        double ant=(double)intersection.size()/ (double)union.size();
+	        
+//	        double dep=((double)inter)/(a.size()+b.size()-inter);
+//	        if(Math.abs(ant-dep)>0.2)
+//	        	System.out.println("sim " + ant +" "+ dep );
+        return ((double)inter)/(a.size()+b.size()-inter);
     }
 	
 	public double  getSImilarity (int entityIds1, int entityIds2){
@@ -199,15 +204,24 @@ public class ExecuteBlockComparisons {
 
 
 	public void print(int entityId1, int entityId2) {
-		System.out.println();
-		//System.out.println(dataset1[entityId1].x);
-		//System.out.println(dataset1[entityId2].x);
+		//System.out.println();
+		System.out.println(dataset1[entityId1].x);
+		System.out.println(dataset1[entityId2].x);
 		Vector<Integer> a=dataset1[entityId1].set;
 		Vector<Integer> b=dataset1[entityId2].set;
-		for (int i = 0; i < a.size() && i< b.size(); i++) {
-			System.out.println("print a "+ a.get(i)+"  "+ b.get(i));
-		}
-		
-		
+//		for (int i = 0; i < a.size() && i< b.size(); i++) {
+//			System.out.println("print a "+ a.get(i)+"  "+ b.get(i));
+//		}
+		Set<Integer> s1 = new LinkedHashSet<Integer>();
+        for(int i =0; i< a.size(); i++){
+            s1.add(a.get(i));
+        }
+        Set<Integer> s2 = new LinkedHashSet<Integer>();
+        for(int i =0; i< b.size(); i++){
+            s2.add(b.get(i));
+        }
+        Set<Integer> intersection = new LinkedHashSet<>(s1);
+        intersection.retainAll(s2);
+		System.out.print("xxx " +intersection.size());
 	}
 }

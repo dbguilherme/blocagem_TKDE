@@ -67,8 +67,8 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     	return count;
     }
     
-    public SupervisedWEP (int noOfClassifiers, List<AbstractBlock> bls, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
-        super (noOfClassifiers, bls, duplicatePairs,ebc);
+    public SupervisedWEP (int noOfClassifiers, List<AbstractBlock> bls, List<AbstractBlock> bls_copy, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
+        super (noOfClassifiers, bls,bls_copy,  duplicatePairs,ebc);
     }
     int count=0;
     @Override
@@ -112,16 +112,17 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
             while (iterator.hasNext()) {
                 Comparison comparison = iterator.next();
                 final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
+                
                 if (commonBlockIndices == null) {
                     continue;
                 }
-                
+                final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(block.getBlockIndex(), comparison);
 //                if (trainingSet.contains(comparison)) {
 //                    continue;
 //                }
                 if(count++%1000000==1)
                     	System.out.println("processados -->" + count);
-                Instance currentInstance = getFeatures(areMatching(comparison)==true?1:0, commonBlockIndices, comparison,0.0);
+                Instance currentInstance = getFeatures(areMatching(comparison)==true?1:0, commonBlockIndices,commonBlockIndices_cpy, comparison,1.0);
                 if(currentInstance==null)
                 	continue;
                 instanceLabel = (int) classifier.classifyInstance(currentInstance);  
