@@ -360,8 +360,8 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 			
 			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			//BlockFiltering bf = new BlockFiltering(0.7);
-		    //bf.applyProcessing(blocks);	
+			BlockFiltering bf = new BlockFiltering(0.8);
+		    bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -459,8 +459,8 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 50;
-			//while(tamanho<=1000)
+			int tamanho = 10;
+			while(tamanho<=1000)
 			{
 
 				writer1.write("level "+tamanho +"\n");
@@ -468,7 +468,7 @@ public class SupervisedMetablocking {
 				writer3.write("level "+tamanho+"\n");
 				writer4.write("level "+tamanho+"\n");
 
-				for (j = 0;j< 5; j++) 
+				for (j = 0;j< 10; j++) 
 				{
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
 

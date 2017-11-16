@@ -377,9 +377,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			//
 			long startingTime = System.currentTimeMillis();
 
-			long deltaTime= System.currentTimeMillis()-startingTime;
-
-			//System.out.println("time da contagem "+ deltaTime);
+			
 
 			int controle=-1;
 			PrintStream pstxt_level[] = new PrintStream[10];
@@ -414,24 +412,25 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				while (iterator.hasNext()) {
 					comparison = iterator.next();
 
-					final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(blocks.get(i).getBlockIndex(), comparison);
-					if (commonBlockIndices == null) {
+					if (entityIndex.testBlock(blocks.get(i).getBlockIndex(), comparison) == -1) {
 						continue;
 					}
 					
+					final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(blocks.get(i).getBlockIndex(), comparison);
 					
-					
-					double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
-					double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
-					try{
-						valor = commonBlockIndices.size()*ibf1*ibf2;	
-					}catch (Exception e ){
-						System.out.println(e.getMessage());
-					}
-					if(valor>1000)
-						level=35;
-					else
-						level=(int) Math.floor(valor/30);
+					double sim =ebc.jaccardSimilarity_l(comparison.getEntityId1(), comparison.getEntityId2(), commonBlockIndices_cpy.size());
+					level=((int)(sim*20));
+//					double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
+//					double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
+//					try{
+//						valor = commonBlockIndices.size()*ibf1*ibf2;	
+//					}catch (Exception e ){
+//						System.out.println(e.getMessage());
+//					}
+//					if(valor>1000)
+//						level=35;
+//					else
+//						level=(int) Math.floor(valor/30);
 					{
 						//	if(comparison.sim>= ((double)level*0.1) && comparison.sim< ((double)(level+1)*0.1))
 						{	
@@ -443,11 +442,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 						if(temp> tamanho)
 							continue;
 
-						final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(blocks.get(i).getBlockIndex(), comparison);
-						if (commonBlockIndices_cpy == null) {
-							
-							continue;
-						}
+						
 						
 						//System.out.println(commonBlockIndices_cpy.size());
 						//System.out.println("blocks size " + commonBlockIndices.size() +"  "+commonBlockIndices_cpy.size());
@@ -477,7 +472,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					}
 				}
 			}
+			long deltaTime= System.currentTimeMillis()-startingTime;
 
+			System.out.println("time da contagem "+ deltaTime);
 			pstxt.close();
 			psarff.close();
 			for (int m = 0; m < 10; m++) {
@@ -631,7 +628,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 		double sim=0.0;
 		
-		
+		int level=0;
 		for ( AbstractBlock b:blocks) {
 
 
@@ -640,23 +637,31 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			while(iterator.hasNext()){			
 				c= iterator.next(); 
 
-				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
-				if (commonBlockIndices == null) {
+				//final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(b.getBlockIndex(), c);
+				
+				if (entityIndex.testBlock(b.getBlockIndex(), c) == -1) {
 					continue;
 				}
+				final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(b.getBlockIndex(), c);
 				
-				double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId1(), 0));
-				double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId2(), 1));
-				try{
-					sim = commonBlockIndices.size()*ibf1*ibf2;	
-				}catch (Exception e ){
-					System.out.println(e.getMessage());
-				}
-				int level=0;
-				if(sim>1000){
-					level=((int)Math.floor(35));
-				}else
-					level=((int)Math.floor(sim/30));
+				sim =ebc.jaccardSimilarity_l(c.getEntityId1(), c.getEntityId2(), commonBlockIndices_cpy.size());
+				
+				level=((int)(sim*20));
+				//sim=level/10.0;
+				//System.out.println("sim " + sim);
+//				double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId1(), 0));
+//				double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(c.getEntityId2(), 1));
+//				try{
+//					sim = commonBlockIndices.size()*ibf1*ibf2;	
+//				}catch (Exception e ){
+//					System.out.println(e.getMessage());
+//				}
+//				int level=0;
+//				if(sim>1000){
+//					level=((int)Math.floor(35));
+//				}else
+//					level=((int)Math.floor(sim/30));
+				
 				
 				blockSize[level][0]++;
 				if(areMatching(c))

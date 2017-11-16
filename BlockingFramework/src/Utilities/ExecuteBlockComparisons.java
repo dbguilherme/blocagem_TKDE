@@ -95,27 +95,27 @@ public class ExecuteBlockComparisons {
         int contador=1;
         for (EntityProfile entityProfile : entityProfiles) {
         	//entityProfile.getatt(entityProfile);
-        	entityProfile.x="";
-        	entityProfile.set= new Vector<Integer>();
+        	//entityProfile.x="";
+        	entityProfile.len= 0;
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " --- ");
+        		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " --- ");
         		String splitted[]=att.getValue().toLowerCase().split(" ");
+        		entityProfile.len+=splitted.length;
         		
-        		
-        			for (int i = 0; i < splitted.length; i++) {
-						
-					
-        		
-	        			if((splitted[i].length())==0)
-	        				continue;
-						if(index.get(splitted[i])!=null) {
-							entityProfile.set.add(index.get(splitted[i]));					
-						}
-						else {
-							index.put(splitted[i], contador);
-							entityProfile.set.add(contador++);
-						}
-        			}	
+//        			for (int i = 0; i < splitted.length; i++) {
+//						
+//					
+//        		
+//	        			if((splitted[i].length())==0)
+//	        				continue;
+//						if(index.get(splitted[i])!=null) {
+//							entityProfile.set.add(index.get(splitted[i]));					
+//						}
+//						else {
+//							index.put(splitted[i], contador);
+//							entityProfile.set.add(contador++);
+//						}
+//        			}	
 				
         		//if(index.get(key))
     		}
@@ -137,12 +137,12 @@ public class ExecuteBlockComparisons {
 	}
 	public double jaccardSimilarity_l(int entityIds1 , int entityIds2, int inter ) {
 		
-			Vector<Integer> a=dataset1[entityIds1].set;
-			Vector<Integer> b;
-			if(dataset2!=null)
-				b=dataset2[entityIds2].set;
-			else
-				b=dataset1[entityIds2].set;
+//			Vector<Integer> a=dataset1[entityIds1].set;
+//			Vector<Integer> b;
+//			if(dataset2!=null)
+//				b=dataset2[entityIds2].set;
+//			else
+//				b=dataset1[entityIds2].set;
 //			
 //			Set<Integer> s1 = new LinkedHashSet<Integer>();
 //	        for(int i =0; i< a.size(); i++){
@@ -161,7 +161,7 @@ public class ExecuteBlockComparisons {
 //	        double dep=((double)inter)/(a.size()+b.size()-inter);
 //	        if(Math.abs(ant-dep)>0.2)
 //	        	System.out.println("sim " + ant +" "+ dep );
-        return ((double)inter)/(a.size()+b.size()-inter);
+        return ((double)inter)/(dataset1[entityIds1].len+dataset1[entityIds2].len-inter);
     }
 	
 	public double  getSImilarity (int entityIds1, int entityIds2){

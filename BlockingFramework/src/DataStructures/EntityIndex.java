@@ -98,6 +98,40 @@ public class EntityIndex implements Serializable {
         return indices;
     }
     
+    public int testBlock(int blockIndex, Comparison comparison) {
+        int[] blocks1 = entityBlocks[comparison.getEntityId1()];
+        int[] blocks2 = entityBlocks[comparison.getEntityId2()+datasetLimit];
+
+        boolean firstCommonIndex = false;
+        int noOfBlocks1 = blocks1.length;
+        int noOfBlocks2 = blocks2.length;
+        final List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < noOfBlocks1; i++) {
+            for (int j = 0; j < noOfBlocks2; j++) {
+                if (blocks2[j] < blocks1[i]) {
+                    continue;
+                }
+
+                if (blocks1[i] < blocks2[j]) {
+                    break;
+                }
+
+                if (blocks1[i] == blocks2[j]) {
+                	 if (blocks1[i] != blockIndex) 
+                		 return -1;
+                	 else
+                		 return 1;
+                }
+            }
+        }
+//        if(comparison.sim>=0.0){
+//    		for (int j2 = 0; j2 < blocks2.length && j2 < blocks1.length; j2++) {
+//    			System.out.println("certo blockIndex "+ blocks1[j2]+ " "+ blocks2[j2] + " " + indices.size());
+//			}
+//    		System.out.println("*******************");
+//        }
+        return 1;
+    }
     
     public List<Integer> getCommonBlockIndices_cpy(int blockIndex, Comparison comparison) {
         int[] blocks1 = entityBlocks[comparison.getEntityId1()];
