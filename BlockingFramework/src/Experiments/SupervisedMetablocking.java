@@ -275,8 +275,8 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="sint";
-		args1[1]="300K";
+		args1[0]="dblp";
+		args1[1]="50K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -330,7 +330,10 @@ public class SupervisedMetablocking {
 					profiles[1] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathB);
 					TokenBlocking imtb = new TokenBlocking(profiles);
 
-					blocks = imtb.buildBlocks();
+					 blocks = imtb.buildBlocks();	
+					 for(AbstractBlock b: blocks) {
+						    blocks_copy.add(b);
+						}
 					//blocks_copy=blocks.c
 					//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
 					//blocks = method.buildBlocks();
@@ -360,7 +363,7 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 			
 			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			BlockFiltering bf = new BlockFiltering(0.8);
+			BlockFiltering bf = new BlockFiltering(0.85);
 		    bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
@@ -459,7 +462,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 10;
+			int tamanho = 50;
 			while(tamanho<=1000)
 			{
 
@@ -477,7 +480,7 @@ public class SupervisedMetablocking {
 					writer3.flush();
 					writer4.flush();
 				}
-				swep.printStatistics();
+				//swep.printStatistics();
 				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
 

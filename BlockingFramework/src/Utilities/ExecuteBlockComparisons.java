@@ -136,7 +136,10 @@ public class ExecuteBlockComparisons {
 		
 	}
 	public double jaccardSimilarity_l(int entityIds1 , int entityIds2, int inter ) {
-		
+		if(dataset2!=null){
+			return ((double)inter)/(dataset1[entityIds1].len+dataset2[entityIds2].len-inter);
+		}else
+			return ((double)inter)/(dataset1[entityIds1].len+dataset1[entityIds2].len-inter);
 //			Vector<Integer> a=dataset1[entityIds1].set;
 //			Vector<Integer> b;
 //			if(dataset2!=null)
@@ -161,7 +164,7 @@ public class ExecuteBlockComparisons {
 //	        double dep=((double)inter)/(a.size()+b.size()-inter);
 //	        if(Math.abs(ant-dep)>0.2)
 //	        	System.out.println("sim " + ant +" "+ dep );
-        return ((double)inter)/(dataset1[entityIds1].len+dataset1[entityIds2].len-inter);
+        
     }
 	
 	public double  getSImilarity (int entityIds1, int entityIds2){

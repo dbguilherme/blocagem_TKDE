@@ -29,9 +29,10 @@ public class Comparison implements Serializable {
     private final int entityId1;
     private final int entityId2;
     private double utilityMeasure;
-    public int teste;
-    public  double sim=0.0;
     
+    private  double sim=0.0;
+    private int blockId;
+    private int label;
     
     public Comparison (boolean ccER, int id1, int id2, double jaccardSim) {
         cleanCleanER = ccER;
@@ -39,6 +40,7 @@ public class Comparison implements Serializable {
         entityId2 = id2;
         utilityMeasure = -1;
         sim=jaccardSim;
+        
     }
 
     @Override
@@ -67,6 +69,12 @@ public class Comparison implements Serializable {
         return entityId2;
     }
     
+    public void setBlockId( int blockId ) {
+        this.blockId=blockId;
+    }
+    public int getBlockId( ) {
+        return (blockId);
+    }
     public double getUtilityMeasure() {
         return utilityMeasure;
     }
@@ -85,5 +93,17 @@ public class Comparison implements Serializable {
     
     public void setUtilityMeasure(double utilityMeasure) {
         this.utilityMeasure = utilityMeasure;
+    }
+    public void setSim( double sim ) {
+        this.sim=sim;
+    }
+    public double getSim( ) {
+        return (sim);
+    }
+    public void setLabel( int label ) {
+        this.label=label;
+    }
+    public int getLabel( ) {
+        return (label);
     }
 }
