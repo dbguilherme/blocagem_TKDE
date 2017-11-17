@@ -31,7 +31,7 @@ public class EntityIndex implements Serializable {
     private int noOfEntities;
     private int validEntities1;
     private int validEntities2;
-    private int[][] entityBlocks;
+    public int[][] entityBlocks;
     
     public EntityIndex (List<AbstractBlock> blocks) {
         if (blocks.isEmpty()) {
@@ -152,15 +152,15 @@ public class EntityIndex implements Serializable {
                 }
 
                 if (blocks1[i] == blocks2[j]) {
-                    if (!firstCommonIndex) 
-                    {
-                        firstCommonIndex = true;
-//                        if (blocks1[i] != blockIndex) {
-//                        	 
-//                        		
-//                            return null;
-//                        }
-                    }
+//                    if (!firstCommonIndex) 
+//                    {
+//                        firstCommonIndex = true;
+////                        if (blocks1[i] != blockIndex) {
+////                        	 
+////                        		
+////                            return null;
+////                        }
+//                    }
                     indices.add(blocks1[i]);
                 }
             }

@@ -49,6 +49,7 @@ import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RBFKernel;
+import weka.classifiers.rules.JRip;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.SelectedTag;
@@ -151,27 +152,29 @@ public class SupervisedMetablocking {
 //	//	classifiers[1] = j48;
 //	//	classifiers[2] = rf;
 		
-				 NaiveBayes naiveBayes = new NaiveBayes();
-			        naiveBayes.setUseKernelEstimator(false);
-			        naiveBayes.setUseSupervisedDiscretization(false);
+		    NaiveBayes naiveBayes = new NaiveBayes();
+		    naiveBayes.setUseKernelEstimator(false);
+		    naiveBayes.setUseSupervisedDiscretization(false);
 
 
 	        J48 j48 = new J48();
-	        j48.setMinNumObj(5);
-	        j48.setConfidenceFactor((float) 0.010);
+	        j48.setMinNumObj(2);
+	        j48.setConfidenceFactor((float) 0.25);
 
 	        SMO smo = new SMO();
 	       //((Object) smo).setBuildLogisticModels(true);
 	        smo.setKernel(new PolyKernel());
 	        smo.setC(9.0);
-
+	        JRip jrip = new JRip();
+	        
+	        
 	        BayesNet bayesNet = new BayesNet();
 
 	        Classifier[] classifiers = new Classifier[1];
 	        classifiers[0] = naiveBayes;
-//	        classifiers[1] = j48;
-//	        classifiers[2] = smo;
-//	        classifiers[3] = bayesNet;
+	       // classifiers[1] = j48;
+	      //  classifiers[0] = jrip;
+	      //  classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
@@ -276,7 +279,7 @@ public class SupervisedMetablocking {
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
 		args1[0]="dblp";
-		args1[1]="50K";
+		args1[1]="10K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -346,7 +349,7 @@ public class SupervisedMetablocking {
 						blockPurging.applyProcessing(blocks);
 //						
 					 BlockFiltering bf = new BlockFiltering(0.8);
-					    bf.applyProcessing(blocks);	
+				    bf.applyProcessing(blocks);	
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
@@ -363,8 +366,8 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 			
 			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			BlockFiltering bf = new BlockFiltering(0.85);
-		    bf.applyProcessing(blocks);	
+			///BlockFiltering bf = new BlockFiltering(0.80);
+		   // bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -494,8 +497,8 @@ public class SupervisedMetablocking {
 				else if(tamanho==100)
 					tamanho=500;
 //				
-				else if( tamanho==500)
-					tamanho=1000;
+				else if( tamanho==100)
+					tamanho=500;
 				else
 				if(tamanho==1000)
 					tamanho+=tamanho;

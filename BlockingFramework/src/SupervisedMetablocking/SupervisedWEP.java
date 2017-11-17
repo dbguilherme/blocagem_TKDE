@@ -122,7 +122,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
 //                }
                 if(count++%1000000==1)
                     	System.out.println("processados -->" + count);
-                Instance currentInstance = getFeatures(areMatching(comparison)==true?1:0, commonBlockIndices,commonBlockIndices_cpy, comparison,1.0);
+                Instance currentInstance = getFeatures(0, commonBlockIndices,commonBlockIndices_cpy, comparison,1.0);
                 if(currentInstance==null)
                 	continue;
                 instanceLabel = (int) classifier.classifyInstance(currentInstance);  
@@ -205,7 +205,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         	}else
         	if(classifierId==1){
         		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[0].get(0) +" \n");
         		//armazena++;
         	}else
         	if(classifierId==2){
@@ -292,8 +292,8 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
           System.out.println("Executed comparisons blocking\t:\t" +teste	);
           System.out.println("Executed comparisons\t:\t" + entityIds1.length);
           System.out.println("Detected duplicates\t:\t" + detectedDuplicates.size());
-         // sampleComparisons[0].add((double)entityIds1.length);
-        //  sampleDuplicates[0].add((double)detectedDuplicates.size());
+          sampleComparisons[xxx].add((double)entityIds1.length);
+          sampleDuplicates[xxx].add((double)detectedDuplicates.size());
          
     }
     

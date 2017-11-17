@@ -101,11 +101,16 @@ public class ExportBlocks implements Constants {
             Fields fields = MultiFields.getFields(d1Index);
             for (String field : fields) {
                 Terms terms = fields.terms(field);
+                
                 TermsEnum termsEnum = terms.iterator(null);
                 BytesRef text;
                 while ((text = termsEnum.next()) != null) {
+                	
                     // check whether it is a common term
                     int d2DocFrequency = d2Index.docFreq(new Term(field, text));
+                   // System.out.println(text.utf8ToString());
+                    
+                   // System.out.println(text+"  term "+ field.);
                     if (d2DocFrequency == 0) {
                         continue;
                     }
@@ -115,7 +120,9 @@ public class ExportBlocks implements Constants {
                     int doc;
                     while ((doc = de.nextDoc()) != DocsEnum.NO_MORE_DOCS) {
                         entityIds.add(documentIds[doc]);
+                       // System.err.print(documentIds[doc]+"  ");
                     }
+                   // System.out.println();
 
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
                     hashedBlocks.put(text.utf8ToString(), idsArray);
@@ -134,13 +141,16 @@ public class ExportBlocks implements Constants {
             Fields fields = MultiFields.getFields(d2Index);
             for (String field : fields) {
                 Terms terms = fields.terms(field);
+                //System.out.println(field +"  term "+ terms.toString());
                 TermsEnum termsEnum = terms.iterator(null);
                 BytesRef text;
                 while ((text = termsEnum.next()) != null) {
                     if (!hashedBlocks.containsKey(text.utf8ToString())) {
                         continue;
                     }
-                   // System.out.println(text.utf8ToString());
+                   // if(text.utf8ToString().equals("for"))
+                   // 	System.out.println();
+                    //System.out.println(text.utf8ToString());
                     final List<Integer> entityIds = new ArrayList<>();
                     DocsEnum de = MultiFields.getTermDocsEnum(d2Index, MultiFields.getLiveDocs(d2Index), field, text);
                     int doc;
@@ -150,7 +160,7 @@ public class ExportBlocks implements Constants {
 
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
                     int[] d1Entities = hashedBlocks.get(text.utf8ToString());
-                    
+                   // System.out.println();
                     blocks.add(new BilateralBlock(d1Entities, idsArray));
                 }
             }

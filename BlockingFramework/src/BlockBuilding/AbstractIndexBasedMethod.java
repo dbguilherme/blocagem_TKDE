@@ -138,12 +138,16 @@ public abstract class AbstractIndexBasedMethod extends AbstractBlockingMethod im
     protected void indexEntities(IndexWriter index, List<EntityProfile> entities) {
         try {
             int counter = 0;
+            int lixo=0;
             for (EntityProfile profile : entities) {
+            	//if(lixo++>10)
+            	//	break;
                 Document doc = new Document();
                 doc.add(new StoredField(DOC_ID, counter++));
                 for (Attribute attribute : profile.getAttributes()) {
                     getBlockingKeys(attribute.getValue()).stream().filter((key) -> (0 < key.trim().length())).forEach((key) -> {
                         doc.add(new StringField(VALUE_LABEL, key.trim(), Field.Store.YES));
+                       // System.out.println(key + " ");
                     });
                 }
                 index.addDocument(doc);

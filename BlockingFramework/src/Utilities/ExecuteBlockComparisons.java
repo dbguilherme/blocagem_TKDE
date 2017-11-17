@@ -95,11 +95,11 @@ public class ExecuteBlockComparisons {
         int contador=1;
         for (EntityProfile entityProfile : entityProfiles) {
         	//entityProfile.getatt(entityProfile);
-        	//entityProfile.x="";
+        	entityProfile.x="";
         	entityProfile.len= 0;
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " --- ");
-        		String splitted[]=att.getValue().toLowerCase().split(" ");
+        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
+        		String splitted[]=att.getValue().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
         		entityProfile.len+=splitted.length;
         		
 //        			for (int i = 0; i < splitted.length; i++) {
@@ -136,6 +136,7 @@ public class ExecuteBlockComparisons {
 		
 	}
 	public double jaccardSimilarity_l(int entityIds1 , int entityIds2, int inter ) {
+		
 		if(dataset2!=null){
 			return ((double)inter)/(dataset1[entityIds1].len+dataset2[entityIds2].len-inter);
 		}else
