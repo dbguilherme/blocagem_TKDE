@@ -676,10 +676,11 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 
 		System.out.println("menor positivo " + lposit);
-		th=Math.ceil((((negativos/countN)*10)))/10.0;
+		th=((((negativos/countN)*10)))/10.0;
 		System.out.println(" media " + th +  "  "+ (negativos/countN));
 //		if(set.contains("dblp"))
-		//th+=-0.1;
+		if(th==0)
+			th=0.1;
 		//if(set.contains("dblp"))
 		//	th=0.2;
 		for (Instance instance : data) {
@@ -725,7 +726,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			List<Comparison> listComparison = b.getComparisons();
 			
 			
-			//for (int i = 0; i < listComparison.size(); i++) 
+			for (int i = 0; i < listComparison.size() && i <5; i++) 
 			{
 				
 			

@@ -465,7 +465,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho = 50;
+			int tamanho =10;
 			while(tamanho<=1000)
 			{
 
