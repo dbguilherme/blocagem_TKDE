@@ -341,11 +341,11 @@ public class SupervisedMetablocking {
 
 					//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 					//sbb.applyProcessing(blocks);
-//					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
-//						blockPurging.applyProcessing(blocks);
-//////						
-//					 BlockFiltering bf = new BlockFiltering(0.8);
-//				    bf.applyProcessing(blocks);	
+					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+						blockPurging.applyProcessing(blocks);
+////						
+					 BlockFiltering bf = new BlockFiltering(0.85);
+				    bf.applyProcessing(blocks);	
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);

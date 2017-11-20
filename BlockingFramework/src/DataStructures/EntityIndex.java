@@ -370,8 +370,7 @@ public class EntityIndex implements Serializable {
 //                if(!records[entityId].contains(block.blockIndex))
 //                	records[entityId].add(block.blockIndex);
             }
-            if(((BilateralBlock)block).text.equals("DataBlade"))
-            	System.out.println("xxxxxapagar "+ counters[6101] +" " + counters[650]);
+           
         }
     }
     
