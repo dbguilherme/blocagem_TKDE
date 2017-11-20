@@ -103,7 +103,7 @@ public class ExecuteBlockComparisons {
         	for ( Attribute att : entityProfile.getAttributes() ) {
         		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
         		String splitted[]=att.getValue().trim().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
-        		//entityProfile.len+=splitted.length;
+
         		for (int i = 0; i < splitted.length; i++) {
         			String atual=splitted[i].trim();
 					if(!atual.isEmpty() && atual!=" "){
@@ -182,9 +182,10 @@ public class ExecuteBlockComparisons {
 					interSet++;
 			}
 		}
-		
-		
-		return ((double)interSet)/(dataset1[entityIds1].len+dataset2[entityIds2].len-interSet);
+		if(dataset2==null)		
+			return ((double)interSet)/(dataset1[entityIds1].len+dataset1[entityIds2].len-interSet);
+		else
+			return ((double)interSet)/(dataset1[entityIds1].len+dataset2[entityIds2].len-interSet);
 		
 //			Vector<Integer> b;
 //			if(dataset2!=null)

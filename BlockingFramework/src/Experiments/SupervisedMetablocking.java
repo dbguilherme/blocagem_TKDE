@@ -278,7 +278,7 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="sint";
+		args1[0]="3";
 		args1[1]="300K";
 		
 		//args1[0]="acm";
@@ -339,11 +339,10 @@ public class SupervisedMetablocking {
 						}
 			
 
-					//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
-					//sbb.applyProcessing(blocks);
+					System.out.println("starting purging");
 					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 						blockPurging.applyProcessing(blocks);
-////						
+					System.out.println("starting blocking filtering");
 					 BlockFiltering bf = new BlockFiltering(0.85);
 				    bf.applyProcessing(blocks);	
 		}else	{
@@ -445,7 +444,7 @@ public class SupervisedMetablocking {
 		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
 		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
 
-       
+		System.out.println("starting ebc");
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
@@ -453,18 +452,19 @@ public class SupervisedMetablocking {
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-
+		int valores [] = {50,100,500,1000};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
-		int i=1,j=5;
+		int i=0,j=5;
 		//for (int i = 1; i <= 2;i++)
 		{
+			System.out.println("starting sup wep");
 			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho =50;
+			int tamanho =valores[i];
 			while(tamanho<=1000)
 			{
-
+				
 				writer1.write("level "+tamanho +"\n");
 				writer2.write("level "+tamanho +"\n");
 				writer3.write("level "+tamanho+"\n");
@@ -472,6 +472,7 @@ public class SupervisedMetablocking {
 
 				for (j = 0;j< 10; j++) 
 				{
+					System.out.println("starting apply processing");
 					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
 
 					writer1.flush();
@@ -484,23 +485,23 @@ public class SupervisedMetablocking {
 				System.out.println("size of level : "+ tamanho);
 
 
-				if(tamanho==5)
-					tamanho=10;
-				else if(tamanho==10)
-					tamanho=50;
-				else if(tamanho==50)
-					tamanho*=2;
-				else if(tamanho==100)
-					tamanho=500;
-//				
-				else if( tamanho==100)
-					tamanho=500;
-				else
-				if(tamanho==1000)
-					tamanho+=tamanho;
+//				if(tamanho==5)
+//					tamanho=10;
+//				else if(tamanho==10)
+//					tamanho=50;
+//				else if(tamanho==50)
+//					tamanho*=2;
+//				else if(tamanho==100)
+//					tamanho=500;
+////				
+//				else if( tamanho==100)
+//					tamanho=500;
+//				else
+//				if(tamanho==1000)
+//					tamanho+=tamanho;
 //				else tamanho*=tamanho;
 			//	ebc.temp_limiar+=0.1;
-
+				tamanho =valores[++i];
 
 			}
 		}
