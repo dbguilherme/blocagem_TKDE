@@ -27,10 +27,15 @@ public class UnilateralBlock extends AbstractBlock implements Serializable {
     private static final long serialVersionUID = 43532585408538695L;
     
     protected final int[] entities;
+    public String text;
     
-    public UnilateralBlock(int[] entities) {
+    public UnilateralBlock(int[] entities, String text) {
         super();
+        this.text=text;
         this.entities = entities;
+//        for (int i = 0; i < entities.length; i++) {
+//			System.out.println("enumeration blocks id "+entities[i] +" text y"+text);
+//		}
         comparisons = ((double)entities.length)*(entities.length-1)/2;
     }
     

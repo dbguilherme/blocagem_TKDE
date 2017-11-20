@@ -1,12 +1,4 @@
-/BlockBuilding/
-/BlockProcessing/
-/Comparators/
-/DataStructures/
-/ExhaustiveMethods/
-/Experiments/
-/MetaBlocking/
-/OnTheFlyMethods/
-/RepresentationModels/
-/SchemaExperiments/
 /SupervisedMetablocking/
+/Experiments/
 /Utilities/
+/DataStructures/

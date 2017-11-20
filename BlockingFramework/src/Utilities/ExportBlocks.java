@@ -108,12 +108,13 @@ public class ExportBlocks implements Constants {
                 	
                     // check whether it is a common term
                     int d2DocFrequency = d2Index.docFreq(new Term(field, text));
-                   // System.out.println(text.utf8ToString());
+                    if(text.utf8ToString().equals("DataBlade"))
+                    	System.out.println(text.utf8ToString());
                     
                    // System.out.println(text+"  term "+ field.);
-                    if (d2DocFrequency == 0) {
-                        continue;
-                    }
+//                    if (d2DocFrequency == 0) {
+//                        continue;
+//                    }
 
                     final List<Integer> entityIds = new ArrayList<>();
                     DocsEnum de = MultiFields.getTermDocsEnum(d1Index, MultiFields.getLiveDocs(d1Index), field, text);
@@ -161,7 +162,10 @@ public class ExportBlocks implements Constants {
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
                     int[] d1Entities = hashedBlocks.get(text.utf8ToString());
                    // System.out.println();
-                    blocks.add(new BilateralBlock(d1Entities, idsArray));
+                    if(text.utf8ToString().equals("DataBlade"))
+                    	System.out.println(text.utf8ToString());
+                    blocks.add(new BilateralBlock(d1Entities, idsArray,text.utf8ToString()));
+                    
                 }
             }
 
@@ -189,10 +193,13 @@ public class ExportBlocks implements Constants {
                     while ((doc = de.nextDoc()) != DocsEnum.NO_MORE_DOCS) {
                         entityIds.add(documentIds[doc]);
                     }
-
+                    if(text.utf8ToString().trim().equals("07"))
+                        System.out.println("blocks x"+ text.utf8ToString());
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
-                    UnilateralBlock block = new UnilateralBlock(idsArray);
+                    UnilateralBlock block = new UnilateralBlock(idsArray,text.utf8ToString());
+                    
                     blocks.add(block);
+                    
                 }
             }
         } catch (IOException ex) {

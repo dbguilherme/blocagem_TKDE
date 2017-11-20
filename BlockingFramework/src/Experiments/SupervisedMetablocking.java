@@ -278,8 +278,8 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="dblp";
-		args1[1]="10K";
+		args1[0]="sint";
+		args1[1]="300K";
 		
 		//args1[0]="acm";
 		//args1[0]="dblp";
@@ -337,19 +337,15 @@ public class SupervisedMetablocking {
 					 for(AbstractBlock b: blocks) {
 						    blocks_copy.add(b);
 						}
-					//blocks_copy=blocks.c
-					//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
-					//blocks = method.buildBlocks();
-			//		QGramsBlocking imtb = new QGramsBlocking(3, profiles);
-			//		blocks = imtb.buildBlocks();
+			
 
 					//SizeBasedBlockPurging sbb= new SizeBasedBlockPurging();
 					//sbb.applyProcessing(blocks);
-					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
-						blockPurging.applyProcessing(blocks);
-//						
-					 BlockFiltering bf = new BlockFiltering(0.8);
-				    bf.applyProcessing(blocks);	
+//					 AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+//						blockPurging.applyProcessing(blocks);
+//////						
+//					 BlockFiltering bf = new BlockFiltering(0.8);
+//				    bf.applyProcessing(blocks);	
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
@@ -366,8 +362,8 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 			
 			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			///BlockFiltering bf = new BlockFiltering(0.80);
-		   // bf.applyProcessing(blocks);	
+			BlockFiltering bf = new BlockFiltering(0.85);
+		    bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -465,7 +461,7 @@ public class SupervisedMetablocking {
 			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
-			int tamanho =10;
+			int tamanho =50;
 			while(tamanho<=1000)
 			{
 

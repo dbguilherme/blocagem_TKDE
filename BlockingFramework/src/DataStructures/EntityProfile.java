@@ -32,7 +32,7 @@ public class EntityProfile implements Serializable {
     private final String entityUrl;
    // private StringBuilder sb= new StringBuilder();
     public String x="";
-    public Vector<Integer> set= new Vector<Integer>();
+    public int [] set;
     public int len;
     public EntityProfile(String url) {
         entityUrl = url;

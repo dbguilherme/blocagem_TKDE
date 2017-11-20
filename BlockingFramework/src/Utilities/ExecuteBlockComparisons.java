@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.lucene.codecs.lucene40.values.Ints;
+
 import DataStructures.AbstractBlock;
 import DataStructures.Attribute;
 import DataStructures.Comparison;
@@ -36,11 +38,11 @@ import uk.ac.shef.wit.simmetrics.tokenisers.TokeniserQGram3;
  */
 public class ExecuteBlockComparisons {
  
-    private  final EntityProfile[] dataset1;
-    private final EntityProfile[] dataset2;
+    public final EntityProfile[] dataset1;
+    public final EntityProfile[] dataset2;
     Map<String,Integer> index = new HashMap<String,Integer>(); 
     public double temp_limiar=0.00;
-
+    
 //    public void exportdataset(){
 //    	dataset1[0].getAttributes()
 //    }
@@ -97,30 +99,26 @@ public class ExecuteBlockComparisons {
         	//entityProfile.getatt(entityProfile);
         	entityProfile.x="";
         	entityProfile.len= 0;
+        	List<Integer> list= new ArrayList<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
-        		String splitted[]=att.getValue().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
-        		entityProfile.len+=splitted.length;
-        		
-//        			for (int i = 0; i < splitted.length; i++) {
-//						
-//					
-//        		
-//	        			if((splitted[i].length())==0)
-//	        				continue;
-//						if(index.get(splitted[i])!=null) {
-//							entityProfile.set.add(index.get(splitted[i]));					
-//						}
-//						else {
-//							index.put(splitted[i], contador);
-//							entityProfile.set.add(contador++);
-//						}
-//        			}	
-				
-        		//if(index.get(key))
+        		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
+        		String splitted[]=att.getValue().trim().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
+        		//entityProfile.len+=splitted.length;
+        		for (int i = 0; i < splitted.length; i++) {
+        			String atual=splitted[i].trim();
+					if(!atual.isEmpty() && atual!=" "){
+						entityProfile.len++;
+						if(index.get(atual)!=null) {						
+							list.add(index.get(atual) );
+						}
+						else {
+							index.put(atual, contador);
+							list.add(contador++);
+						}
+					}
+				}
+        		entityProfile.set= Converter.convertCollectionToArray(list);
     		}
-        	//System.out.println("  " + entityProfile.set.size());
-        	
 		}
         return e;
     }
@@ -142,6 +140,52 @@ public class ExecuteBlockComparisons {
 		}else
 			return ((double)inter)/(dataset1[entityIds1].len+dataset1[entityIds2].len-inter);
 //			Vector<Integer> a=dataset1[entityIds1].set;
+//			Vector<Integer> b;
+//			if(dataset2!=null)
+//				b=dataset2[entityIds2].set;
+//			else
+//				b=dataset1[entityIds2].set;
+//			
+//			Set<Integer> s1 = new LinkedHashSet<Integer>();
+//	        for(int i =0; i< a.size(); i++){
+//	            s1.add(a.get(i));
+//	        }
+//	        Set<Integer> s2 = new LinkedHashSet<Integer>();
+//	        for(int i =0; i< b.size(); i++){
+//	            s2.add(b.get(i));
+//	        }
+//	        Set<Integer> intersection = new LinkedHashSet<>(s1);
+//	        intersection.retainAll(s2);
+//	        Set<Integer> union = new LinkedHashSet<Integer>(s1); 
+//	        union.addAll(s2); 
+//	        double ant=(double)intersection.size()/ (double)union.size();
+	        
+//	        double dep=((double)inter)/(a.size()+b.size()-inter);
+//	        if(Math.abs(ant-dep)>0.2)
+//	        	System.out.println("sim " + ant +" "+ dep );
+        
+    }
+	
+	public double jaccardSimilarity_l_real(int entityIds1 , int entityIds2, int inter ) {
+		
+		
+		int vetA[]=dataset1[entityIds1].set;
+		int vetB[]=null;
+		if(dataset2!=null)
+			 vetB=dataset2[entityIds2].set;
+		else
+			 vetB=dataset1[entityIds2].set;
+		int interSet=0;
+		for (int i = 0; i < vetA.length; i++) {
+			for (int j = 0; j < vetB.length; j++) {
+				if(vetA[i]==vetB[j])
+					interSet++;
+			}
+		}
+		
+		
+		return ((double)interSet)/(dataset1[entityIds1].len+dataset2[entityIds2].len-interSet);
+		
 //			Vector<Integer> b;
 //			if(dataset2!=null)
 //				b=dataset2[entityIds2].set;

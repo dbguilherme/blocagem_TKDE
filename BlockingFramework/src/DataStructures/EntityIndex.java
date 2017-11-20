@@ -32,7 +32,7 @@ public class EntityIndex implements Serializable {
     private int validEntities1;
     private int validEntities2;
     public int[][] entityBlocks;
-    
+   // public ArrayList<Integer>[] records = (ArrayList<Integer>[])new ArrayList[68000];
     public EntityIndex (List<AbstractBlock> blocks) {
         if (blocks.isEmpty()) {
             System.err.println("Entity index received an empty block collection as input!");
@@ -53,7 +53,22 @@ public class EntityIndex implements Serializable {
     public void enumerateBlocks(List<AbstractBlock> blocks) {
         int blockIndex = 0;
         for (AbstractBlock block : blocks) {
-            block.setBlockIndex(blockIndex++);
+            block.setBlockIndex(blockIndex);
+           // System.out.println("enumerate " + blockIndex +" --- "+ ((UnilateralBlock)block).text );
+           //if(((BilateralBlock)block).text.equals("DataBlade"))
+            {
+            	//System.out.println("enumerate " + blockIndex +" --- "+ ((BilateralBlock)block).text + " "+ " " + ((BilateralBlock)block).getIndex2Entities().toString());
+//            	for (int i = 0; i < ((UnilateralBlock)block).getEntities().length; i++) {
+//            		System.out.print(((UnilateralBlock)block).getEntities()[i]+" ");
+//				}
+//            	System.out.println();
+//            	for (int i = 0; i < ((BilateralBlock)block).getIndex2Entities().length; i++) {
+//            		System.out.print(((BilateralBlock)block).getIndex2Entities()[i]+" ");
+//				}
+//            	System.out.println();
+            }
+            	
+            blockIndex++;
         }
     }
     
@@ -305,6 +320,8 @@ public class EntityIndex implements Serializable {
         validEntities2 = 0;
         int[] counters = new int[noOfEntities];
         for (AbstractBlock block : blocks) {
+        	if(((BilateralBlock)block).text.equals("DataBlade"))
+            	System.out.println("apagar ");
             BilateralBlock bilBlock = (BilateralBlock) block;
             for (int id1 : bilBlock.getIndex1Entities()) {
                 if (counters[id1] == 0) {
@@ -320,6 +337,7 @@ public class EntityIndex implements Serializable {
                 }
                 counters[entityId]++;
             }
+            
         }
         
         //initialize inverted index
@@ -331,17 +349,29 @@ public class EntityIndex implements Serializable {
         
         //build inverted index
         for (AbstractBlock block : blocks) {
+        	 if(((BilateralBlock)block).text.equals("DataBlade"))
+             	System.out.println("apagar ");
             BilateralBlock bilBlock = (BilateralBlock) block;
             for (int id1 : bilBlock.getIndex1Entities()) {
                 entityBlocks[id1][counters[id1]] = block.getBlockIndex();
                 counters[id1]++;
+//                if(records[id1]==null)
+//                	records[id1]=new ArrayList<Integer>();
+//                if(!records[id1].contains(block.blockIndex))
+//                	records[id1].add(block.blockIndex);
             }
             
             for (int id2 : bilBlock.getIndex2Entities()) {
                 int entityId = datasetLimit+id2;
                 entityBlocks[entityId][counters[entityId]] = block.getBlockIndex();
                 counters[entityId]++;
+//                if(records[entityId]==null)
+//                	records[entityId]=new ArrayList<Integer>();
+//                if(!records[entityId].contains(block.blockIndex))
+//                	records[entityId].add(block.blockIndex);
             }
+            if(((BilateralBlock)block).text.equals("DataBlade"))
+            	System.out.println("xxxxxapagar "+ counters[6101] +" " + counters[650]);
         }
     }
     
@@ -357,6 +387,7 @@ public class EntityIndex implements Serializable {
         //count valid entities & blocks per entity
         validEntities1 = 0;
         int[] counters = new int[noOfEntities];
+        
         for (AbstractBlock block : blocks) {
             UnilateralBlock uniBlock = (UnilateralBlock) block;
             for (int id : uniBlock.getEntities()) {
@@ -377,10 +408,18 @@ public class EntityIndex implements Serializable {
         //build inverted index
         for (AbstractBlock block : blocks) {
             UnilateralBlock uniBlock = (UnilateralBlock) block;
+            
             for (int id : uniBlock.getEntities()) {
                 entityBlocks[id][counters[id]] = block.getBlockIndex();
                 counters[id]++;
+                
+                //if(records[]
+//                if(records[id]==null)
+//                	records[id]=new ArrayList<Integer>();
+//                if(!records[id].contains(block.blockIndex))
+//                	records[id].add(block.blockIndex);
             }
+            
         }
     }
     
