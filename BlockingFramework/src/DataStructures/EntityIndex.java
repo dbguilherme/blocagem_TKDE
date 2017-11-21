@@ -117,10 +117,8 @@ public class EntityIndex implements Serializable {
         int[] blocks1 = entityBlocks[comparison.getEntityId1()];
         int[] blocks2 = entityBlocks[comparison.getEntityId2()+datasetLimit];
 
-        boolean firstCommonIndex = false;
         int noOfBlocks1 = blocks1.length;
         int noOfBlocks2 = blocks2.length;
-        final List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < noOfBlocks1; i++) {
             for (int j = 0; j < noOfBlocks2; j++) {
                 if (blocks2[j] < blocks1[i]) {

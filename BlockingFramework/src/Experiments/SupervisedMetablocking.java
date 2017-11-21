@@ -278,17 +278,20 @@ public class SupervisedMetablocking {
 		String profilesPathB=null;
 		String groundTruthPath = null;
 		String[] args1 =new String[2];
-		args1[0]="3";
-		args1[1]="300K";
 		
-		//args1[0]="acm";
-		//args1[0]="dblp";
 		
-		switch(args1[0]){
+		if(args.length == 0)
+		{
+			args =new String[2];
+			args[0]="sint";
+			args[1]="300K";
+		}
+		
+		switch(args[0]){
 		case "sint":	       
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
-			profilesPathA =  mainDirectory+"/"+args1[1]+"profiles"	;	
-			groundTruthPath =  mainDirectory+"/"+args1[1]+"IdDuplicates";	
+			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
+			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
 			System.out.println("-----------"+mainDirectory);
 			break;
 		case "dblp":
@@ -317,6 +320,12 @@ public class SupervisedMetablocking {
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/produtos/";
 			profilesPathA =  mainDirectory+"/"+"amazon"	;	
 			groundTruthPath =  mainDirectory+"/"+"groundtruth";	
+			break;
+		case "6":
+			//alto desbalanceamento descartar essa base
+			
+			profilesPathA =  args[1];	
+			groundTruthPath =  args[2];	
 			break;
 		}
 	
@@ -361,7 +370,7 @@ public class SupervisedMetablocking {
 			blockPurging.applyProcessing(blocks);
 			
 			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			BlockFiltering bf = new BlockFiltering(0.85);
+			BlockFiltering bf = new BlockFiltering(0.80);
 		    bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
@@ -452,7 +461,7 @@ public class SupervisedMetablocking {
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-		int valores [] = {50,100,500,1000};
+		int valores [] = {10,50,100,500,1000};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=0,j=5;
 		//for (int i = 1; i <= 2;i++)
