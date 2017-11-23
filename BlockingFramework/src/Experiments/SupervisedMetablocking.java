@@ -283,37 +283,38 @@ public class SupervisedMetablocking {
 		if(args.length == 0)
 		{
 			args =new String[2];
-			args[0]="sint";
+			args[0]="1";
 			args[1]="300K";
 		}
 		
 		switch(args[0]){
-		case "sint":	       
+		case "1":	       
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/sintetica";
 			profilesPathA =  mainDirectory+"/"+args[1]+"profiles"	;	
 			groundTruthPath =  mainDirectory+"/"+args[1]+"IdDuplicates";	
 			System.out.println("-----------"+mainDirectory);
 			break;
-		case "dblp":
+		case "2":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/base_clean_serializada";
 			profilesPathA= mainDirectory+"/dblp";
 			profilesPathB= mainDirectory+"/scholar";
 			groundTruthPath =  mainDirectory+ "/groundtruth"; 
 			break;
 		case "3":
-			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
-
-			profilesPathA= mainDirectory+"/token/dataset1_imdb";
-			profilesPathB= mainDirectory+"/token/dataset2_dbpedia";
-			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
-			break;
-		case "acm":
 			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/acm_cleanB";
 			profilesPathA= mainDirectory+"//dblpB";
 			profilesPathB= mainDirectory+"//acmB";
 			//profilesPathB= mainDirectory+"/dataset2_gp";
 			groundTruthPath =  mainDirectory+ "/groundtruth"; 
 			break;
+		case "4":
+			mainDirectory = System.getProperty("user.home")+"/Dropbox/blocagem/bases/movies";
+
+			profilesPathA= mainDirectory+"/token/dataset1_imdb";
+			profilesPathB= mainDirectory+"/token/dataset2_dbpedia";
+			groundTruthPath =  mainDirectory+ "/ground/groundtruth"; 
+			break;
+		
 			
 		case "5":
 			//alto desbalanceamento descartar essa base
@@ -363,15 +364,17 @@ public class SupervisedMetablocking {
 			 for(AbstractBlock b: blocks) {
 				    blocks_copy.add(b);
 				}
-			//ExtendedQGramsBlocking method = new ExtendedQGramsBlocking(0.95, 3, profiles);
-			//QGramsBlocking imtb = new QGramsBlocking(6, profiles);
-			//blocks = method.buildBlocks();			 
-			AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
-			blockPurging.applyProcessing(blocks);
+			 AbstractEfficiencyMethod blockPurging=null;
+			//if(args[1].contains("300")){
+				blockPurging = new ComparisonsBasedBlockPurging(1.005);
+				blockPurging.applyProcessing(blocks);
+				BlockFiltering bf = new BlockFiltering(0.8);		    
+				bf.applyProcessing(blocks);
+//			}else{
+//				blockPurging = new ComparisonsBasedBlockPurging(1.005);
+//				blockPurging.applyProcessing(blocks);
+//			}
 			
-			//System.out.println("xxxxxxxxxxxxxxxxxx" +blocks.size() +"  "+ blocks_copy.size());
-			BlockFiltering bf = new BlockFiltering(0.8);
-		    bf.applyProcessing(blocks);	
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -461,7 +464,7 @@ public class SupervisedMetablocking {
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-		int valores [] = {50,100,500,1000};
+		int valores [] = {5,10,20,30,40,50,100,500,1000};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=0,j=5;
 		//for (int i = 1; i <= 2;i++)

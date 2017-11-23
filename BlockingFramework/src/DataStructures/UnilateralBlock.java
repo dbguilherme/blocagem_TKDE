@@ -29,9 +29,9 @@ public class UnilateralBlock extends AbstractBlock implements Serializable {
     protected final int[] entities;
     public String text;
     
-    public UnilateralBlock(int[] entities, String text) {
+    public UnilateralBlock(int[] entities) {
         super();
-        this.text=text;
+       // this.text=text;
         this.entities = entities;
 //        for (int i = 0; i < entities.length; i++) {
 //			System.out.println("enumeration blocks id "+entities[i] +" text y"+text);

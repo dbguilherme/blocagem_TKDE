@@ -165,7 +165,7 @@ public class BlockFiltering extends AbstractEfficiencyMethod {
                 for (int entityId : blockEntitiesD2) {
                     counterD2[entityId]++;
                 }
-                newBlocks.add(new BilateralBlock(blockEntitiesD1, blockEntitiesD2,""));
+                newBlocks.add(new BilateralBlock(blockEntitiesD1, blockEntitiesD2));
             }
         }
         blocks.clear();
@@ -196,7 +196,7 @@ public class BlockFiltering extends AbstractEfficiencyMethod {
                 for (int entityId : blockEntities) {
                     counterD1[entityId]++;
                 }
-                newBlocks.add(new UnilateralBlock(blockEntities,oldBlock.text));
+                newBlocks.add(new UnilateralBlock(blockEntities));
             }
         }
         blocks.clear();

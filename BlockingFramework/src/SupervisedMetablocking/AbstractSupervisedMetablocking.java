@@ -52,6 +52,7 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SystemInfo;
 
 /**
  *
@@ -336,11 +337,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	        } else if (blocks.get(0) instanceof UnilateralBlock) {
 	        	instanceValues[5] = ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
 	        }
-		
-		
-		
-//		if(Math.abs(x-instanceValues[5])>0.01)
-//			System.out.println("erro" + Math.abs(x-instanceValues[5]));
+
 		
 		if(instanceValues[5]<0.1 && flag==1.0)
 		{
@@ -804,8 +801,19 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 
 		System.out.println("menor positivo " + lposit);
 		
-		th=Math.ceil((((negativos/countN)*10)))/10.0;
+		th=Math.ceil((((negativos/countN)*100)))/100.0;
 		System.out.println(" media " + th +  "  "+ (negativos/countN));
+//		int temp =(int)(th*10);
+//		double temp_t=th*10;
+//		if(temp==0)
+//			th=0.1;
+//		else
+//			if(Math.abs(temp_t -temp)>=0.5)
+//				th=Math.ceil(th*10)/10;
+//			else
+//				th=Math.floor(th*10)/10;
+		
+		System.out.println("threshold ---> " + th);
 //		if(set.contains("dblp"))
 	//	if(th==0)
 	//	th=0.1;

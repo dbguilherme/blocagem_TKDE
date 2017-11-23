@@ -27,11 +27,11 @@ public class BilateralBlock extends AbstractBlock implements Serializable {
     
     private final int[] index1Entities;
     private final int[] index2Entities;
-    public String text;
+   // public String text;
 
-    public BilateralBlock(int[] entities1, int[] entities2, String text) {
+    public BilateralBlock(int[] entities1, int[] entities2) {
         super();
-        this.text=text;
+       // this.text=text;
         index1Entities = entities1;
         index2Entities = entities2;
         comparisons = ((double) index1Entities.length) * ((double) index2Entities.length);

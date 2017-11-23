@@ -164,7 +164,7 @@ public class ExportBlocks implements Constants {
                    // System.out.println();
                     if(text.utf8ToString().equals("DataBlade"))
                     	System.out.println(text.utf8ToString());
-                    blocks.add(new BilateralBlock(d1Entities, idsArray,text.utf8ToString()));
+                    blocks.add(new BilateralBlock(d1Entities, idsArray));
                     
                 }
             }
@@ -196,7 +196,7 @@ public class ExportBlocks implements Constants {
                     if(text.utf8ToString().trim().equals("07"))
                         System.out.println("blocks x"+ text.utf8ToString());
                     int[] idsArray = Converter.convertCollectionToArray(entityIds);
-                    UnilateralBlock block = new UnilateralBlock(idsArray,text.utf8ToString());
+                    UnilateralBlock block = new UnilateralBlock(idsArray);
                     
                     blocks.add(block);
                     

@@ -101,7 +101,7 @@ public class ExecuteBlockComparisons {
         	entityProfile.len= 0;
         	List<Integer> list= new ArrayList<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
+        		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
         		String splitted[]=att.getValue().trim().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
 
         		for (int i = 0; i < splitted.length; i++) {

@@ -61,6 +61,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     private List<Integer> retainedEntities2;
     private long overheadTimevali=0;
     Statement st;
+    int count=0;
   //  Connection con;
     
     public int getCount (){
@@ -71,7 +72,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     public SupervisedWEP (int noOfClassifiers, List<AbstractBlock> bls, List<AbstractBlock> bls_copy, Set<IdDuplicates> duplicatePairs, ExecuteBlockComparisons ebc) {
         super (noOfClassifiers, bls,bls_copy,  duplicatePairs,ebc);
     }
-    int count=0;
+   
 	
     @Override
 //    protected void applyClassifier(Classifier classifier) throws Exception {
@@ -108,6 +109,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
 //    }
 
     protected void applyClassifier(Classifier classifier) throws Exception {
+    	count=0;
         for (AbstractBlock block : blocks) {
             ComparisonIterator iterator = block.getComparisonIterator();
             int instanceLabel=0;
