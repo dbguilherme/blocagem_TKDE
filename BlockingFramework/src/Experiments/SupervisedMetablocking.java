@@ -365,16 +365,18 @@ public class SupervisedMetablocking {
 				    blocks_copy.add(b);
 				}
 			 AbstractEfficiencyMethod blockPurging=null;
-			//if(args[1].contains("300")){
+			 int size=blocks.size();
+			
 				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 				blockPurging.applyProcessing(blocks);
-				BlockFiltering bf = new BlockFiltering(0.8);		    
+				System.out.println("blocking size after purging"+ (blocks.size()-size));
+				BlockFiltering bf = new BlockFiltering(0.80);		    
 				bf.applyProcessing(blocks);
 //			}else{
 //				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 //				blockPurging.applyProcessing(blocks);
 //			}
-			
+			//return;
 		}
 		//		String mainDirectory = "/home/guilherme/Transferências/";
 		//	        String[] profilesPath = {   
@@ -464,7 +466,7 @@ public class SupervisedMetablocking {
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-		int valores [] = {5,10,20,30,40,50,100,500,1000};
+		int valores [] = {50,100,500,1000};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=0,j=5;
 		//for (int i = 1; i <= 2;i++)

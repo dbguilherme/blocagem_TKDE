@@ -331,14 +331,18 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues = new double[noOfAttributes];
 		
 		int entityId2 = comparison.getEntityId2() + entityIndex.getDatasetLimit();
-		//instanceValues[5]= ebcX.getSimilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2());
+		
 		 if (blocks.get(0) instanceof BilateralBlock) {
-			 instanceValues[5] = ebcX.jaccardSimilarity_l_real(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
+			 instanceValues[5] =ebcX.jaccardSimilarity_l_real(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
 	        } else if (blocks.get(0) instanceof UnilateralBlock) {
 	        	instanceValues[5] = ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
 	        }
-
-		
+//		 double temp= ebcX.getSimilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2());
+//		 if(Math.abs(temp-instanceValues[5])>0.1) {
+//			 System.out.println(" erroo  " + temp+ " "+ instanceValues[5]);
+//			 instanceValues[5] =ebcX.jaccardSimilarity_l_real(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
+//		 }
+//		
 		if(instanceValues[5]<0.1 && flag==1.0)
 		{
 

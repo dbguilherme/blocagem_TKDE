@@ -15,6 +15,7 @@
 package Utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -101,12 +102,13 @@ public class ExecuteBlockComparisons {
         	entityProfile.len= 0;
         	List<Integer> list= new ArrayList<Integer>();
         	for ( Attribute att : entityProfile.getAttributes() ) {
-        		//entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
-        		String splitted[]=att.getValue().trim().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
+        	//	entityProfile.x=entityProfile.x.concat(att.getValue().toLowerCase().trim().replaceAll("[\\W]|_", " ")+ " ");
+        		
+        		String splitted[]=att.getValue().replaceAll("[\\W]|_", " ").toLowerCase().split(" ");
 
         		for (int i = 0; i < splitted.length; i++) {
         			String atual=splitted[i].trim();
-					if(!atual.isEmpty() && atual!=" "){
+					if(!atual.isEmpty() && atual!= " "){
 						entityProfile.len++;
 						if(index.get(atual)!=null) {						
 							list.add(index.get(atual) );
@@ -116,9 +118,11 @@ public class ExecuteBlockComparisons {
 							list.add(contador++);
 						}
 					}
-				}
-        		entityProfile.set= Converter.convertCollectionToArray(list);
+				}  		        	
     		}
+        	Collections.sort(list);
+        	Set<Integer> s = new LinkedHashSet<>(list);
+       		entityProfile.set= Converter.convertCollectionToArray(s);
 		}
         return e;
     }
@@ -177,15 +181,17 @@ public class ExecuteBlockComparisons {
 			 vetB=dataset1[entityIds2].set;
 		int interSet=0;
 		for (int i = 0; i < vetA.length; i++) {
-			for (int j = 0; j < vetB.length; j++) {
-				if(vetA[i]==vetB[j])
+			for (int j =0; j < vetB.length; j++) {
+				if(vetA[i]==vetB[j]) {
 					interSet++;
+					break;
+				}
 			}
 		}
 		if(dataset2==null)		
 			return ((double)interSet)/(dataset1[entityIds1].len+dataset1[entityIds2].len-interSet);
 		else
-			return ((double)interSet)/(dataset1[entityIds1].len+dataset2[entityIds2].len-interSet);
+			return ((double)interSet)/(vetA.length+vetB.length-interSet);
 		
 //			Vector<Integer> b;
 //			if(dataset2!=null)

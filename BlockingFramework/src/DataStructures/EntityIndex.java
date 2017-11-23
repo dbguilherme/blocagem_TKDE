@@ -318,8 +318,6 @@ public class EntityIndex implements Serializable {
         validEntities2 = 0;
         int[] counters = new int[noOfEntities];
         for (AbstractBlock block : blocks) {
-        	if(((BilateralBlock)block).text.equals("DataBlade"))
-            	System.out.println("apagar ");
             BilateralBlock bilBlock = (BilateralBlock) block;
             for (int id1 : bilBlock.getIndex1Entities()) {
                 if (counters[id1] == 0) {
@@ -347,8 +345,6 @@ public class EntityIndex implements Serializable {
         
         //build inverted index
         for (AbstractBlock block : blocks) {
-        	 if(((BilateralBlock)block).text.equals("DataBlade"))
-             	System.out.println("apagar ");
             BilateralBlock bilBlock = (BilateralBlock) block;
             for (int id1 : bilBlock.getIndex1Entities()) {
                 entityBlocks[id1][counters[id1]] = block.getBlockIndex();
