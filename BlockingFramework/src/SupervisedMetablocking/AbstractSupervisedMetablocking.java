@@ -219,16 +219,17 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		int controle[] = new int[40];
 		redundantCPE = new double[noOfEntities];
 		nonRedundantCPE = new double[noOfEntities];
-		int i,j ,w=0;
+		int level,j ,w=0;
 		Random rn = new Random();
 		int apagart=0,apagarf=0;
 		comparisonsPerBlock = new double[(int)(blocks.size() + 1)];
 		for (AbstractBlock block : blocks) {
 			comparisonsPerBlock[block.getBlockIndex()] = block.getNoOfComparisons();
-
+			int blockSize=(int) block.getNoOfComparisons();
 			List<Comparison> listComp = block.getComparisons();
 			w=0;
-			for (int k = 0; k< listComp.size(); k++) {
+			int numberOfPairs=0;
+			for (int k = 0; k< blockSize; k++) {
 				Comparison comparison = listComp.get(k);
 
 				int entityId2 = comparison.getEntityId2()+entityIndex.getDatasetLimit();
@@ -241,7 +242,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 					nonRedundantCPE[entityId2]++;
 				}
 				apagar1++;
-				if(w!=0 && k!=w)
+				if(w!=0 && k!=w || w==listComp.size())
 					continue;
 				
 				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
@@ -252,79 +253,51 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 				double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
 				double	valor = commonBlockIndices.size()*ibf1*ibf2;	
 				if(valor>1000)
-					i=35;
+					level=35;
 				else
-					i=(int) Math.floor(valor/30);
+					level=(int) Math.floor(valor/30);
 				
-				if(controle[i]<tamanho){
+				if(controle[level]<tamanho){
 					comparison.setBlockId(block.getBlockIndex());
 					comparison.setSim(valor);
-					levels[i].add(comparison);
-					controle[i]++;
+					levels[level].add(comparison);
+					controle[level]++;
 				}
 				else{			
-					 j = rn.nextInt(controle[i]);					
+					 j = rn.nextInt(controle[level]);					
 					 if(j<block.getNoOfComparisons()){						 
-						 levels[i].remove(rn.nextInt(tamanho)); 
+						 levels[level].remove(rn.nextInt(tamanho)); 
 						 comparison.setBlockId(block.getBlockIndex());
 						 comparison.setSim(valor);
 						 comparison.setLabel(areMatching(comparison)==true?1:0);
-						 levels[i].add(comparison);
-						 if(tamanho<block.getNoOfComparisons()){
-							 w+=k+rn.nextInt((int)block.getNoOfComparisons());
+						 levels[level].add(comparison);
+						 if(tamanho<blockSize){
+							 w+=k+rn.nextInt(blockSize);
 						 }
+						 if(numberOfPairs++>3)
+							 w=blockSize;
 					 }
-					 controle[i]++; 
+					 controle[level]++; 
 				}
 				
-//				if(Nblocks[(int)(sim*10)][0] > tamanho)
-//					continue;
-//				while (numbers.contains(sem)) {
-//					sem=rn.nextInt(listComparison.size());
-//		    }
-				
+		
 			}
 		}
 		System.out.println("apafgarrrrrrrrrrr "+ apagar1 +"  "+ apagar2);
-//		for (i = 0; i < levels.length; i++) {
-//			int w=0;
-//			for(Comparison c:levels[i]){
-//				System.out.print("block size " + i +"  "+ c.getSim() +"  " + c.getBlockId() +"  j  "+w++ +  " ");
-//				if(c.getLabel()==1)
-//					apagart++;
-//				else
-//					apagarf++;
-//			}
-//			System.out.println();
-//		}
-//		System.out.println("positios " + apagart +"  "+ apagarf);
+		for (int i = 0; i < levels.length; i++) {
+			for(Comparison c:levels[i]){
+				System.out.print("block size " + i +"  "+ c.getSim() +"  " + c.getBlockId() +"  j  "+w++ +  " ");
+				if(c.getLabel()==1)
+					apagart++;
+				else
+					apagarf++;
+			}
+			System.out.println();
+		}
+		System.out.println("positios " + apagart +"  "+ apagarf);
 	}
 	
-//	private double[] conta_niveis(List<AbstractBlock> blocks, ExecuteBlockComparisons ebc, int tamanho) {
-//		
-//		int levels[] = new int[10];
-//		double perc[] = new double[10];
-//		for (int i = 0; i < levels.length; i++) {
-//			levels[i]=0;
-//		}
-//		for (AbstractBlock abstractBlock : blocks) {
-//			ComparisonIterator iterator = abstractBlock.getComparisonIterator();
-//			Comparison comparison;
-//			while(iterator.hasNext()){			
-//					 comparison = iterator.next(); 
-//					 final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(abstractBlock.getBlockIndex(), comparison);
-//					 double sim=ebcX.getSimilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2());
-//					 //double sim=ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2(),commonBlockIndices_cpy.size());		
-//					// System.out.println(((int)Math.floor(comparison.sim*10)));
-//					 levels[((int)Math.floor(sim*10))]++;
-//			}			
-//		}
-//		for (int i = 0; i < levels.length; i++) {
-//			perc[i]=((double)tamanho)/(levels[i]);
-//			System.out.println(i + " "+ perc[i] + "  " + levels[i] );
-//		}
-//		return perc;
-//}
+
 
 	protected Instance getFeatures(int match, List<Integer> commonBlockIndices,List<Integer> commonBlockIndices_cpy,Comparison comparison, double flag) {
 		double[] instanceValues =null;
@@ -370,7 +343,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		instanceValues[3] = nonRedundantCPE[comparison.getEntityId1()];
 		instanceValues[4] = nonRedundantCPE[entityId2];
 		
-		
 		instanceValues[6] = match;
 		
 		Instance newInstance = new DenseInstance(1.0, instanceValues);
@@ -384,9 +356,6 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		sampleMatches.clear();
 		sampleNonMatches.clear();
 		sampleNonMatchesNotUsed.clear();
-		//Nblocks=conta_niveis_hashB(blocks,ebc);
-		
-		
 		
 		Random random= new Random(iteration);
 		PrintStream psarff = null;
@@ -400,20 +369,14 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		
 		
 		long startingTime = System.currentTimeMillis();
-		
-		
 		//List<Comparison> listComparison = conta_niveis_hash(blocks,ebc,tamanho);
 		//	System.out.println("count ---> "+ getCount());
 		long overheadTime = System.currentTimeMillis()-startingTime;
 		System.out.println("rank time\t:\t" + overheadTime);
-		
-		//overheadTimes[0].add((double)overheadTime);
-		
+
 		startingTime = System.currentTimeMillis();
 		
-		
 		try {
-			//pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff"+profilesPathA+".txt"),false));
 			psarff = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff"+profilesPathA+".arff"),false));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -432,86 +395,10 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			for(Comparison c:levels[i]){
 				getLevels(c,psarff);
 			}
-			
-//			Comparison c = listComparison.get(i);
-//			
-//			int temp=random.nextInt(Nblocks[(int)(c.getSim())][0]);
-//			if(temp> tamanho)
-//				continue;
-//			getLevels(c,psarff);
-//			if(c.getLabel()==1)
-//				countp++;
-//			else
-//				countn++;
-					
 		}
-//		}
-//		System.out.println("zzzzzzzzzzz selected " + countp +" "+countn);
-//		double[] niveis = conta_niveis(blocks, ebc, tamanho);
-//		double valor=0.0;
-//		int level=0;
-//		for (int i=0;i<blocks.size();i++) {
-//			ComparisonIterator iterator = blocks.get(i).getComparisonIterator();
-//
-//			while (iterator.hasNext()) {
-//				Comparison comparison = iterator.next();
-////				if (entityIndex.testBlock(blocks.get(i).getBlockIndex(), comparison) == -1) {
-////					continue;
-////				}
-////				final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(blocks.get(i).getBlockIndex(), comparison);
-////				
-////				
-////				double sim =ebcX.getSimilarityAttribute(comparison.getEntityId1(),comparison.getEntityId2());
-////				int level = ((int)(sim*10));
-////				
-////				//int temp=random.nextInt(Nblocks[level][0]);
-////				if(random.nextDouble()>(niveis[level])){
-////					continue;
-////				}
-////
-//////				if(temp> tamanho)
-//////					continue;
-////				comparison.setBlockId(blocks.get(i).getBlockIndex());
-////				getLevels(comparison,psarff);
-//				
-//				final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(blocks.get(i).getBlockIndex(), comparison);
-//				if (commonBlockIndices == null) {
-//					continue;
-//				}
-//
-//				double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
-//				double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
-//				try{
-//					valor = commonBlockIndices.size()*ibf1*ibf2;	
-//				}catch (Exception e ){
-//					System.out.println(e.getMessage());
-//				}
-//				if(valor>1000)
-//					level=35;
-//				else
-//					level=(int) Math.floor(valor/30);
-//				{
-//					//	if(comparison.sim>= ((double)level*0.1) && comparison.sim< ((double)(level+1)*0.1))
-//					{	
-//						//if(level>1 && level< 5)
-//						//	continue;
-//						int temp=random.nextInt(Nblocks[level][0]);
-//
-//
-//						if(temp> tamanho)
-//							continue;
-//						comparison.setBlockId(blocks.get(i).getBlockIndex());
-//						getLevels(comparison,psarff);
-//					}
-//				}
-//				//break;
-//			}
-//		}
+
 		
-		//System.out.println("inseridos " + count +" elementos para o allac-------------" + validComparisons);
-		overheadTime = System.currentTimeMillis()-startingTime;
-		//System.out.println("sampling time\t:\t" + overheadTime);
-		//overheadTimes[0].add((double)overheadTime);
+//		overheadTime = System.currentTimeMillis()-startingTime;
 		
 		startingTime = System.currentTimeMillis();
 		
@@ -534,239 +421,9 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			e.printStackTrace();
 		}
 		overheadTime = System.currentTimeMillis()-startingTime;
-		//overheadTimes[0].add((double)overheadTime);
 		System.out.println("training  time\t:\t" + overheadTime);
 	}
 		
-	
-//	int temp=0;
-//	protected void getTrainingSet_original(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, String profilesPathA) throws FileNotFoundException {
-//
-//		sampleMatches.clear();
-//		sampleNonMatches.clear();
-//		sampleNonMatchesNotUsed.clear();
-//		int trueMetadata=0;
-//		int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size());
-//		double nonMatchRatio = matchingInstances / (validComparisons - duplicates.size());
-//		System.out.println("nonMatchRatio --> " + nonMatchRatio  + " duplicates.size() "+ duplicates.size() + " validComparisons " + validComparisons);
-//		trainingSet = new HashSet<Comparison>(4*matchingInstances);
-//		trainingInstances = new Instances("trainingSet", attributes, 2*matchingInstances);
-//		trainingInstances.setClassIndex(noOfAttributes - 1);
-//		//double  vector[]={0,0,0,0,0};
-//		Random random= new Random(iteration);
-//		PrintStream pstxt = null;
-//		PrintStream psarff = null;
-//
-//		if(true){
-//			//encontraPares();
-//
-//			try {
-//				pstxt = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff"+profilesPathA+".txt"),false));
-//				//pstxt = new PrintStream(new FileOutputStream(new File("/tmp/final_treina.txt"),false));
-//				psarff = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff"+profilesPathA+".arff"),false));
-//			} catch (FileNotFoundException e1) {
-//				e1.printStackTrace();
-//			}
-//			System.out.println("linha 251");
-//			psarff.println("@relation whatever");
-//			for (int i = 0; i < trainingInstances.numAttributes()-1 ; i++) {
-//				psarff.println("@attribute "+i+" numeric");			
-//			}		
-//			psarff.println("@attribute classe {0,1}");
-//			psarff.println("@data");
-//			//Vector<Comparison> randomInstances= new Vector<Comparison>(4*matchingInstances);;
-//			Comparison comparison;
-//
-//			System.out.println("linha 260");
-//
-////										Collections.sort(blocks_cpy, new Comparator<AbstractBlock>() {
-////											public int compare(AbstractBlock c1, AbstractBlock c2) {
-////												if (c1.getBlockIndex() < c2.getBlockIndex()) return -1;
-////												if (c1.getBlockIndex() > c2.getBlockIndex()) return 1;
-////												return 0;
-////											}});
-////			Collections.shuffle(blocks_cpy);
-//
-//			//
-//			long startingTime = System.currentTimeMillis();
-//
-//			
-//
-//			int controle=-1;
-//			PrintStream pstxt_level[] = new PrintStream[10];
-//			PrintStream psarff_level[]= new PrintStream[10];
-//			//HashMap<Integer, ArrayList<DataStructures.Comparison>> deep= blockHash.deep;
-//
-//			//int valores[]=new int[tamanho];
-//			for (int i = 0; i < 10; i++) {
-//				try {
-//					pstxt_level[i] = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+i+profilesPathA+".txt"),false));
-//					psarff_level[i] = new PrintStream(new FileOutputStream(new File("/tmp/levels_arff_level"+i+profilesPathA+".arff"),false));
-//					psarff_level[i].println("@relation whatever");
-//					for (int k = 0; k < trainingInstances.numAttributes()-1 ; k++) {					
-//						psarff_level[i].println("@attribute "+k+" numeric");			
-//					}		
-//					psarff_level[i].println("@attribute classe {0,1}");
-//					psarff_level[i].println("@data");
-//				} catch (FileNotFoundException e1) {
-//					e1.printStackTrace();
-//				}
-//
-//			}
-//
-//
-//
-//			int level=0;
-//			Double valor=0.0;
-//			//System.out.println("primeiroBlock[controle] -->> " + primeiroBlock[controle]);
-//			for (int i=0;i<blocks.size();i++) {
-//				ComparisonIterator iterator = blocks.get(i).getComparisonIterator();
-//
-//				while (iterator.hasNext()) {
-//					comparison = iterator.next();
-//
-//					if (entityIndex.testBlock(blocks.get(i).getBlockIndex(), comparison) == -1) {
-//						continue;
-//					}
-//					
-//					final List<Integer> commonBlockIndices_cpy = entityIndex_cpy.getCommonBlockIndices_cpy(blocks.get(i).getBlockIndex(), comparison);
-//					
-//					double sim =ebc.jaccardSimilarity_l(comparison.getEntityId1(), comparison.getEntityId2(), commonBlockIndices_cpy.size());
-//					level=((int)(sim*20));
-////					double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
-////					double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
-////					try{
-////						valor = commonBlockIndices.size()*ibf1*ibf2;	
-////					}catch (Exception e ){
-////						System.out.println(e.getMessage());
-////					}
-////					if(valor>1000)
-////						level=35;
-////					else
-////						level=(int) Math.floor(valor/30);
-//					{
-//						//	if(comparison.sim>= ((double)level*0.1) && comparison.sim< ((double)(level+1)*0.1))
-//						{	
-//							//if(level>1 && level< 5)
-//							//	continue;
-//						int temp=random.nextInt(Nblocks[level][0]);
-//
-//
-//						if(temp> tamanho)
-//							continue;
-//
-//						
-//						
-//						//System.out.println(commonBlockIndices_cpy.size());
-//						//System.out.println("blocks size " + commonBlockIndices.size() +"  "+commonBlockIndices_cpy.size());
-//
-//
-////																										int match = NON_DUPLICATE; // false
-////																										if (areMatching(comparison)) {
-////																											if (random.nextDouble() < SAMPLE_SIZE) {
-////																												trueMetadata++;
-////																												match = DUPLICATE; // true
-////																											} else {
-////																												continue;
-////																											}
-////																										} else if (nonMatchRatio <= random.nextDouble()) {
-////																											continue;
-////																										}
-//
-//							//								if(controle==4)
-//							//									System.out.println("descarte " + temp +"  "+ Nblocks[controle]);
-//							if((getLevels(comparison,ebc,blocks.get(i).getBlockIndex(),pstxt,psarff,pstxt_level,psarff_level, nonMatchRatio, tamanho,level,blocks.get(i).getNoOfComparisons()))<=0){
-//
-//							}
-//							//pstxt_level[level].flush();
-//							//psarff_level[level].flush();
-//							//	
-//						}
-//					}
-//				}
-//			}
-//			long deltaTime= System.currentTimeMillis()-startingTime;
-//
-//			System.out.println("time da contagem "+ deltaTime);
-//			pstxt.close();
-//			psarff.close();
-//			for (int m = 0; m < 10; m++) {
-//				pstxt_level[m].close();
-//				psarff_level[m].close();
-//			}
-//
-//			try {
-//				File f = new File("/tmp/lock");
-//				while(f.exists() ) { 
-//					System.out.println("sleeping................");
-//					Thread.sleep(1000);
-//				}
-//				f.createNewFile();
-//
-//				callGeraBins();
-//			//	for (int i = 8; i >=8; i--)
-//				{
-//					//System.out.println("chamando allac " + i	);
-//					//	DiscretizeTest.run_short("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-//					//	DiscretizeTest.run("/tmp/levels_arff_level"+i+".arff", "/tmp/levels_arff_level"+i+"D.arff");			
-//					callAllac(8,r);  
-//				}
-//				//teste_tree(trainingInstances);
-//				//loadFileTrainingSet(trainingInstances);
-//				loadFileTrainingSet();
-//				f.delete();
-//			}  catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			System.err.println(" ");
-//			System.out.println("trainingSet.size() - trueMetadata)--->" + (trainingSet.size() - trueMetadata)  + "   ----------->> " + trueMetadata);
-//			//sampleMatches.add((double) trueMetadata);///positivos
-//			//	sampleNonMatches.add((double) (trainingSet.size() - trueMetadata)); //negativos
-//		}
-//
-//	}
-
-//	 protected void getTrainingSet(int iteration) {
-//	        int trueMetadata = 0;
-//	        Random random = new Random(iteration);
-//	        int matchingInstances = (int) (SAMPLE_SIZE*duplicates.size()+1);
-//	        double nonMatchRatio = matchingInstances / (validComparisons - duplicates.size());
-//
-//	        trainingSet = new HashSet<Comparison>(4*matchingInstances);
-//	        trainingInstances = new Instances("trainingSet", attributes, 2*matchingInstances);
-//	        trainingInstances.setClassIndex(noOfAttributes - 1);
-//
-//	        for (AbstractBlock block : blocks) {
-//	            ComparisonIterator iterator = block.getComparisonIterator();
-//	            while (iterator.hasNext()) {
-//	                Comparison comparison = iterator.next();
-//	                final List<Integer> commonBlockIndices = entityIndex.getCommonBlockIndices(block.getBlockIndex(), comparison);
-//	                if (commonBlockIndices == null) {
-//	                    continue;
-//	                }
-//
-//	                int match = NON_DUPLICATE; // false
-//	                if (areMatching(comparison)) {
-//	                    if (random.nextDouble() < SAMPLE_SIZE) {
-//	                        trueMetadata++;
-//	                        match = DUPLICATE; // true
-//	                    } else {
-//	                        continue;
-//	                    }
-//	                } else if (nonMatchRatio <= random.nextDouble()) {
-//	                    continue;
-//	                }
-//
-//	                trainingSet.add(comparison);
-//	                Instance newInstance = getFeatures(match, commonBlockIndices, commonBlockIndices, comparison, nonMatchRatio);
-//	                trainingInstances.add(newInstance);
-//	            }
-//	        }
-//
-//	        sampleMatches.add((double) trueMetadata);
-//	        sampleNonMatches.add((double) (trainingSet.size() - trueMetadata));
-//	        sampleNonMatchesNotUsed.add(0.0);
-//	    }
 
 	private void loadFileTrainingSet() throws Exception {
 		// TODO Auto-generated method stub
@@ -810,7 +467,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //		int temp =(int)(th*10);
 //		double temp_t=th*10;
 //		if(temp==0)
-//			th=0.1;
+//		th=0.1;
 //		else
 //			if(Math.abs(temp_t -temp)>=0.5)
 //				th=Math.ceil(th*10)/10;

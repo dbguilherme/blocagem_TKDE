@@ -284,7 +284,7 @@ public class SupervisedMetablocking {
 		{
 			args =new String[2];
 			args[0]="1";
-			args[1]="300K";
+			args[1]="10K";
 		}
 		
 		switch(args[0]){
@@ -370,8 +370,8 @@ public class SupervisedMetablocking {
 				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 				blockPurging.applyProcessing(blocks);
 				System.out.println("blocking size after purging"+ (blocks.size()-size));
-				BlockFiltering bf = new BlockFiltering(0.80);		    
-				bf.applyProcessing(blocks);
+				//BlockFiltering bf = new BlockFiltering(0.95);		    
+				//bf.applyProcessing(blocks);
 //			}else{
 //				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 //				blockPurging.applyProcessing(blocks);
@@ -466,7 +466,7 @@ public class SupervisedMetablocking {
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-		int valores [] = {50,100,500,1000};
+		int valores [] = {10,50,100,500,1000};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int i=0,j=5;
 		//for (int i = 1; i <= 2;i++)
