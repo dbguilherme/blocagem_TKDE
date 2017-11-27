@@ -182,7 +182,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     
 
     int armazena=0;
-    protected void processComparisons(int classifierId, int iteration, BufferedWriter writer1, double th) {
+    protected void processComparisons(int classifierId, int iteration, BufferedWriter writer1, double th, long [] t) {
         System.out.println("\n\nProcessing comparisons...");
        // create_conection("tese_scholar_clean");
         int[] entityIds1 = Converter.convertCollectionToArray(retainedEntities1);
@@ -208,7 +208,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         try {
         	if(classifierId==0){
         		Double d =((double)detectedDuplicates.size())/(duplicates.size())*100.0;
-        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th + " rank time " + overheadTimes[0].get(0) + " sample time " + overheadTimes[0].get(1) + " classifier time " + (overheadTimes[0].get(2))  +"\n");
+        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th + " time " + t[0] +" "+ t[1] +" "+   t[2] +" "+  t[3] +" "+ (t[4]-t[9]) +" "+  t[5] +   " " +t[9]+"\n");
         		//armazena++;
         	}
 //        	else

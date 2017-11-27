@@ -118,12 +118,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
 	protected abstract List<AbstractBlock> gatherComparisons();
 	protected abstract void initializeDataStructures();
-	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, double th2);
+	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, double th2, long[] t);
 	protected abstract void savePairs(int i, ExecuteBlockComparisons ebc);
 	protected abstract int getCount();
 
 
-	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, int r, String profilesPathA) throws Exception {
+	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, int r, String profilesPathA, long[] t) throws Exception {
 		elements=new int[10];
 		overheadTimes = new ArrayList[4];
 		for (int i = 0; i < overheadTimes.length; i++) {
@@ -137,13 +137,15 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		
 		double overheadTime0 = System.currentTimeMillis()-startingTime;
 		overheadTimes[0].add((double) overheadTime0);
+		t[3]=(long) overheadTime0;
 		System.out.println("sampling time xxx\t:\t" + overheadTime0);
 		//ebcX=ebc;
 		set=profilesPathA;
 		startingTime = System.currentTimeMillis();
-		getTrainingSet_BLOSS(iteration,ebc,tamanho,r,profilesPathA);
+		getTrainingSet_BLOSS(iteration,ebc,tamanho,r,profilesPathA, t);
 		overheadTime0 = System.currentTimeMillis()-startingTime;
 		overheadTimes[0].add((double) overheadTime0);
+		t[4]=(long) overheadTime0;
 		long overheadTime1;
 		System.out.println("training time rank+selection+allac \t:\t" + overheadTime0);
 		//getTrainingSet(iteration);
@@ -167,8 +169,8 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			
 			System.out.println("CL"+i+" Classification time\t:\t" + (overheadTime1));
 			resolutionTimes[i].add(new Double(overheadTime0+overheadTime1));
-
-			processComparisons(i, iteration, writer1,th);
+			t[5]=(long) overheadTime1;
+			processComparisons(i, iteration, writer1,th,t);
 			savePairs(i,ebc);
 		}
 		
@@ -351,7 +353,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	}
 
 	
-	protected void getTrainingSet_BLOSS(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, String profilesPathA) throws FileNotFoundException {
+	protected void getTrainingSet_BLOSS(int iteration, ExecuteBlockComparisons ebc, int tamanho, int r, String profilesPathA, long[] t) throws FileNotFoundException {
 		
 		sampleMatches.clear();
 		sampleNonMatches.clear();
@@ -422,6 +424,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 		overheadTime = System.currentTimeMillis()-startingTime;
 		System.out.println("training  time\t:\t" + overheadTime);
+		t[9]=overheadTime;
 	}
 		
 

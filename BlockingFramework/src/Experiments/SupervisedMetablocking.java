@@ -283,8 +283,8 @@ public class SupervisedMetablocking {
 		if(args.length == 0)
 		{
 			args =new String[2];
-			args[0]="3";
-			args[1]="10K";
+			args[0]="1";
+			args[1]="50K";
 		}
 		
 		switch(args[0]){
@@ -376,8 +376,8 @@ public class SupervisedMetablocking {
 				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 				blockPurging.applyProcessing(blocks);
 				System.out.println("blocking size after purging"+ (blocks.size()-size));
-				BlockFiltering bf = new BlockFiltering(0.80);		    
-				bf.applyProcessing(blocks);
+				//BlockFiltering bf = new BlockFiltering(0.80);		    
+				//bf.applyProcessing(blocks);
 //			}else{
 //				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 //				blockPurging.applyProcessing(blocks);
@@ -420,6 +420,7 @@ public class SupervisedMetablocking {
 		int valores [] = {50};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
 		int  i=0,j=5;
+		long t[]= new long[10];
 		//for (int i = 1; i <= 2;i++)
 		{
 			System.out.println("starting sup wep");
@@ -427,34 +428,48 @@ public class SupervisedMetablocking {
 
 			//blockHash.produceHash(blocks, ebc);
 			int tamanho =valores[i];
-			while(tamanho<=1000)
+			//while(tamanho<=1000)
 			{
 				
 				writer1.write("level "+tamanho +"\n");
 				
 
-				for (j = 0;j< 10; j++) 
+				for (j = 0;j< 5; j++) 
 				{
-					//System.out.println("starting apply processing");
-					startingTime = System.currentTimeMillis();
+					System.out.println("starting apply processing");
 					TokenBlocking imtb = new TokenBlocking(profiles);
+					startingTime = System.currentTimeMillis();
+					
 
 					blocks = imtb.buildBlocks();	
+					t[0] = System.currentTimeMillis()-startingTime;
+					
+					
 					AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 					blockPurging = new ComparisonsBasedBlockPurging(1.005);
 					blockPurging.applyProcessing(blocks);
+					BlockFiltering bf = new BlockFiltering(0.80);		    
+					bf.applyProcessing(blocks);
+					startingTime = System.currentTimeMillis();
 					ebc = new ExecuteBlockComparisons(profilesPath);
 					swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
-					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
+					t[1] = System.currentTimeMillis()-startingTime;
+					
+					startingTime = System.currentTimeMillis();
+					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,i,profilesPathA.split("/")[profilesPathA.split("/").length-1],t);
 					totaltime = System.currentTimeMillis()-startingTime;
-					System.out.println("bkocking " + totaltime );
+					//t[2] = System.currentTimeMillis()-startingTime;
+					
+					startingTime = System.currentTimeMillis();
+					//System.out.println("time " + t1 + " "+ t2 + " "+ t3);
+					//System.out.println("bkocking " + totaltime );
 					
 					writer1.flush();
 					
 					
 				}
 				System.out.println("size of level : "+ tamanho);
-				tamanho =valores[++i];
+				//tamanho =valores[++i];
 			}
 		}
 		writer1.close();
