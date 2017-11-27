@@ -132,7 +132,8 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
                 	continue;
                 instanceLabel = (int) classifier.classifyInstance(currentInstance);  
                 long startingTime = System.currentTimeMillis();
-                if (instanceLabel == DUPLICATE) {
+                if (instanceLabel == DUPLICATE)
+                {
                     retainedEntities1.add(comparison.getEntityId1());
                     retainedEntities2.add(comparison.getEntityId2());
                 }
@@ -181,7 +182,7 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
     
 
     int armazena=0;
-    protected void processComparisons(int classifierId, int iteration, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3,BufferedWriter writer4, double th) {
+    protected void processComparisons(int classifierId, int iteration, BufferedWriter writer1, double th) {
         System.out.println("\n\nProcessing comparisons...");
        // create_conection("tese_scholar_clean");
         int[] entityIds1 = Converter.convertCollectionToArray(retainedEntities1);
@@ -207,19 +208,20 @@ public class SupervisedWEP extends AbstractSupervisedMetablocking {
         try {
         	if(classifierId==0){
         		Double d =((double)detectedDuplicates.size())/(duplicates.size())*100.0;
-        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th + " rank time " + overheadTimes[0].get(0) + " sample time " + overheadTimes[0].get(1) + " classifier time " + (overheadTimes[0].get(2)-overheadTimevali)  +"\n");
+        		writer1.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " "+  sampleNonMatches.get(0) + " " +sampleNonMatchesNotUsed.get(0)+" th " + th + " rank time " + overheadTimes[0].get(0) + " sample time " + overheadTimes[0].get(1) + " classifier time " + (overheadTimes[0].get(2))  +"\n");
         		//armazena++;
-        	}else
-        	if(classifierId==1){
-        		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[0].get(0) +" \n");
-        		//armazena++;
-        	}else
-        	if(classifierId==2){
-        		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
-        		writer3.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
-        		armazena++;
         	}
+//        	else
+//        	if(classifierId==1){
+//        		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
+//        		writer2.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[0].get(0) +" \n");
+//        		//armazena++;
+//        	}else
+//        	if(classifierId==2){
+//        		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;
+//        		writer3.write("ExecutedComparisons " + (entityIds1.length) + " DetectedDuplicates " + detectedDuplicates.size() + " PC " + d + " sampleMatches "+ sampleMatches.get(0) +  " samplesNMatch "+  sampleNonMatches.get(0) + " time " + overheadTimes[classifierId].get(iteration) +" \n");
+//        		armazena++;
+//        	}
 //        	else
 //            	if(classifierId==3){
 //            		Double d =(sampleDuplicates[classifierId].get(armazena))/(duplicates.size())*100.0;

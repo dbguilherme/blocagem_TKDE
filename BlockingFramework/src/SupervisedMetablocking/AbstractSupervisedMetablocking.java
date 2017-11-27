@@ -118,12 +118,12 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	protected abstract void applyClassifier(Classifier classifier) throws Exception;
 	protected abstract List<AbstractBlock> gatherComparisons();
 	protected abstract void initializeDataStructures();
-	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, BufferedWriter writer2, BufferedWriter writer3,BufferedWriter writer4, double th2);
+	protected abstract void processComparisons(int configurationId, int iteration, BufferedWriter writer, double th2);
 	protected abstract void savePairs(int i, ExecuteBlockComparisons ebc);
 	protected abstract int getCount();
 
 
-	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, BufferedWriter writer2, BufferedWriter writer3, BufferedWriter writer4, int r, String profilesPathA) throws Exception {
+	public void applyProcessing(int iteration, Classifier[] classifiers, ExecuteBlockComparisons ebc, int tamanho, BufferedWriter writer1, int r, String profilesPathA) throws Exception {
 		elements=new int[10];
 		overheadTimes = new ArrayList[4];
 		for (int i = 0; i < overheadTimes.length; i++) {
@@ -168,7 +168,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			System.out.println("CL"+i+" Classification time\t:\t" + (overheadTime1));
 			resolutionTimes[i].add(new Double(overheadTime0+overheadTime1));
 
-			processComparisons(i, iteration, writer1, writer2,writer3, writer4,th);
+			processComparisons(i, iteration, writer1,th);
 			savePairs(i,ebc);
 		}
 		
@@ -284,7 +284,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}
 		}
 		System.out.println("apafgarrrrrrrrrrr "+ apagar1 +"  "+ apagar2);
-		for (int i = 0; i < levels.length; i++) {
+	/*	for (int i = 0; i < levels.length; i++) {
 			for(Comparison c:levels[i]){
 				System.out.print("block size " + i +"  "+ c.getSim() +"  " + c.getBlockId() +"  j  "+w++ +  " ");
 				if(c.getLabel()==1)
@@ -294,7 +294,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 			}
 			System.out.println();
 		}
-		System.out.println("positios " + apagart +"  "+ apagarf);
+		System.out.println("positios " + apagart +"  "+ apagarf);*/
 	}
 	
 
@@ -461,18 +461,18 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 		}
 
 		System.out.println("menor positivo " + lposit);
-		
-		th=Math.ceil((((negativos/countN)*100)))/100.0;
+	//	th=((int)(th*100))/100.0;
+		th=((((negativos/countN)*10)))/10.0;
 		System.out.println(" media " + th +  "  "+ (negativos/countN));
-//		int temp =(int)(th*10);
-//		double temp_t=th*10;
-//		if(temp==0)
-//		th=0.1;
-//		else
-//			if(Math.abs(temp_t -temp)>=0.5)
-//				th=Math.ceil(th*10)/10;
-//			else
-//				th=Math.floor(th*10)/10;
+		int temp =(int)(th*10);
+		double temp_t=th*10;
+		if(temp==0)
+		th=0.1;
+		else
+			if(Math.abs(temp_t -temp)>=0.5)
+				th=Math.ceil(th*10)/10;
+			else
+				th=Math.floor(th*10)/10;
 		
 		System.out.println("threshold ---> " + th);
 //		if(set.contains("dblp"))

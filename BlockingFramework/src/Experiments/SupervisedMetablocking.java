@@ -283,7 +283,7 @@ public class SupervisedMetablocking {
 		if(args.length == 0)
 		{
 			args =new String[2];
-			args[0]="1";
+			args[0]="3";
 			args[1]="10K";
 		}
 		
@@ -332,11 +332,17 @@ public class SupervisedMetablocking {
 	
 		Set<IdDuplicates> duplicatePairs = (HashSet<IdDuplicates>) SerializationUtilities.loadSerializedObject(groundTruthPath);
 		System.out.println("Existing duplicates\t:\t" + duplicatePairs.size());
-
+		long totaltime=0;
+//for (int i = 0; i < 10; i++) 
+{
+	
+		
 		List<AbstractBlock> blocks = null;
 		List<AbstractBlock> blocks_copy = new ArrayList<AbstractBlock>();
 
 		List<EntityProfile>[] profiles ;
+		
+		long startingTime = System.currentTimeMillis();
 		if(profilesPathB != null){
 					profiles = new List[2];
 					profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
@@ -370,55 +376,16 @@ public class SupervisedMetablocking {
 				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 				blockPurging.applyProcessing(blocks);
 				System.out.println("blocking size after purging"+ (blocks.size()-size));
-				//BlockFiltering bf = new BlockFiltering(0.95);		    
-				//bf.applyProcessing(blocks);
+				BlockFiltering bf = new BlockFiltering(0.80);		    
+				bf.applyProcessing(blocks);
 //			}else{
 //				blockPurging = new ComparisonsBasedBlockPurging(1.005);
 //				blockPurging.applyProcessing(blocks);
 //			}
 			//return;
 		}
-		//		String mainDirectory = "/home/guilherme/Transferências/";
-		//	        String[] profilesPath = {   
-		
 
-		//		System.out.println(" database  1  "+ profiles[0].size()  +"  data 2 ->" + profiles[1].size());
-		
-	//	String  atributos_value[] = { "id", "given_name" , "surname", "age","postcode", "state","given_name","date_of_birth","suburb","address_2","address_1","surname","soc_sec_id","phone_number","street_number"};
-
-
-//    	String vector[]=new String[atributos_value.length+1];
-//		
-//		for (int i = 0; i < profiles[0].size(); i++) {
-//			EntityProfile x = profiles[0].get(i);
-//			Set<Attribute> st=x.getAttributes();
-//		//	System.out.print(i +" ");
-////			for(Attribute at:st){
-////				System.out.print(at.getValue() +"; ");
-////			}
-////			System.out.println();
-//			
-//			
-//			for(Attribute att:st){
-//	   			//vector[0]=String.valueOf(entityIds1) ;
-//	    		for (int j = 1; j < atributos_value.length; j++) {
-//	    			if(att.getName().equals(atributos_value[j]))
-//		    			vector[j]=att.getValue();
-//				}
-//	   			
-//	    		
-//	    	//	if(att.getName().equals(atributos_value[4]))
-//	    	//		vector[4]=att.getValue();   			
-//	    	}
-//			for (int j = 0; j < vector.length; j++) {
-//				System.out.print(vector[j]+ "  ");
-//			}
-//			System.out.println();
-//		}
-		
-		//for(profiles)
-		//System.out.println(" numero comparações --> "+ num_blocks);
-
+		totaltime+=System.currentTimeMillis()-startingTime;
 
 		String[] profilesPath;
 		if(profilesPathB!=null){
@@ -434,41 +401,25 @@ public class SupervisedMetablocking {
 		//            System.out.println("\n\n\n\n\n======================= Supervised CEP =======================");
 
 		Classifier[] classifiers = getSupervisedWepClassifiers();
-		//            SupervisedCEP scep = new SupervisedCEP(classifiers.length, blocks, duplicatePairs);
-		//            for (int j = 0; j < ITERATIONS; j++) {
-		//                scep.applyProcessing(j, classifiers, ebc);
-		//            }
-		//            scep.printStatistics();
-		//
-		//		            System.out.println("\n\n\n\n\n======================= Supervised CNP =======================");
-		//		            classifiers = getSupervisedCnpClassifiers();
-		//		            SupervisedCNP scnp = new SupervisedCNP(classifiers.length, blocks, duplicatePairs);
-		//		            for (int j = 0; j < 5; j++) {
-		//		                scnp.applyProcessing(j, classifiers, ebc);
-		////		                BlockStatistics blockStats = new BlockStatistics(blocks, new BilateralDuplicatePropagation(mainDirectory+ "/groundtruth"));
-		////		     		   double teste[]=blockStats.applyProcessing();
-		////		     		   System.out.println("------------" +teste[0] + "  "+ teste[1] + "  "+ teste[0]);
-		//		            }
-		//		            scnp.printStatistics();
+		
 		Random r=new Random();
 		int n=r.nextInt(100);
 
 		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
-		BufferedWriter writer2 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador2"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
-		BufferedWriter writer3 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador3"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
-		BufferedWriter writer4 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador4"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
-
+		
 		System.out.println("starting ebc");
 		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
-
+		long overheadTime1 = System.currentTimeMillis()-startingTime;
+		
+		System.out.println("blocking time ---->>>" + overheadTime1);
 		//new EntityIndex(blocks).enumerateBlocks(blocks);;	
 		File f=new File("/tmp/lock");
 		f.delete();
-		int valores [] = {10,50,100,500,1000};
+		int valores [] = {50};
 		System.out.println("\n\n\n\n\n======================= Supervised WEP =======================");
-		int i=0,j=5;
+		int  i=0,j=5;
 		//for (int i = 1; i <= 2;i++)
 		{
 			System.out.println("starting sup wep");
@@ -480,48 +431,35 @@ public class SupervisedMetablocking {
 			{
 				
 				writer1.write("level "+tamanho +"\n");
-				writer2.write("level "+tamanho +"\n");
-				writer3.write("level "+tamanho+"\n");
-				writer4.write("level "+tamanho+"\n");
+				
 
 				for (j = 0;j< 10; j++) 
 				{
-					System.out.println("starting apply processing");
-					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,writer2,writer3,writer4,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
+					//System.out.println("starting apply processing");
+					startingTime = System.currentTimeMillis();
+					TokenBlocking imtb = new TokenBlocking(profiles);
 
+					blocks = imtb.buildBlocks();	
+					AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
+					blockPurging = new ComparisonsBasedBlockPurging(1.005);
+					blockPurging.applyProcessing(blocks);
+					ebc = new ExecuteBlockComparisons(profilesPath);
+					swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
+					swep.applyProcessing(j, classifiers, ebc, tamanho, writer1,i,profilesPathA.split("/")[profilesPathA.split("/").length-1]);
+					totaltime = System.currentTimeMillis()-startingTime;
+					System.out.println("bkocking " + totaltime );
+					
 					writer1.flush();
-					writer2.flush();
-					writer3.flush();
-					writer4.flush();
+					
+					
 				}
-				//swep.printStatistics();
-				//swep.printStatisticsB(writer);
 				System.out.println("size of level : "+ tamanho);
-
-
-//				if(tamanho==5)
-//					tamanho=10;
-//				else if(tamanho==10)
-//					tamanho=50;
-//				else if(tamanho==50)
-//					tamanho*=2;
-//				else if(tamanho==100)
-//					tamanho=500;
-////				
-//				else if( tamanho==100)
-//					tamanho=500;
-//				else
-//				if(tamanho==1000)
-//					tamanho+=tamanho;
-//				else tamanho*=tamanho;
-			//	ebc.temp_limiar+=0.1;
 				tamanho =valores[++i];
-
 			}
 		}
 		writer1.close();
-		writer2.close();
-		writer3.close();
+	}
+	System.out.println("total time "+ totaltime/10);
 	}
 	//  }
 }
