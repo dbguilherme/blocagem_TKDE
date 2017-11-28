@@ -300,7 +300,7 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 	}
 	
 
-
+	int apagar=0,vez=0;
 	protected Instance getFeatures(int match, List<Integer> commonBlockIndices,List<Integer> commonBlockIndices_cpy,Comparison comparison, double flag) {
 		double[] instanceValues =null;
 		instanceValues = new double[noOfAttributes];
@@ -317,12 +317,15 @@ public abstract class AbstractSupervisedMetablocking implements Constants {
 //			 System.out.println(" erroo  " + temp+ " "+ instanceValues[5]);
 //			 instanceValues[5] =ebcX.jaccardSimilarity_l_real(comparison.getEntityId1(),comparison.getEntityId2(), commonBlockIndices_cpy.size()); // getSimilarityAttribute_l(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());//ebcX.getSimilarityAttribute(comparison.getEntityId1(), comparison.getEntityId2());;//ebcX.jaccardSimilarity_l(comparison.getEntityId1(),comparison.getEntityId2());
 //		 }
-//		
-		if(instanceValues[5]<0.1 && flag==1.0)
-		{
-
-			return null;
-		}
+		
+//		if(instanceValues[5]<0.05 && flag==1.0)
+//		{
+//			if(match==1)
+//				apagar++;
+//			if(apagar%100==0 && match==1)
+//				System.out.println("apagar " + apagar +" "+instanceValues[5]);
+//			return null;
+//		}
 		double ibf1 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId1(), 0));
 		double ibf2 = Math.log(noOfBlocks/entityIndex.getNoOfEntityBlocks(comparison.getEntityId2(), 1));
 		try{

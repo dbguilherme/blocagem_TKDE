@@ -284,7 +284,7 @@ public class SupervisedMetablocking {
 		{
 			args =new String[2];
 			args[0]="1";
-			args[1]="50K";
+			args[1]="300K";
 		}
 		
 		switch(args[0]){
@@ -364,18 +364,18 @@ public class SupervisedMetablocking {
 		}else	{
 			profiles= new List[1];
 			profiles[0] = (List<EntityProfile>) SerializationUtilities.loadSerializedObject(profilesPathA);
-			TokenBlocking imtb = new TokenBlocking(profiles);
+		//	TokenBlocking imtb = new TokenBlocking(profiles);
 
-			 blocks = imtb.buildBlocks();	
-			 for(AbstractBlock b: blocks) {
-				    blocks_copy.add(b);
-				}
-			 AbstractEfficiencyMethod blockPurging=null;
-			 int size=blocks.size();
-			
-				blockPurging = new ComparisonsBasedBlockPurging(1.005);
-				blockPurging.applyProcessing(blocks);
-				System.out.println("blocking size after purging"+ (blocks.size()-size));
+//			 blocks = imtb.buildBlocks();	
+//			 for(AbstractBlock b: blocks) {
+//				    blocks_copy.add(b);
+//				}
+//			 AbstractEfficiencyMethod blockPurging=null;
+//			 int size=blocks.size();
+//			
+//				blockPurging = new ComparisonsBasedBlockPurging(1.005);
+//				blockPurging.applyProcessing(blocks);
+//				System.out.println("blocking size after purging"+ (blocks.size()-size));
 				//BlockFiltering bf = new BlockFiltering(0.80);		    
 				//bf.applyProcessing(blocks);
 //			}else{
@@ -408,7 +408,7 @@ public class SupervisedMetablocking {
 		BufferedWriter writer1 = new BufferedWriter(new FileWriter(System.getProperty("user.home")+"/Dropbox/blocagem/saida50K_classificador1"+profilesPathA.split("/")[profilesPathA.split("/").length-1]));
 		
 		System.out.println("starting ebc");
-		ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
+		//ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 		classifiers = getSupervisedWepClassifiers();
 		SupervisedWEP swep;
 		long overheadTime1 = System.currentTimeMillis()-startingTime;
@@ -424,7 +424,7 @@ public class SupervisedMetablocking {
 		//for (int i = 1; i <= 2;i++)
 		{
 			System.out.println("starting sup wep");
-			swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
+			//swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 
 			//blockHash.produceHash(blocks, ebc);
 			int tamanho =valores[i];
@@ -434,24 +434,30 @@ public class SupervisedMetablocking {
 				writer1.write("level "+tamanho +"\n");
 				
 
-				for (j = 0;j< 5; j++) 
+				for (j = 0;j< 10; j++) 
 				{
 					System.out.println("starting apply processing");
 					TokenBlocking imtb = new TokenBlocking(profiles);
 					startingTime = System.currentTimeMillis();
 					
+					blocks_copy.clear();
+					blocks = imtb.buildBlocks();
+					for(AbstractBlock b: blocks) {
+					    blocks_copy.add(b);
+					}
 
-					blocks = imtb.buildBlocks();	
 					t[0] = System.currentTimeMillis()-startingTime;
-					
 					
 					AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 					blockPurging = new ComparisonsBasedBlockPurging(1.005);
 					blockPurging.applyProcessing(blocks);
+					
 					BlockFiltering bf = new BlockFiltering(0.80);		    
 					bf.applyProcessing(blocks);
+					
 					startingTime = System.currentTimeMillis();
-					ebc = new ExecuteBlockComparisons(profilesPath);
+					
+					ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
 					swep = new SupervisedWEP(classifiers.length, blocks, blocks_copy, duplicatePairs,ebc);
 					t[1] = System.currentTimeMillis()-startingTime;
 					
