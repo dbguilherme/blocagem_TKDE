@@ -38,21 +38,22 @@ import Utilities.ExecuteBlockComparisons;
 import Utilities.ExportBlocks;
 import Utilities.SerializationUtilities;
 import Utilities.blockHash;
-import libsvm.svm;
-import libsvm.svm_model;
-import libsvm.svm_parameter;
-import libsvm.svm_problem;
+
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-//import weka.classifiers.functions.LibSVM;
+
+import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RBFKernel;
 import weka.classifiers.rules.JRip;
+import weka.classifiers.trees.HoeffdingTree;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
+import weka.clusterers.SimpleKMeans;
 import weka.core.SelectedTag;
+import weka.core.pmml.jaxbbindings.LinearKernelType;
 //import weka.classifiers.functions.LibSVM;;
 
 /**
@@ -117,15 +118,24 @@ public class SupervisedMetablocking {
 //
 //
 	
-		//LibSVM sv = new LibSVM();
-		//sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
-		////sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
+	//	LibSVM libSVM=new LibSVM();
+//		SMO smo = new SMO();
+//		//smo.setKernel(new LinearKernelType());
+//	    smo.setC(8.0);
+//	    Logistic logisticLBFGS = new Logistic();
+       // logisticLBFGS.setRidge(1e-4);
+      //  logisticLBFGS.setMaxIts(500);	
+	    //smo.setBuildLogisticModels(false);
+		//smo.setBuildLogisticModels(true);
+		//smo.setKernel();
+//smo.setC(9.0);
+		//sv.setKernelType(LibSVM.KERNELTYPE_POLYNOMIAL);
 		//sv.setCost(2);
 		
 		//sv.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_POLYNOMIAL, LibSVM.TAGS_KERNELTYPE));
-				svm_parameter param;
-				param = new svm_parameter();
-				
+		//		svm_parameter param;
+		//		param = new svm_parameter();
+		//		
 				//param=	get_grid(param);
 				// default values
 				
@@ -152,74 +162,88 @@ public class SupervisedMetablocking {
 //	//	classifiers[1] = j48;
 //	//	classifiers[2] = rf;
 		
-		    NaiveBayes naiveBayes = new NaiveBayes();
+		    NaiveBayes naiveBayes = new NaiveBayes  ();
 		    naiveBayes.setUseKernelEstimator(false);
 		    naiveBayes.setUseSupervisedDiscretization(false);
-
+		  // naiveBayes.set
 
 	        J48 j48 = new J48();
-	        j48.setMinNumObj(2);
-	        j48.setConfidenceFactor((float) 0.25);
+	        j48.setMinNumObj(8);
+	        j48.setConfidenceFactor((float) 0.0025);
 
-	        SMO smo = new SMO();
+	      //  SMO smo = new SMO();
 	       //((Object) smo).setBuildLogisticModels(true);
-	        smo.setKernel(new PolyKernel());
-	        smo.setC(9.0);
-	        JRip jrip = new JRip();
-	        
-	        
-	        BayesNet bayesNet = new BayesNet();
+	      
+	        SimpleKMeans wekaKMeans = new SimpleKMeans();
+            try {
+				wekaKMeans.setNumClusters(10);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            RandomForest wekaRF = new RandomForest();
+            wekaRF.setNumExecutionSlots(1);
+            wekaRF.setMaxDepth(0/*0 for unlimited*/);
+          
+            
+            HoeffdingTree ht=new HoeffdingTree();
+	        ht.setNaiveBayesPredictionThreshold(0.5);
+            ht.setGracePeriod(200);
+            //ht.setLeafPredictionStrategy(strat); leafPredictionStrategyTipText();
+            ht.setSplitConfidence(0.00000001);
+            //-L 1 -S 1 -E 1.0E-7 -H 0.05 -M 0.01 -G 200.0 -N 0.0
+            BayesNet bayesNet = new BayesNet();
 
 	        Classifier[] classifiers = new Classifier[1];
 	        classifiers[0] = naiveBayes;
-	       // classifiers[1] = j48;
+	        //classifiers[1] = j48;
 	      //  classifiers[0] = jrip;
 	      //  classifiers[3] = bayesNet;
 		return classifiers;
 	}
 
 
-	public static svm_parameter get_grid(svm_parameter param) {
-		PrintWriter out =null;
-		BufferedReader in=null;
-		BufferedReader in_t=null;
-		Process proc = null;
-		String line=null;		
-		String userHome = System.getProperty("user.home");
-		System.out.println(userHome);
-		try {
-			proc = Runtime.getRuntime().exec("/bin/bash", null, new File(userHome+"/Downloads/libsvm-3.21/tools/"));
-			if (proc != null) {
-				in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())), true);
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (proc != null) {
-			System.out.println("antes do grid.py----------python grid.py /tmp/test.libsvm");
-			out.println("python grid.py /tmp/test.libsvm");//reverrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-			try {
-				while ((line = in.readLine()) != null ) {
-					if(!line.contains("[local]")){
-						String arg[]=line.split(" ");
-						param.C= Double.parseDouble(arg[0]);
-						param.gamma= Double.parseDouble(arg[1]);
-						System.out.println("valor c  " + param.C + "  " + param.gamma);
-						return param;
-					}
-
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println("depois do grid.py----------");
-		System.out.println("depois do grid.py----------");
-		return null;    
-	}
+//	public static svm_parameter get_grid(svm_parameter param) {
+//		PrintWriter out =null;
+//		BufferedReader in=null;
+//		BufferedReader in_t=null;
+//		Process proc = null;
+//		String line=null;		
+//		String userHome = System.getProperty("user.home");
+//		System.out.println(userHome);
+//		try {
+//			proc = Runtime.getRuntime().exec("/bin/bash", null, new File(userHome+"/Downloads/libsvm-3.22/tools/"));
+//			if (proc != null) {
+//				in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+//				out= new PrintWriter(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())), true);
+//			}
+//		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		if (proc != null) {
+//			System.out.println("antes do grid.py----------python grid.py /tmp/final_treina.arff");
+//			out.println("python grid.py /tmp/test.libsvm");//reverrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+//			try {
+//				while ((line = in.readLine()) != null ) {
+//					if(!line.contains("[local]")){
+//						String arg[]=line.split(" ");
+//						param.C= Double.parseDouble(arg[0]);
+//						param.gamma= Double.parseDouble(arg[1]);
+//						System.out.println("valor c  " + param.C + "  " + param.gamma);
+//						return param;
+//					}
+//
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		System.out.println("depois do grid.py----------");
+//		System.out.println("depois do grid.py----------");
+//		return null;    
+//	}
 
 	
 
@@ -446,7 +470,7 @@ public class SupervisedMetablocking {
 					    blocks_copy.add(b);
 					}
 
-					t[0] = System.currentTimeMillis()-startingTime;
+					
 					
 					AbstractEfficiencyMethod blockPurging = new ComparisonsBasedBlockPurging(1.005);
 					blockPurging = new ComparisonsBasedBlockPurging(1.005);
@@ -454,7 +478,7 @@ public class SupervisedMetablocking {
 					
 					BlockFiltering bf = new BlockFiltering(0.80);		    
 					bf.applyProcessing(blocks);
-					
+					t[0] = System.currentTimeMillis()-startingTime;
 					startingTime = System.currentTimeMillis();
 					
 					ExecuteBlockComparisons ebc = new ExecuteBlockComparisons(profilesPath);
